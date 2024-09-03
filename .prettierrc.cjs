@@ -1,3 +1,8 @@
+/** @typedef  {import("@ianvs/prettier-plugin-sort-imports").PluginConfig} SortImportsConfig*/
+/** @typedef  {import("prettier").Config} PrettierConfig*/
+/** @typedef  {{ tailwindConfig: string }} TailwindConfig*/
+
+/** @type { PrettierConfig | SortImportsConfig | TailwindConfig } */
 module.exports = {
   trailingComma: 'all', // Utilise des virgules en fin de ligne dans tous les contextes. Remplacez par 'es5' si vous voulez des virgules uniquement là où c'était valide en ES5 (c'est-à-dire dans les objets et les tableaux, mais pas dans les paramètres ou les arguments des fonctions).
   tabWidth: 2, // Utilise un espacement de 2 pour les tabulations.
@@ -5,4 +10,21 @@ module.exports = {
   singleQuote: true, // Utilise des guillemets simples au lieu de doubles.
   endOfLine: 'auto', // Gère automatiquement les fins de ligne en fonction de l'environnement, évitant les problèmes de compatibilité entre différents systèmes d'exploitation.
   arrowParens: 'always', // Encadre toujours les paramètres des fonctions fléchées avec des parenthèses.
+  plugins: [
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss",
+  ],
+  tailwindConfig: './tailwind.config.js', 
+  importOrder: [
+    "^(react/(.*)$)|^(react$)|^(react-native(.*)$)", 
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^@ab-solutions/(.*)$",
+    "",
+    "^~/utils/(.*)$",
+    "^~/components/(.*)$",
+    "^~/(.*)$",
+    "^[./]",
+  ],
+  importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
 };
