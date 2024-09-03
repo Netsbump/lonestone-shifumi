@@ -11,7 +11,7 @@ module.exports = {
     'plugin:react-hooks/recommended', // Règles recommandées pour les hooks React
     'plugin:prettier/recommended', // Intègre Prettier avec ESLint pour formater le code selon les règles définies
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'], // Dossiers et fichiers à ignorer par ESLint
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'tailwind.config.js', 'postcss.config.js'], // Dossiers et fichiers à ignorer par ESLint
   parser: '@typescript-eslint/parser', // Utilise le parseur de TypeScript pour ESLint
   parserOptions: {
     ecmaVersion: 'latest', // Utilise la dernière version disponible d'ECMAScript
