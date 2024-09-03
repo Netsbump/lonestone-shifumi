@@ -1,3 +1,3 @@
 export const App: React.FC = () => {
-  return <div> world!</div>;
+  return <div>Hello world2!</div>;
 };
