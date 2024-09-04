@@ -1,0 +1,24 @@
+import React from 'react';
+
+import humanPlayer from '../../../../../assets/images/avatar-human.svg';
+import npcPlayer from '../../../../../assets/images/avatar-robot.svg';
+import { PlayerSection } from './playersection/PlayerSection';
+
+export const PlayerScores: React.FC = () => {
+  return (
+    <div className="flex">
+      <PlayerSection
+        playerName="Moi"
+        avatar={humanPlayer}
+        altAvatar="avatar human player"
+        scores={0}
+      />
+      <PlayerSection
+        playerName="J-Ordi"
+        avatar={npcPlayer}
+        altAvatar="avatar npc player"
+        scores={0}
+      />
+    </div>
+  );
+};
