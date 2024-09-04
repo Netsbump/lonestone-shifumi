@@ -38,6 +38,15 @@ export default {
         'normal': 400,
         'black': 900,
       },
+      borderRadius: {
+        't-2.5xl' : '1.25rem'
+      },
+      maxWidth: {
+        '8xl' : '90rem'
+      },
+      height: {
+        '15' : '3.75rem'
+      }
     },
   },
   plugins: [ 
