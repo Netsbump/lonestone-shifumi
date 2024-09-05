@@ -8,20 +8,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        'night-blue': {
-          DEFAULT: 'hsl(230, 58%, 12%)',
-          light: 'hsl(230, 58%, 22%)',
-          medium: '#131935', 
-          dark: 'hsl(230, 58%, 2%)',
-        },
-        'dark-blue': 'hsl(230, 40%, 20%)',
-        'hard-blue': 'hsl(215, 95%, 32%)',
-        'electric-blue': 'hsl(215, 99%, 45%)',
-        'light-blue': 'hsl(230, 100%, 89%)',
-        'dark-red': 'hsl(0, 60%, 42%)',
-        'red': 'hsl(0, 80%, 63%)',
-        'green': 'hsl(165, 99%, 41%)',
-        'white': 'hsl(0, 0%, 100%)',
+        'dark-blue': 'var(--dark-blue)',
+        'hard-blue': 'var(--hard-blue)',
+        'button': 'var(--electric-blue)',
+        'light-blue': 'var(--light-blue)',
+        'dark-red': 'var(--dark-red)',
+        'red': 'var(--red)',
+        'green': 'var(--green)',
+        'white': 'var(--white)',
+        'background': 'var(--dark-blue)',
+        'title-container': 'var(--night-blue)',
+        'container' : 'var(--night-blue-medium)'
       },
       fontFamily: {
         'chivo': ['Chivo', 'sans-serif'],
@@ -40,13 +37,16 @@ export default {
         'black': 900,
       },
       borderRadius: {
-        't-2.5xl' : '1.25rem'
+        'primary' : 'var(--rounded-primary)',
       },
       maxWidth: {
         '8xl' : '90rem'
       },
       height: {
         '15' : '3.75rem'
+      },
+      boxShadow: {
+        'button-primary' : 'var(--shadow-button-default)'
       }
     },
   },
