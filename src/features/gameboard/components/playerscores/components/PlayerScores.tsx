@@ -6,18 +6,20 @@ import { PlayerSection } from './playersection/PlayerSection';
 
 export const PlayerScores: React.FC = () => {
   return (
-    <div className="flex">
+    <div className="flex w-full justify-between">
       <PlayerSection
         playerName="Moi"
         avatar={humanPlayer}
         altAvatar="avatar human player"
         scores={0}
+        isComputer={false}
       />
       <PlayerSection
         playerName="J-Ordi"
         avatar={npcPlayer}
         altAvatar="avatar npc player"
         scores={0}
+        isComputer
       />
     </div>
   );
