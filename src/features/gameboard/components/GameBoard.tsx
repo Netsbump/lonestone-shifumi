@@ -8,7 +8,7 @@ import { PlayerScores } from './playerscores/components/PlayerScores';
 export const GameBoard: React.FC = () => {
   return (
     <main className="grid grid-cols-5 grid-rows-[auto,minmax(420px,1fr),auto] gap-4">
-      <div className="h-15 col-span-3 col-start-2 flex">
+      <div className="col-span-3 col-start-2 flex">
         <PlayerScores />
       </div>
 
