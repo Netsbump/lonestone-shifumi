@@ -1,9 +1,9 @@
 import React from 'react';
 
 import { GameHistory } from './gamehistory/components/GameHistory';
-import { GameRules } from './gamerules/components/GameRules';
 import { GameScreen } from './gamescreen/components/GameScreen';
 import { PlayerScores } from './playerscores/components/PlayerScores';
+import { GameRules } from './rules/GameRules';
 
 export const GameBoard: React.FC = () => {
   return (

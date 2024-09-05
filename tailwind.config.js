@@ -11,6 +11,7 @@ export default {
         'night-blue': {
           DEFAULT: 'hsl(230, 58%, 12%)',
           light: 'hsl(230, 58%, 22%)',
+          medium: '#131935', 
           dark: 'hsl(230, 58%, 2%)',
         },
         'dark-blue': 'hsl(230, 40%, 20%)',
