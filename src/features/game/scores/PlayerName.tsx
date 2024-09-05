@@ -2,16 +2,16 @@ import React from 'react';
 
 type PlayerNameProps = {
   playerName: string;
-  isComputer: boolean;
+  isOpponent: boolean;
 };
 
 export const PlayerName: React.FC<PlayerNameProps> = ({
   playerName,
-  isComputer,
+  isOpponent,
 }) => {
   return (
     <h3
-      className={`flex ${isComputer ? 'flex-row-reverse' : ''} text-light-blue`}
+      className={`flex ${isOpponent ? 'flex-row-reverse' : ''} text-light-blue`}
     >
       {playerName}
     </h3>

@@ -8,7 +8,7 @@ type PlayerSectionProps = {
   altAvatar: string;
   playerName: string;
   scores: number;
-  isComputer: boolean;
+  isOpponent: boolean;
 };
 
 export const PlayerSection: React.FC<PlayerSectionProps> = ({
@@ -16,16 +16,16 @@ export const PlayerSection: React.FC<PlayerSectionProps> = ({
   altAvatar,
   playerName,
   scores,
-  isComputer,
+  isOpponent,
 }) => {
   return (
     <div
-      className={`flex ${isComputer ? 'flex-row-reverse' : 'flex-row'} gap-4`}
+      className={`flex ${isOpponent ? 'flex-row-reverse' : 'flex-row'} gap-4`}
     >
       <img src={avatar} alt={altAvatar} width="60px" height="60px" />
       <div className="flex flex-col gap-1">
-        <PlayerName playerName={playerName} isComputer={isComputer} />
-        <LiveScore scores={scores} isComputer={isComputer} />
+        <PlayerName playerName={playerName} isOpponent={isOpponent} />
+        <LiveScore scores={scores} isOpponent={isOpponent} />
       </div>
     </div>
   );

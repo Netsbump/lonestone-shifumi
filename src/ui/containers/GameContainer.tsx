@@ -1,7 +1,7 @@
 import React from 'react';
 
 type GameContainerProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 };
 
 export const GameContainer: React.FC<GameContainerProps> = ({ children }) => {
