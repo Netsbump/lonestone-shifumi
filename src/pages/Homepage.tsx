@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { GameBoard } from '../features/game/components/GameBoard';
+import { GameBoard } from '../features/game/GameBoard';
 
 export const Homepage: React.FC = () => {
   return (

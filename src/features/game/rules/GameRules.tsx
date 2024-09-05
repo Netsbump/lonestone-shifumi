@@ -1,11 +1,11 @@
 import React from 'react';
 
-import leaf from '../../../../assets/images/icon-leaf.svg';
-import scissors from '../../../../assets/images/icon-scissors.svg';
-import stone from '../../../../assets/images/icon-stone.svg';
-import { LEAF, SCISSORS, STONE } from '../../../../lib/utils/constants';
-import { GameContainer } from '../../../../ui/containers/GameContainer';
-import { TitleContainer } from '../../../../ui/containers/TitleContainer';
+import leaf from '../../../assets/images/icon-leaf.svg';
+import scissors from '../../../assets/images/icon-scissors.svg';
+import stone from '../../../assets/images/icon-stone.svg';
+import { LEAF, SCISSORS, STONE } from '../../../lib/utils/constants';
+import { GameContainer } from '../../../ui/containers/GameContainer';
+import { TitleContainer } from '../../../ui/containers/TitleContainer';
 import { RuleLine } from './RuleLine';
 
 export const GameRules: React.FC = () => {

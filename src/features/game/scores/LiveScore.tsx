@@ -1,14 +1,14 @@
 import React from 'react';
 
-import dotBlack from '../../../../../../assets/images/dot-black.svg';
-import dotGreen from '../../../../../../assets/images/dot-green.svg';
+import dotBlack from '../../../assets/images/dot-black.svg';
+import dotGreen from '../../../assets/images/dot-green.svg';
 
 type LiveScoreProps = {
   scores: number;
-  isComputer: boolean;
+  isOpponent: boolean;
 };
 
-export const LiveScore: React.FC<LiveScoreProps> = ({ scores, isComputer }) => {
+export const LiveScore: React.FC<LiveScoreProps> = ({ scores, isOpponent }) => {
   const dots = Array(5)
     .fill(null)
     .map((_, index) => {
@@ -23,7 +23,7 @@ export const LiveScore: React.FC<LiveScoreProps> = ({ scores, isComputer }) => {
       );
     });
   return (
-    <div className={`flex ${isComputer ? 'flex-row-reverse' : ''} gap-1`}>
+    <div className={`flex ${isOpponent ? 'flex-row-reverse' : ''} gap-1`}>
       {dots}
     </div>
   );
