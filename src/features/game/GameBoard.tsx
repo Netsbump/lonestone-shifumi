@@ -1,14 +1,19 @@
 import React from 'react';
 
+import { LEAF, SCISSORS, STONE } from '../../lib/utils/constants';
 import { GameButton } from '../../ui/button/GameButton';
 import { GameHistory } from './history/GameHistory';
 import { GameRules } from './rules/GameRules';
 import { PlayerScores } from './scores/PlayerScores';
 import { GameScreen } from './screen/GameScreen';
 
-export const GameBoard: React.FC = () => {
-  const handlePress = (): void => {
-    console.log('Button pressed');
+type GameBoardProps = {
+  startGame: boolean;
+};
+
+export const GameBoard: React.FC<GameBoardProps> = ({ startGame }) => {
+  const handlePlayerChoice = (choice: string): void => {
+    console.log(choice);
   };
 
   return (
@@ -29,9 +34,19 @@ export const GameBoard: React.FC = () => {
         </aside>
       </div>
 
-      <div className="col-span-3 col-start-2 flex items-center justify-center">
-        <GameButton onPress={handlePress}>Commencer la partie</GameButton>
-      </div>
+      {startGame && (
+        <div className="col-span-3 col-start-2 flex items-center justify-center">
+          <GameButton onPress={handlePlayerChoice} name={STONE}>
+            {STONE}
+          </GameButton>
+          <GameButton onPress={handlePlayerChoice} name={LEAF}>
+            {LEAF}
+          </GameButton>
+          <GameButton onPress={handlePlayerChoice} name={SCISSORS}>
+            {SCISSORS}
+          </GameButton>
+        </div>
+      )}
     </main>
   );
 };
