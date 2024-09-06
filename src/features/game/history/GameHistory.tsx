@@ -18,7 +18,7 @@ export const GameHistory: React.FC<GameHistoryProps> = ({ roundsHistory }) => {
           <ul>
             {roundsHistory.map((round, index) => (
               <li key={index}>
-                {round.humanChoice} {round.result} {round.npcChoice}
+                {round.playerChoice} {round.roundResult} {round.opponentChoice}
               </li>
             ))}
           </ul>

@@ -16,7 +16,7 @@ export const RuleLine: React.FC<RuleLineProps> = ({
   textRule,
 }) => {
   return (
-    <span className="flex w-full justify-between p-[10px]">
+    <span className="flex w-full items-center justify-between p-[10px]">
       <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-dark-blue">
         <img
           src={iconSrc1}

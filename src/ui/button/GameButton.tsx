@@ -14,7 +14,7 @@ export const GameButton: React.FC<GameButtonProps> = ({
       {...props}
       className="pushable group cursor-pointer rounded-primary border-none bg-hard-blue p-0 focus:outline-none"
     >
-      <span className="front duration-250 Text-button block -translate-y-[8px] rounded-primary bg-button px-7 pb-6 pt-8 text-white transition-transform ease-in-out will-change-transform group-hover:translate-y-[-12px] group-data-[pressed]:translate-y-[-4px]">
+      <span className="front duration-250 Text-button block -translate-y-[8px] rounded-primary bg-button px-7 py-6 text-white transition-transform ease-in-out will-change-transform group-hover:translate-y-[-12px] group-data-[pressed]:translate-y-[-4px]">
         {children}
       </span>
     </Button>
