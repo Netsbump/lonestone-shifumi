@@ -1,6 +1,13 @@
 import React from 'react';
 
-import { LEAF, SCISSORS, STONE } from '../../lib/utils/constants';
+import {
+  LEAF,
+  LEAF_TEXT,
+  SCISSORS,
+  SCISSORS_TEXT,
+  STONE,
+  STONE_TEXT,
+} from '../../lib/utils/constants';
 import { GameButton } from '../../ui/button/GameButton';
 import { GameHistory } from './history/GameHistory';
 import { GameRules } from './rules/GameRules';
@@ -36,14 +43,14 @@ export const GameBoard: React.FC<GameBoardProps> = ({ startGame }) => {
 
       {startGame && (
         <div className="col-span-3 col-start-2 flex items-center justify-center">
-          <GameButton onPress={handlePlayerChoice} name={STONE}>
-            {STONE}
+          <GameButton onPress={() => handlePlayerChoice(STONE)}>
+            {STONE_TEXT}
           </GameButton>
-          <GameButton onPress={handlePlayerChoice} name={LEAF}>
-            {LEAF}
+          <GameButton onPress={() => handlePlayerChoice(LEAF)}>
+            {LEAF_TEXT}
           </GameButton>
-          <GameButton onPress={handlePlayerChoice} name={SCISSORS}>
-            {SCISSORS}
+          <GameButton onPress={() => handlePlayerChoice(SCISSORS)}>
+            {SCISSORS_TEXT}
           </GameButton>
         </div>
       )}

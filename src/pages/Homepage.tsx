@@ -7,7 +7,8 @@ export const Homepage: React.FC = () => {
   const [gameStarted, setGameStarted] = useState(false);
 
   const handlePress = (): void => {
-    setGameStarted((prev) => !prev);
+    //setGameStarted((prev) => !prev);
+    setGameStarted(false);
   };
 
   return (
@@ -20,10 +21,8 @@ export const Homepage: React.FC = () => {
         <GameBoard startGame={gameStarted} />
 
         {!gameStarted && (
-          <footer className="flex items-center justify-center">
-            <GameButton onPress={handlePress} name="start-button">
-              Commencer la partie
-            </GameButton>
+          <footer className="mt-5 flex items-center justify-center">
+            <GameButton onPress={handlePress}>Commencer la partie</GameButton>
           </footer>
         )}
       </div>

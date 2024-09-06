@@ -26,7 +26,7 @@ export const RuleLine: React.FC<RuleLineProps> = ({
           className="invert"
         />
       </div>
-      <p className=".Texte-courant text-light-blue">{textRule}</p>
+      <p className="Texte-courant text-light-blue">{textRule}</p>
       <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-dark-blue">
         <img
           src={iconSrc2}

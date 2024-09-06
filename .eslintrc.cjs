@@ -35,7 +35,6 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'warn', // Avertir contre l'utilisation de 'any'
     'react/jsx-filename-extension': ['warn', { extensions: ['.tsx'] }], // N'autoriser les fichiers JSX qu'avec l'extension .tsx
     'react/prop-types': 'off', // Désactiver les prop-types de React, car TypeScript est utilisé pour la vérification des types
-    'react/jsx-props-no-spreading': 'warn', // Avertir contre la propagation des props dans JSX
     'prettier/prettier': 'error', // Signaler les erreurs de formatage Prettier comme des erreurs ESLint
     'react/react-in-jsx-scope': 'off', // Désactiver la règle exigeant React dans la portée pour JSX (inutile avec React 17+)
   },
