@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 
-import { GameBoard } from '../features/game/GameBoard';
+import { Game } from '../features/game/Game';
 import { GameButton } from '../ui/button/GameButton';
 
 export const Homepage: React.FC = () => {
   const [gameStarted, setGameStarted] = useState(false);
 
   const handlePress = (): void => {
-    //setGameStarted((prev) => !prev);
-    setGameStarted(false);
+    setGameStarted((prev) => !prev);
   };
 
   return (
@@ -18,7 +17,7 @@ export const Homepage: React.FC = () => {
       </header>
 
       <div>
-        <GameBoard startGame={gameStarted} />
+        <Game startGame={gameStarted} />
 
         {!gameStarted && (
           <footer className="mt-5 flex items-center justify-center">
