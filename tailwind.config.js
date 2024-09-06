@@ -89,6 +89,12 @@ export default {
           fontWeight: theme('fontWeight.normal'),
           textAlign: 'center',
         },
+        '.Text-button': {
+          fontFamily: theme('fontFamily.chivo'),
+          fontSize: theme('fontSize.h4'),
+          fontWeight: theme('fontWeight.normal'),
+          textAlign: 'center',
+        },
       })
     },
   ],
