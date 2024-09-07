@@ -1,22 +1,20 @@
 import React from 'react';
 
-import { Round } from '../../../lib/types/global';
 import { GameContainer } from '../../../ui/containers/GameContainer';
 import { TitleContainer } from '../../../ui/containers/TitleContainer';
+import { useGame } from '../useGame';
 
-type GameHistoryProps = {
-  roundsHistory?: Round[];
-};
+export const GameHistory: React.FC = () => {
+  const { state } = useGame();
 
-export const GameHistory: React.FC<GameHistoryProps> = ({ roundsHistory }) => {
   return (
     <GameContainer>
-      <div className="flex h-full w-full flex-col gap-9 p-[10px]">
+      <div className="p-container flex h-full w-full flex-col gap-9">
         <TitleContainer>Historique des coups</TitleContainer>
 
-        {roundsHistory && roundsHistory.length > 0 ? (
+        {state.history && state.history.length > 0 ? (
           <ul>
-            {roundsHistory.map((round, index) => (
+            {state.history.map((round, index) => (
               <li key={index}>
                 {round.playerChoice} {round.roundResult} {round.opponentChoice}
               </li>

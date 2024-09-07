@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import leaf from '../../assets/images/icon-leaf.svg';
 import scissors from '../../assets/images/icon-scissors.svg';
 import stone from '../../assets/images/icon-stone.svg';
-import { Choice, Round } from '../../lib/types/global';
+import { Choice } from '../../lib/types/global';
 import {
   DRAW,
   LEAF,
@@ -23,16 +23,14 @@ import { GameHistory } from './history/GameHistory';
 import { GameRules } from './rules/GameRules';
 import { PlayerScores } from './scores/PlayerScores';
 import { GameScreen } from './screen/GameScreen';
+import { useGame } from './useGame';
 
 type GameProps = {
   startGame: boolean;
 };
 
 export const Game: React.FC<GameProps> = ({ startGame }) => {
-  const [rounds, setRounds] = useState<number>(0);
-  const [history, setHistory] = useState<Round[]>([]);
-  // const [score, setScores] = useState<null | number>(null);
-
+  const { dispatch } = useGame();
   const handlePlayerChoice = (playerChoice: Choice): void => {
     console.log(playerChoice);
 
@@ -55,12 +53,23 @@ export const Game: React.FC<GameProps> = ({ startGame }) => {
     }
 
     //Update scores
+    if (roundResult === 'WIN') {
+      dispatch({ type: 'ADD_SCORE', scoringPlayer: 'player', value: 1 });
+    } else if (roundResult === 'LOSE') {
+      dispatch({ type: 'ADD_SCORE', scoringPlayer: 'opponent', value: 1 });
+    }
 
     //Update history
-    setHistory([{ playerChoice, opponentChoice, roundResult }]);
+    dispatch({
+      type: 'UPDATE_HISTORY',
+      value: [{ playerChoice, opponentChoice, roundResult }],
+    });
 
-    //Update rounds
-    setRounds((prev) => prev + 1);
+    //Increment round
+    dispatch({
+      type: 'INCREMENT_ROUND',
+      value: 1,
+    });
 
     //Check if winner (one playerScore === 5)
     //Next round or endgame + display final result
@@ -77,10 +86,10 @@ export const Game: React.FC<GameProps> = ({ startGame }) => {
           <GameRules />
         </aside>
         <div className="col-span-3">
-          <GameScreen round={rounds} />
+          <GameScreen />
         </div>
         <aside className="col-span-1">
-          <GameHistory roundsHistory={history} />
+          <GameHistory />
         </aside>
       </div>
 
