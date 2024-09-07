@@ -35,7 +35,7 @@ export const GameRules: React.FC = () => {
 
   return (
     <GameContainer>
-      <div className="flex h-full w-full flex-col gap-9 p-[10px]">
+      <div className="p-container flex h-full w-full flex-col gap-9">
         <TitleContainer>Règles du jeu</TitleContainer>
 
         <div className="flex flex-col gap-[10px]">

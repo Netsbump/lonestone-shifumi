@@ -47,6 +47,9 @@ export default {
       },
       boxShadow: {
         'button-primary' : 'var(--shadow-button-default)'
+      },
+      padding: {
+        'container' : 'var(--padding-game-container)' 
       }
     },
   },

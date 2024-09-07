@@ -16,4 +16,7 @@
 
   /* Box Shadow */
   --shadow-button-default: '0px 10px 0px 0px var(--hard-blue)';
+
+  /* Padding */
+  --padding-game-container: 10px;
 }
