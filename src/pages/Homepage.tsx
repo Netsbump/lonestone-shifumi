@@ -8,23 +8,27 @@ export const Homepage: React.FC = () => {
 
   const handlePress = (): void => {
     setGameStarted((prev) => !prev);
+    // setGameStarted(false);
   };
 
   return (
-    <div className="mx-auto flex h-screen w-full max-w-8xl flex-col gap-[90px]">
-      <header className="m-[38px]">
+    <div className="mx-auto flex h-screen w-full max-w-8xl flex-col">
+      <header className="m-9">
         <h2 className="text-light-blue">Shifumi !</h2>
       </header>
 
-      <div>
-        <Game startGame={gameStarted} />
+      <Game startGame={gameStarted} />
 
-        {!gameStarted && (
-          <footer className="mt-5 flex items-center justify-center">
-            <GameButton onPress={handlePress}>Commencer la partie</GameButton>
-          </footer>
-        )}
-      </div>
+      {!gameStarted && (
+        <footer className="mt-5 flex items-center justify-center">
+          <GameButton
+            onPress={handlePress}
+            className={'flex w-72 items-center justify-center'}
+          >
+            Commencer la partie
+          </GameButton>
+        </footer>
+      )}
     </div>
   );
 };
