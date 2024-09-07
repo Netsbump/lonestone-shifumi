@@ -22,7 +22,9 @@ export const PlayerSection: React.FC<PlayerSectionProps> = ({
     <div
       className={`flex ${isOpponent ? 'flex-row-reverse' : 'flex-row'} gap-4`}
     >
-      <img src={avatar} alt={altAvatar} width="60px" height="60px" />
+      <div>
+        <img src={avatar} alt={altAvatar} className="w-15 h-15" />
+      </div>
       <div className="flex flex-col gap-1">
         <PlayerName playerName={playerName} isOpponent={isOpponent} />
         <LiveScore scores={scores} isOpponent={isOpponent} />

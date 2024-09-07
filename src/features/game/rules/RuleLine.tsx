@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { Illustration } from '../../../ui/Illustration';
+
 type RuleLineProps = {
   iconSrc1: string;
   iconAlt1: string;
@@ -17,25 +19,22 @@ export const RuleLine: React.FC<RuleLineProps> = ({
 }) => {
   return (
     <span className="flex w-full items-center justify-between p-[10px]">
-      <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-dark-blue">
-        <img
-          src={iconSrc1}
-          alt={iconAlt1.toLowerCase()}
-          width="15px"
-          height="15px"
-          className="invert"
-        />
-      </div>
+      <Illustration
+        src={iconSrc1}
+        alt={iconAlt1.toLowerCase()}
+        bgColor="bg-dark-blue"
+        imgSize="15px"
+        containerImgClass="h-[30px] w-[30px]"
+      />
+
       <p className="Texte-courant text-light-blue">{textRule}</p>
-      <div className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-dark-blue">
-        <img
-          src={iconSrc2}
-          alt={iconAlt2.toLowerCase()}
-          width="15px"
-          height="15px"
-          className="invert"
-        />
-      </div>
+      <Illustration
+        src={iconSrc2}
+        alt={iconAlt2.toLowerCase()}
+        bgColor="bg-dark-blue"
+        imgSize="15px"
+        containerImgClass="h-[30px] w-[30px]"
+      />
     </span>
   );
 };
