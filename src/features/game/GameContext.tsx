@@ -1,7 +1,12 @@
-import React, { createContext, Dispatch, useReducer } from 'react';
+import React, { createContext, useCallback, useReducer } from 'react';
 
-import { Round } from '../../lib/types/global';
+import { Result, Round } from '../../lib/types/global';
+import { OPPONENT, PLAYER } from '../../lib/utils/constants';
 import { Game } from './Game';
+
+export const INCREMENT_ROUND = 'INCREMENT_ROUND';
+export const ADD_SCORE = 'ADD_SCORE';
+export const UPDATE_HISTORY = 'UPDATE_HISTORY';
 
 type Game = {
   round: number;
@@ -10,20 +15,17 @@ type Game = {
   //More props: rules pour éventuellement d'autres regles ? id pour identifier une partie en particulier ?
 };
 
-type GameAction =
+export type GameAction =
   | {
-      type: 'INCREMENT_ROUND';
+      type: typeof INCREMENT_ROUND;
       value: number;
     }
-  | { type: 'ADD_SCORE'; scoringPlayer: 'player' | 'opponent'; value: number }
-  | { type: 'UPDATE_HISTORY'; value: Round[] };
-
-export type GameContextType = {
-  state: Game;
-  dispatch: Dispatch<GameAction>;
-};
-
-const GameContext = createContext<GameContextType | undefined>(undefined);
+  | {
+      type: typeof ADD_SCORE;
+      scoringPlayer: typeof PLAYER | typeof OPPONENT;
+      value: number;
+    }
+  | { type: typeof UPDATE_HISTORY; value: Round };
 
 const initialState: Game = {
   round: 0,
@@ -31,11 +33,28 @@ const initialState: Game = {
   history: [],
 };
 
+// Action creators
+const addScore = (roundResult: Result): GameAction => ({
+  type: ADD_SCORE,
+  scoringPlayer: roundResult === PLAYER ? PLAYER : OPPONENT,
+  value: 1,
+});
+
+const updateHistory = (round: Round): GameAction => ({
+  type: UPDATE_HISTORY,
+  value: round,
+});
+
+const incrementRound = (): GameAction => ({
+  type: INCREMENT_ROUND,
+  value: 1,
+});
+
 const gameReducer = (state: Game, action: GameAction): Game => {
   switch (action.type) {
-    case 'INCREMENT_ROUND':
+    case INCREMENT_ROUND:
       return { ...state, round: state.round + action.value };
-    case 'ADD_SCORE':
+    case ADD_SCORE:
       return {
         ...state,
         scores: {
@@ -44,15 +63,24 @@ const gameReducer = (state: Game, action: GameAction): Game => {
             state.scores[action.scoringPlayer] + action.value,
         },
       };
-    case 'UPDATE_HISTORY':
+    case UPDATE_HISTORY:
       return {
         ...state,
-        history: [...state.history, ...action.value],
+        history: [...state.history, action.value],
       };
     default:
       return state;
   }
 };
+
+export type GameContextType = {
+  state: Game;
+  addScore: (roundResult: Result) => void;
+  updateHistory: (round: Round) => void;
+  incrementRound: () => void;
+};
+
+const GameContext = createContext<GameContextType | undefined>(undefined);
 
 type GameProviderProps = {
   children: React.ReactNode;
@@ -61,8 +89,27 @@ type GameProviderProps = {
 const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialState);
 
+  const addScoreCallback = useCallback((roundResult: Result) => {
+    dispatch(addScore(roundResult));
+  }, []);
+
+  const updateScoreCallback = useCallback((round: Round) => {
+    dispatch(updateHistory(round));
+  }, []);
+
+  const incrementRoundCallback = useCallback(() => {
+    dispatch(incrementRound());
+  }, []);
+
   return (
-    <GameContext.Provider value={{ state, dispatch }}>
+    <GameContext.Provider
+      value={{
+        state,
+        addScore: addScoreCallback,
+        updateHistory: updateScoreCallback,
+        incrementRound: incrementRoundCallback,
+      }}
+    >
       {children}
     </GameContext.Provider>
   );

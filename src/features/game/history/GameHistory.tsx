@@ -9,7 +9,7 @@ export const GameHistory: React.FC = () => {
 
   return (
     <GameContainer>
-      <div className="p-container flex h-full w-full flex-col gap-9">
+      <div className="flex h-full w-full flex-col gap-9 p-container">
         <TitleContainer>Historique des coups</TitleContainer>
 
         {state.history && state.history.length > 0 ? (

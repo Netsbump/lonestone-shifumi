@@ -1,6 +1,13 @@
-import { DRAW, LEAF, LOSE, SCISSORS, STONE, WIN } from '../utils/constants';
+import {
+  DRAW,
+  LEAF,
+  OPPONENT,
+  PLAYER,
+  SCISSORS,
+  STONE,
+} from '../utils/constants';
 
-export type Result = typeof WIN | typeof LOSE | typeof DRAW;
+export type Result = typeof PLAYER | typeof OPPONENT | typeof DRAW;
 
 export type Round = {
   playerChoice: Choice;

@@ -1,6 +1,6 @@
-export const WIN = 'WIN';
-export const LOSE = 'LOSE';
-export const DRAW = 'DRAW';
+export const PLAYER = 'player';
+export const OPPONENT = 'opponent';
+export const DRAW = 'draw';
 
 export const LEAF = 'LEAF';
 export const STONE = 'STONE';
