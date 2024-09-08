@@ -6,11 +6,11 @@ import { GameButton } from '../ui/button/GameButton';
 
 export const Homepage: React.FC = () => {
   const [gameStarted, setGameStarted] = useState(false);
-  const { dispatch } = useGame();
+  const { incrementRound } = useGame();
   const handlePress = (): void => {
     setGameStarted((prev) => !prev);
     // setGameStarted(false);
-    dispatch({ type: 'INCREMENT_ROUND', value: 1 });
+    incrementRound();
   };
 
   return (

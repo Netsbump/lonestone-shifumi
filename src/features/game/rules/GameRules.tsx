@@ -9,6 +9,8 @@ import { TitleContainer } from '../../../ui/containers/TitleContainer';
 import { RuleLine } from './RuleLine';
 
 export const GameRules: React.FC = () => {
+  //Todo: Centraliser les rules dans gameLogic.ts
+  //Todo : Ajouter un type de rules au context d'une game ?
   const rules = [
     {
       iconSrc1: stone,
@@ -35,7 +37,7 @@ export const GameRules: React.FC = () => {
 
   return (
     <GameContainer>
-      <div className="p-container flex h-full w-full flex-col gap-9">
+      <div className="flex h-full w-full flex-col gap-9 p-container">
         <TitleContainer>Règles du jeu</TitleContainer>
 
         <div className="flex flex-col gap-[10px]">

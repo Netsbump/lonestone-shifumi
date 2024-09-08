@@ -5,7 +5,6 @@ import scissors from '../../assets/images/icon-scissors.svg';
 import stone from '../../assets/images/icon-stone.svg';
 import { Choice } from '../../lib/types/global';
 import {
-  DRAW,
   LEAF,
   LEAF_TEXT,
   SCISSORS,
@@ -14,6 +13,7 @@ import {
   STONE_TEXT,
 } from '../../lib/utils/constants';
 import {
+  checkWinner,
   determineRoundResult,
   getRandomChoice,
 } from '../../lib/utils/gameLogic';
@@ -30,49 +30,18 @@ type GameProps = {
 };
 
 export const Game: React.FC<GameProps> = ({ startGame }) => {
-  const { dispatch } = useGame();
+  const { state, addScore, incrementRound, updateHistory } = useGame();
   const handlePlayerChoice = (playerChoice: Choice): void => {
-    console.log(playerChoice);
-
     //Todo getOpponentChoice (V1: Npc)
     const opponentChoice = getRandomChoice();
-
-    //Display choices
-    console.log(
-      `(Player choice) ${playerChoice} VS ${opponentChoice} (Opponent Choice)`,
-    );
-
-    //Call determineWinner(playerChoice, OpponentChoice);
     const roundResult = determineRoundResult(playerChoice, opponentChoice);
 
-    //Display result
-    if (roundResult !== DRAW) {
-      console.log(`Player ${roundResult}`);
-    } else {
-      console.log(`It's ${roundResult}`);
+    addScore(roundResult);
+    updateHistory({ playerChoice, opponentChoice, roundResult });
+
+    if (!checkWinner(state.scores)) {
+      incrementRound();
     }
-
-    //Update scores
-    if (roundResult === 'WIN') {
-      dispatch({ type: 'ADD_SCORE', scoringPlayer: 'player', value: 1 });
-    } else if (roundResult === 'LOSE') {
-      dispatch({ type: 'ADD_SCORE', scoringPlayer: 'opponent', value: 1 });
-    }
-
-    //Update history
-    dispatch({
-      type: 'UPDATE_HISTORY',
-      value: [{ playerChoice, opponentChoice, roundResult }],
-    });
-
-    //Increment round
-    dispatch({
-      type: 'INCREMENT_ROUND',
-      value: 1,
-    });
-
-    //Check if winner (one playerScore === 5)
-    //Next round or endgame + display final result
   };
 
   return (

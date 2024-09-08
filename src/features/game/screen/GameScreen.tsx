@@ -6,7 +6,7 @@ import { RoundDisplay } from './RoundDiplay';
 export const GameScreen: React.FC = () => {
   return (
     <GameContainer>
-      <div className="p-container flex w-full flex-col items-center">
+      <div className="flex w-full flex-col items-center p-container">
         <RoundDisplay />
         <div className="flex h-full w-full items-center justify-center">
           <div>Jouez !</div>
