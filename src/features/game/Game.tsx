@@ -5,6 +5,7 @@ import scissors from '../../assets/images/icon-scissors.svg';
 import stone from '../../assets/images/icon-stone.svg';
 import { Choice } from '../../lib/types/global';
 import {
+  DRAW,
   LEAF,
   LEAF_TEXT,
   SCISSORS,
@@ -36,7 +37,10 @@ export const Game: React.FC<GameProps> = ({ startGame }) => {
     const opponentChoice = getRandomChoice();
     const roundResult = determineRoundResult(playerChoice, opponentChoice);
 
-    addScore(roundResult);
+    if (roundResult !== DRAW) {
+      addScore(roundResult);
+    }
+
     updateHistory({ playerChoice, opponentChoice, roundResult });
 
     if (!checkWinner(state.scores)) {
