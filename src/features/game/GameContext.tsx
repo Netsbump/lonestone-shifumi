@@ -7,12 +7,14 @@ import { Game } from './Game';
 export const INCREMENT_ROUND = 'INCREMENT_ROUND';
 export const ADD_SCORE = 'ADD_SCORE';
 export const UPDATE_HISTORY = 'UPDATE_HISTORY';
+export const SET_GAME_OVER = 'SET_GAME_OVER';
+export const RESET_GAME = 'RESET_GAME';
 
 type Game = {
   round: number;
   scores: { player: number; opponent: number };
   history: Round[];
-  //More props: rules pour éventuellement d'autres regles ? id pour identifier une partie en particulier ?
+  gameOver: boolean;
 };
 
 export type GameAction =
@@ -31,6 +33,7 @@ const initialState: Game = {
   round: 0,
   scores: { player: 0, opponent: 0 },
   history: [],
+  gameOver: false,
 };
 
 // Action creators

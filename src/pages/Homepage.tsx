@@ -9,7 +9,6 @@ export const Homepage: React.FC = () => {
   const { incrementRound } = useGame();
   const handlePress = (): void => {
     setGameStarted((prev) => !prev);
-    // setGameStarted(false);
     incrementRound();
   };
 
