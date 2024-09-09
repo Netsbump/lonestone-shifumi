@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { FINISHED } from '../../../lib/utils/constants';
 import { GameContainer } from '../../../ui/containers/GameContainer';
 import { useGame } from '../useGame';
 import { RoundDisplay } from './RoundDiplay';
@@ -7,17 +8,10 @@ import { RoundDisplay } from './RoundDiplay';
 export const GameScreen: React.FC = () => {
   const { state } = useGame();
   const lastRound = state.history[state.history.length - 1];
+  // Déterminer fin de game via gameStatus
+  const gameStatus = state.gameStatus;
 
-  // Savoir si quelqu'un à gagné et qui
-  const endGame = state.scores.player === 5 || state.scores.opponent === 5;
-
-  // Déterminer le gagnant
-  const winner =
-    state.scores.player === 5
-      ? 'Player'
-      : state.scores.opponent === 5
-        ? 'Opponent'
-        : null;
+  // Déterminer le gagnant via l'historique
 
   const playerChoice = lastRound?.playerChoice;
   const opponentChoice = lastRound?.opponentChoice;
@@ -26,9 +20,9 @@ export const GameScreen: React.FC = () => {
       <div className="flex w-full flex-col items-center p-container">
         <RoundDisplay />
         <div className="flex h-full w-full items-center justify-center gap-9">
-          {endGame ? (
+          {gameStatus === FINISHED ? (
             <div className="flex h-full w-full items-center justify-center gap-9">
-              <div>Fin de la partie, {winner} a gagné</div>
+              <div>Fin de la partie, truc a gagné</div>
             </div>
           ) : (
             <>

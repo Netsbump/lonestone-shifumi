@@ -1,76 +1,87 @@
 import React, { createContext, useCallback, useReducer } from 'react';
 
-import { Result, Round } from '../../lib/types/global';
-import { OPPONENT, PLAYER } from '../../lib/utils/constants';
-import { Game } from './Game';
+import player1 from '../../assets/images/avatar-human.svg';
+import player2 from '../../assets/images/avatar-robot.svg';
+import { Choice, Game } from '../../lib/types/game.types';
+import {
+  FINISHED,
+  NOT_STARTED,
+  OPPONENT,
+  PLAYER,
+} from '../../lib/utils/constants';
+import {
+  determineRoundResult,
+  getRandomChoice,
+} from '../../lib/utils/gameLogic';
 
-export const INCREMENT_ROUND = 'INCREMENT_ROUND';
-export const ADD_SCORE = 'ADD_SCORE';
-export const UPDATE_HISTORY = 'UPDATE_HISTORY';
-export const SET_GAME_OVER = 'SET_GAME_OVER';
 export const RESET_GAME = 'RESET_GAME';
+export const PLAY = 'PLAY'; //Ou PLAY_ROUND ?
 
-type Game = {
-  round: number;
-  scores: { player: number; opponent: number };
-  history: Round[];
-  gameOver: boolean;
-};
-
-export type GameAction =
-  | {
-      type: typeof INCREMENT_ROUND;
-      value: number;
-    }
-  | {
-      type: typeof ADD_SCORE;
-      scoringPlayer: typeof PLAYER | typeof OPPONENT;
-      value: number;
-    }
-  | { type: typeof UPDATE_HISTORY; value: Round };
-
-const initialState: Game = {
-  round: 0,
-  scores: { player: 0, opponent: 0 },
+const initialGameState: Game = {
+  gameStatus: NOT_STARTED,
+  currentRound: 0,
   history: [],
-  gameOver: false,
+  players: {
+    player: {
+      name: '', //Initialiser à "Moi" en v1
+      avatar: {
+        imgPath: player1,
+        alt: 'avatar player 1',
+      },
+    },
+    opponent: {
+      name: '', //Initialiser à "J-Ordi" en v1
+      avatar: {
+        imgPath: player2,
+        alt: 'avatar player 2',
+      },
+    },
+  },
 };
+
+export type GameAction = { type: typeof PLAY; value: Choice };
 
 // Action creators
-const addScore = (roundResult: Result): GameAction => ({
-  type: ADD_SCORE,
-  scoringPlayer: roundResult === PLAYER ? PLAYER : OPPONENT,
-  value: 1,
-});
-
-const updateHistory = (round: Round): GameAction => ({
-  type: UPDATE_HISTORY,
-  value: round,
-});
-
-const incrementRound = (): GameAction => ({
-  type: INCREMENT_ROUND,
-  value: 1,
+const play = (playerChoice: Choice): GameAction => ({
+  type: PLAY,
+  value: playerChoice,
 });
 
 const gameReducer = (state: Game, action: GameAction): Game => {
   switch (action.type) {
-    case INCREMENT_ROUND:
-      return { ...state, round: state.round + action.value };
-    case ADD_SCORE:
+    case PLAY: {
+      const playerChoice = action.value;
+      const opponentChoice = getRandomChoice();
+      const roundResult = determineRoundResult(playerChoice, opponentChoice);
+
+      // Ajouter le round à l'history
+      const newRound = {
+        playerChoice,
+        opponentChoice,
+        roundResult,
+      };
+
+      const updateHistory = [...state.history, newRound];
+
+      const playerWins = updateHistory.filter(
+        (round) => round.roundResult === PLAYER,
+      ).length;
+      const opponentWins = updateHistory.filter(
+        (round) => round.roundResult === OPPONENT,
+      ).length;
+
+      let gameStatus = state.gameStatus;
+      if (playerWins === 5 || opponentWins === 5) {
+        gameStatus = FINISHED;
+      }
+
       return {
         ...state,
-        scores: {
-          ...state.scores,
-          [action.scoringPlayer]:
-            state.scores[action.scoringPlayer] + action.value,
-        },
+        currentRound: state.currentRound + 1,
+        gameStatus,
+        history: updateHistory,
       };
-    case UPDATE_HISTORY:
-      return {
-        ...state,
-        history: [...state.history, action.value],
-      };
+    }
     default:
       return state;
   }
@@ -78,9 +89,7 @@ const gameReducer = (state: Game, action: GameAction): Game => {
 
 export type GameContextType = {
   state: Game;
-  addScore: (roundResult: Result) => void;
-  updateHistory: (round: Round) => void;
-  incrementRound: () => void;
+  play: (playerChoice: Choice) => void;
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -90,27 +99,17 @@ type GameProviderProps = {
 };
 
 const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
-  const [state, dispatch] = useReducer(gameReducer, initialState);
+  const [state, dispatch] = useReducer(gameReducer, initialGameState);
 
-  const addScoreCallback = useCallback((roundResult: Result) => {
-    dispatch(addScore(roundResult));
-  }, []);
-
-  const updateScoreCallback = useCallback((round: Round) => {
-    dispatch(updateHistory(round));
-  }, []);
-
-  const incrementRoundCallback = useCallback(() => {
-    dispatch(incrementRound());
+  const playCallback = useCallback((playerChoice: Choice) => {
+    dispatch(play(playerChoice));
   }, []);
 
   return (
     <GameContext.Provider
       value={{
         state,
-        addScore: addScoreCallback,
-        updateHistory: updateScoreCallback,
-        incrementRound: incrementRoundCallback,
+        play: playCallback,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { Choice, Result } from '../types/global';
+import { Choice, Result } from '../types/game.types';
 import { DRAW, LEAF, OPPONENT, PLAYER, SCISSORS, STONE } from './constants';
 
 export const determineRoundResult = (
