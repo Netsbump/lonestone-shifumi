@@ -34,7 +34,7 @@ export const Game: React.FC<GameProps> = ({ startGame }) => {
   const { state, addScore, incrementRound, updateHistory } = useGame();
 
   const handlePlayerChoice = (playerChoice: Choice): void => {
-    //Todo getOpponentChoice (V1: Npc)
+    //V1(npc): getOpponentChoice
     const opponentChoice = getRandomChoice();
     const roundResult = determineRoundResult(playerChoice, opponentChoice);
 
