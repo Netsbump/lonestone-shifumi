@@ -32,6 +32,7 @@ type GameProps = {
 
 export const Game: React.FC<GameProps> = ({ startGame }) => {
   const { state, addScore, incrementRound, updateHistory } = useGame();
+
   const handlePlayerChoice = (playerChoice: Choice): void => {
     //Todo getOpponentChoice (V1: Npc)
     const opponentChoice = getRandomChoice();
