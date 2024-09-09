@@ -3,9 +3,8 @@ import React from 'react';
 import leaf from '../../assets/images/icon-leaf.svg';
 import scissors from '../../assets/images/icon-scissors.svg';
 import stone from '../../assets/images/icon-stone.svg';
-import { Choice } from '../../lib/types/global';
+import { Choice } from '../../lib/types/game.types';
 import {
-  DRAW,
   LEAF,
   LEAF_TEXT,
   SCISSORS,
@@ -13,11 +12,6 @@ import {
   STONE,
   STONE_TEXT,
 } from '../../lib/utils/constants';
-import {
-  checkWinner,
-  determineRoundResult,
-  getRandomChoice,
-} from '../../lib/utils/gameLogic';
 import { GameButton } from '../../ui/button/GameButton';
 import { Illustration } from '../../ui/Illustration';
 import { GameHistory } from './history/GameHistory';
@@ -31,22 +25,23 @@ type GameProps = {
 };
 
 export const Game: React.FC<GameProps> = ({ startGame }) => {
-  const { state, addScore, incrementRound, updateHistory } = useGame();
+  const { play } = useGame();
 
   const handlePlayerChoice = (playerChoice: Choice): void => {
+    play(playerChoice);
     //V1(npc): getOpponentChoice
-    const opponentChoice = getRandomChoice();
-    const roundResult = determineRoundResult(playerChoice, opponentChoice);
+    // const opponentChoice = getRandomChoice();
+    // const roundResult = determineRoundResult(playerChoice, opponentChoice);
 
-    if (roundResult !== DRAW) {
-      addScore(roundResult);
-    }
+    // if (roundResult !== DRAW) {
+    //   addScore(roundResult);
+    // }
 
-    updateHistory({ playerChoice, opponentChoice, roundResult });
+    // updateHistory({ playerChoice, opponentChoice, roundResult });
 
-    if (!checkWinner(state.scores)) {
-      incrementRound();
-    }
+    // if (!checkWinner(state.scores)) {
+    //   incrementRound();
+    // }
   };
 
   return (
