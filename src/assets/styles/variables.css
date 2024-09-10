@@ -20,3 +20,7 @@
   /* Padding */
   --padding-game-container: 10px;
 }
+
+body {
+  background: var(--dark-blue);
+}

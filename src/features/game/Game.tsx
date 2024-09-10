@@ -5,6 +5,8 @@ import scissors from '../../assets/images/icon-scissors.svg';
 import stone from '../../assets/images/icon-stone.svg';
 import { Choice } from '../../lib/types/game.types';
 import {
+  FINISHED,
+  IN_PROGRESS,
   LEAF,
   LEAF_TEXT,
   SCISSORS,
@@ -20,15 +22,18 @@ import { PlayerScores } from './scores/PlayerScores';
 import { GameScreen } from './screen/GameScreen';
 import { useGame } from './useGame';
 
-type GameProps = {
-  startGame: boolean;
-};
+export const Game: React.FC = () => {
+  const { state, play, reset } = useGame();
+  const gameStatus = state.gameStatus;
 
-export const Game: React.FC<GameProps> = ({ startGame }) => {
-  const { play } = useGame();
+  //Todo récupérer le nom du gagnant via state + history
 
   const handlePlayerChoice = (playerChoice: Choice): void => {
     play(playerChoice);
+  };
+
+  const handleResetGame = (): void => {
+    reset();
   };
 
   return (
@@ -49,7 +54,7 @@ export const Game: React.FC<GameProps> = ({ startGame }) => {
         </aside>
       </div>
 
-      {startGame && (
+      {gameStatus === IN_PROGRESS && (
         <div className="col-span-3 col-start-2 mt-5 flex items-center justify-center gap-3">
           <GameButton
             onPress={() => handlePlayerChoice(STONE)}
@@ -95,6 +100,17 @@ export const Game: React.FC<GameProps> = ({ startGame }) => {
               />
               {SCISSORS_TEXT}
             </span>
+          </GameButton>
+        </div>
+      )}
+
+      {gameStatus === FINISHED && (
+        <div className="col-span-3 col-start-2 mt-5 flex items-center justify-center gap-3">
+          <GameButton
+            onPress={handleResetGame}
+            className={'flex w-72 items-center justify-center'}
+          >
+            Rejouez
           </GameButton>
         </div>
       )}
