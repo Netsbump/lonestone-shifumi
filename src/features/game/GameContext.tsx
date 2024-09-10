@@ -23,14 +23,14 @@ const initialGameState: Game = {
   history: [],
   players: {
     player: {
-      name: '', //Initialiser à "Moi" en v1
+      name: 'Moi', //Initialiser à "Moi" en v1
       avatar: {
         imgPath: player1,
         alt: 'avatar player 1',
       },
     },
     opponent: {
-      name: '', //Initialiser à "J-Ordi" en v1
+      name: 'J-Ordi', //Initialiser à "J-Ordi" en v1
       avatar: {
         imgPath: player2,
         alt: 'avatar player 2',
