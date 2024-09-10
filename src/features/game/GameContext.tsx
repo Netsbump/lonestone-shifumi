@@ -13,11 +13,11 @@ import {
 import {
   determineRoundResult,
   getRandomChoice,
-} from '../../lib/utils/gameLogic';
+} from '../../lib/utils/game.logic';
 
-export const RESET = 'RESET';
-export const PLAY = 'PLAY';
-export const START = 'START';
+const RESET = 'RESET';
+const PLAY = 'PLAY';
+const START = 'START';
 
 const initialGameState: Game = {
   gameStatus: NOT_STARTED,
@@ -73,15 +73,15 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       const opponentChoice = getRandomChoice();
       const roundResult = determineRoundResult(playerChoice, opponentChoice);
 
-      // Ajouter le round à l'history
+      //Add newRound to history
       const newRound = {
         playerChoice,
         opponentChoice,
         roundResult,
       };
-
       const updateHistory = [...state.history, newRound];
 
+      // Check if either player has won the game by reaching 5 wins
       const playerWins = updateHistory.filter(
         (round) => round.roundResult === PLAYER,
       ).length;

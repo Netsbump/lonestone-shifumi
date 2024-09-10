@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import { OPPONENT, PLAYER } from '../../../lib/utils/constants';
+import { getPlayerScores } from '../../../lib/utils/game.logic';
 import { useGame } from '../useGame';
 import { LiveScore } from './LiveScore';
 import { PlayerName } from './PlayerName';
@@ -17,17 +17,7 @@ export const PlayerSection: React.FC<PlayerSectionProps> = ({
   const player = isOpponent ? players.opponent : players.player;
 
   const { playerScore, opponentScore } = useMemo(() => {
-    const playerWins = history.filter(
-      (round) => round.roundResult === PLAYER,
-    ).length;
-
-    const opponentWins = history.filter(
-      (round) => round.roundResult === OPPONENT,
-    ).length;
-    return {
-      playerScore: playerWins,
-      opponentScore: opponentWins,
-    };
+    return getPlayerScores(history);
   }, [history]);
 
   const score = isOpponent ? opponentScore : playerScore;
