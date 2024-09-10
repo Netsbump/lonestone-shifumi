@@ -5,8 +5,12 @@ import { App } from './App.tsx';
 
 import './index.css';
 
+import { GameProvider } from './features/game/GameContext.tsx';
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <GameProvider>
+      <App />
+    </GameProvider>
   </React.StrictMode>,
 );

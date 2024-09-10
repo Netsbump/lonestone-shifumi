@@ -5,6 +5,7 @@ import player2 from '../../assets/images/avatar-robot.svg';
 import { Choice, Game } from '../../lib/types/game.types';
 import {
   FINISHED,
+  IN_PROGRESS,
   NOT_STARTED,
   OPPONENT,
   PLAYER,
@@ -14,8 +15,9 @@ import {
   getRandomChoice,
 } from '../../lib/utils/gameLogic';
 
-export const RESET_GAME = 'RESET_GAME';
-export const PLAY = 'PLAY'; //Ou PLAY_ROUND ?
+export const RESET = 'RESET';
+export const PLAY = 'PLAY';
+export const START = 'START';
 
 const initialGameState: Game = {
   gameStatus: NOT_STARTED,
@@ -39,16 +41,33 @@ const initialGameState: Game = {
   },
 };
 
-export type GameAction = { type: typeof PLAY; value: Choice };
+type GameAction =
+  | { type: typeof PLAY; value: Choice }
+  | { type: typeof START }
+  | { type: typeof RESET };
 
 // Action creators
+const start = (): GameAction => ({
+  type: START,
+});
+
 const play = (playerChoice: Choice): GameAction => ({
   type: PLAY,
   value: playerChoice,
 });
 
+const reset = (): GameAction => ({
+  type: RESET,
+});
+
 const gameReducer = (state: Game, action: GameAction): Game => {
   switch (action.type) {
+    case START: {
+      return {
+        ...state,
+        gameStatus: IN_PROGRESS,
+      };
+    }
     case PLAY: {
       const playerChoice = action.value;
       const opponentChoice = getRandomChoice();
@@ -82,6 +101,9 @@ const gameReducer = (state: Game, action: GameAction): Game => {
         history: updateHistory,
       };
     }
+    case RESET: {
+      return initialGameState;
+    }
     default:
       return state;
   }
@@ -89,7 +111,9 @@ const gameReducer = (state: Game, action: GameAction): Game => {
 
 export type GameContextType = {
   state: Game;
+  start: () => void;
   play: (playerChoice: Choice) => void;
+  reset: () => void;
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -101,8 +125,16 @@ type GameProviderProps = {
 const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialGameState);
 
+  const startCallback = useCallback(() => {
+    dispatch(start());
+  }, []);
+
   const playCallback = useCallback((playerChoice: Choice) => {
     dispatch(play(playerChoice));
+  }, []);
+
+  const resetCallback = useCallback(() => {
+    dispatch(reset());
   }, []);
 
   return (
@@ -110,6 +142,8 @@ const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
       value={{
         state,
         play: playCallback,
+        start: startCallback,
+        reset: resetCallback,
       }}
     >
       {children}
