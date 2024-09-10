@@ -5,11 +5,12 @@ import { useGame } from '../useGame';
 
 export const RoundDisplay: React.FC = () => {
   const { state } = useGame();
+  const currentRound = state.currentRound;
 
   return (
     <>
-      {state.round !== 0 && (
-        <TitleContainer className="px-4">Manche {state.round}</TitleContainer>
+      {currentRound !== 0 && (
+        <TitleContainer className="px-4">Manche {currentRound}</TitleContainer>
       )}
     </>
   );

@@ -26,8 +26,6 @@ export const Game: React.FC = () => {
   const { state, play, reset } = useGame();
   const gameStatus = state.gameStatus;
 
-  //Todo récupérer le nom du gagnant via state + history
-
   const handlePlayerChoice = (playerChoice: Choice): void => {
     play(playerChoice);
   };

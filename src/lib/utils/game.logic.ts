@@ -1,4 +1,4 @@
-import { Choice, Result } from '../types/game.types';
+import { Choice, Result, Round } from '../types/game.types';
 import { DRAW, LEAF, OPPONENT, PLAYER, SCISSORS, STONE } from './constants';
 
 export const determineRoundResult = (
@@ -24,9 +24,18 @@ export const getRandomChoice = (): Choice => {
   return choices[randomIndex];
 };
 
-export const checkWinner = (
-  scores: { player: number; opponent: number },
-  winningScore: number = 5,
-): boolean => {
-  return scores.player >= winningScore || scores.opponent >= winningScore;
+export const getPlayerScores = (
+  history: Round[],
+): { playerScore: number; opponentScore: number } => {
+  const playerScore = history.filter(
+    (round) => round.roundResult === PLAYER,
+  ).length;
+  const opponentScore = history.filter(
+    (round) => round.roundResult === OPPONENT,
+  ).length;
+
+  return {
+    playerScore,
+    opponentScore,
+  };
 };
