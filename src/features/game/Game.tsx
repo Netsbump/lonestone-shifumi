@@ -29,19 +29,6 @@ export const Game: React.FC<GameProps> = ({ startGame }) => {
 
   const handlePlayerChoice = (playerChoice: Choice): void => {
     play(playerChoice);
-    //V1(npc): getOpponentChoice
-    // const opponentChoice = getRandomChoice();
-    // const roundResult = determineRoundResult(playerChoice, opponentChoice);
-
-    // if (roundResult !== DRAW) {
-    //   addScore(roundResult);
-    // }
-
-    // updateHistory({ playerChoice, opponentChoice, roundResult });
-
-    // if (!checkWinner(state.scores)) {
-    //   incrementRound();
-    // }
   };
 
   return (
