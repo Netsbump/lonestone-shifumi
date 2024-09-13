@@ -11,6 +11,7 @@ export default {
         'dark-blue': 'var(--dark-blue)',
         'hard-blue': 'var(--hard-blue)',
         'button': 'var(--electric-blue)',
+        'electric-blue' : 'var(--electric-blue)',
         'light-blue': 'var(--light-blue)',
         'dark-red': 'var(--dark-red)',
         'red': 'var(--red)',
