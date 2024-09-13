@@ -25,6 +25,22 @@ export type GameStatus =
   | typeof IN_PROGRESS
   | typeof FINISHED;
 
+export type Rules = Record<
+  Choice,
+  {
+    beat: Choice;
+  }
+>;
+
+export type VisualElements = Record<
+  Choice,
+  {
+    iconSrc: string;
+    iconAlt: string;
+    text: string;
+  }
+>;
+
 export type Player = {
   name: string;
   avatar: {

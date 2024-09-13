@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TitleContainer } from '../../../ui/containers/TitleContainer';
+import { TitleContainer } from '../../../ui/TitleContainer';
 import { useGame } from '../useGame';
 
 export const RoundDisplay: React.FC = () => {

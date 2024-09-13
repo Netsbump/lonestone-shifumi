@@ -1,26 +1,60 @@
 import React from 'react';
 
-import { GameContainer } from '../../../ui/containers/GameContainer';
-import { TitleContainer } from '../../../ui/containers/TitleContainer';
+import { Result } from '../../../lib/types/game.types';
+import { getRuleInfo } from '../../../lib/utils/game.logic';
+import { GameContainer } from '../../../ui/GameContainer';
+import { IconTextLine } from '../../../ui/IconTextLine';
+import { TitleContainer } from '../../../ui/TitleContainer';
 import { useGame } from '../useGame';
 
 export const GameHistory: React.FC = () => {
   const { state } = useGame();
+  const history = state.history;
+
+  const getResultText = (
+    playerChoice: string,
+    opponentChoice: string,
+    roundResult: Result,
+  ): string => {
+    if (roundResult === 'draw') {
+      return 'égalité !';
+    } else if (roundResult === 'player') {
+      return `${playerChoice} bat ${opponentChoice}`;
+    } else {
+      return `${opponentChoice} bat ${playerChoice}`;
+    }
+  };
 
   return (
     <GameContainer>
-      <div className="flex h-full w-full flex-col gap-9 p-container">
+      <div className="flex h-full w-full flex-col gap-2 p-container">
         <TitleContainer>Historique des coups</TitleContainer>
-
-        {state.history && state.history.length > 0 ? (
+        <div className="flex h-[350px] flex-col-reverse overflow-y-auto">
           <ul>
-            {state.history.map((round, index) => (
-              <li key={index}>
-                {round.playerChoice} {round.roundResult} {round.opponentChoice}
-              </li>
-            ))}
+            {history.map((round, index) => {
+              const playerInfo = getRuleInfo(round.playerChoice);
+              const opponentInfo = getRuleInfo(round.opponentChoice);
+
+              return (
+                <li key={index} className="pb-2">
+                  <IconTextLine
+                    className="bg-night-blue"
+                    iconSrc1={playerInfo.iconSrc}
+                    iconAlt1={playerInfo.iconAlt}
+                    iconSrc2={opponentInfo.iconSrc}
+                    iconAlt2={opponentInfo.iconAlt}
+                    text={getResultText(
+                      playerInfo.text,
+                      opponentInfo.text,
+                      round.roundResult,
+                    )}
+                    roundResult={round.roundResult}
+                  />
+                </li>
+              );
+            })}
           </ul>
-        ) : null}
+        </div>
       </div>
     </GameContainer>
   );
