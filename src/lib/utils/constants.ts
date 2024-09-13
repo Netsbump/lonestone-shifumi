@@ -1,3 +1,8 @@
+import leafIcon from '../../assets/images/icon-leaf.svg';
+import scissorsIcon from '../../assets/images/icon-scissors.svg';
+import stoneIcon from '../../assets/images/icon-stone.svg';
+import { Rules, VisualElements } from '../types/game.types';
+
 export const PLAYER = 'player';
 export const OPPONENT = 'opponent';
 export const DRAW = 'draw';
@@ -18,4 +23,34 @@ export const choiceTranslation: { [key: string]: string } = {
   LEAF: 'Feuille',
   STONE: 'Pierre',
   SCISSORS: 'Ciseaux',
+};
+
+export const SHIFUMI_RULES: Rules = {
+  [LEAF]: {
+    beat: STONE,
+  },
+  [STONE]: {
+    beat: SCISSORS,
+  },
+  [SCISSORS]: {
+    beat: LEAF,
+  },
+};
+
+export const VISUAL_ELEMENTS: VisualElements = {
+  [LEAF]: {
+    iconSrc: leafIcon,
+    iconAlt: 'Feuille',
+    text: 'feuille',
+  },
+  [STONE]: {
+    iconSrc: stoneIcon,
+    iconAlt: 'Pierre',
+    text: 'pierre',
+  },
+  [SCISSORS]: {
+    iconSrc: scissorsIcon,
+    iconAlt: 'Ciseaux',
+    text: 'ciseaux',
+  },
 };

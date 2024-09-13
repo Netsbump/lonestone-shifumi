@@ -1,39 +1,15 @@
 import React from 'react';
 
-import leaf from '../../../assets/images/icon-leaf.svg';
-import scissors from '../../../assets/images/icon-scissors.svg';
-import stone from '../../../assets/images/icon-stone.svg';
+import { Choice } from '../../../lib/types/game.types';
 import { LEAF, SCISSORS, STONE } from '../../../lib/utils/constants';
-import { GameContainer } from '../../../ui/containers/GameContainer';
-import { TitleContainer } from '../../../ui/containers/TitleContainer';
-import { RuleLine } from './RuleLine';
+import { getRuleInfo } from '../../../lib/utils/game.logic';
+import { GameContainer } from '../../../ui/GameContainer';
+import { IconTextLine } from '../../../ui/IconTextLine';
+import { TitleContainer } from '../../../ui/TitleContainer';
 
 export const GameRules: React.FC = () => {
-  //Todo: Centraliser les rules dans gameLogic.ts
-  //Todo : Ajouter un type de rules au context d'une game ?
-  const rules = [
-    {
-      iconSrc1: stone,
-      iconAlt1: STONE,
-      iconSrc2: scissors,
-      iconAlt2: SCISSORS,
-      textRule: 'pierre bat ciseaux',
-    },
-    {
-      iconSrc1: leaf,
-      iconAlt1: LEAF,
-      iconSrc2: stone,
-      iconAlt2: STONE,
-      textRule: 'feuille bat pierre',
-    },
-    {
-      iconSrc1: scissors,
-      iconAlt1: SCISSORS,
-      iconSrc2: leaf,
-      iconAlt2: LEAF,
-      textRule: 'ciseaux bat feuille',
-    },
-  ];
+  const choices: Choice[] = [LEAF, SCISSORS, STONE];
+  const ruleInfo = choices.map((choice) => getRuleInfo(choice));
 
   return (
     <GameContainer>
@@ -42,14 +18,14 @@ export const GameRules: React.FC = () => {
 
         <div className="flex flex-col gap-[10px]">
           <ul>
-            {rules.map((rule, index) => (
+            {ruleInfo.map((rule, index) => (
               <li key={index}>
-                <RuleLine
-                  iconSrc1={rule.iconSrc1}
-                  iconAlt1={rule.iconAlt1}
-                  iconSrc2={rule.iconSrc2}
-                  iconAlt2={rule.iconAlt2}
-                  textRule={rule.textRule}
+                <IconTextLine
+                  iconSrc1={rule.iconSrc}
+                  iconAlt1={rule.iconAlt}
+                  iconSrc2={getRuleInfo(rule.beat).iconSrc}
+                  iconAlt2={getRuleInfo(rule.beat).iconAlt}
+                  text={`${rule.text} bat ${getRuleInfo(rule.beat).text}`}
                 />
               </li>
             ))}

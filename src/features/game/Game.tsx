@@ -14,7 +14,7 @@ import {
   STONE,
   STONE_TEXT,
 } from '../../lib/utils/constants';
-import { GameButton } from '../../ui/button/GameButton';
+import { GameButton } from '../../ui/GameButton';
 import { Illustration } from '../../ui/Illustration';
 import { GameHistory } from './history/GameHistory';
 import { GameRules } from './rules/GameRules';

@@ -11,7 +11,7 @@ import {
 } from '../../../lib/utils/constants';
 import { getPlayerScores } from '../../../lib/utils/game.logic';
 import { ChoiceCard } from '../../../ui/ChoiceCard';
-import { GameContainer } from '../../../ui/containers/GameContainer';
+import { GameContainer } from '../../../ui/GameContainer';
 import { Illustration } from '../../../ui/Illustration';
 import { useGame } from '../useGame';
 import { RoundDisplay } from './RoundDiplay';
@@ -30,7 +30,7 @@ export const GameScreen: React.FC = () => {
       return players.opponent.name;
     }
 
-    return null; // Pas encore de gagnant
+    return null;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history]);
 

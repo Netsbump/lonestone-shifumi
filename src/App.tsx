@@ -4,7 +4,7 @@ import './assets/styles/variables.css';
 import { Game } from './features/game/Game';
 import { useGame } from './features/game/useGame';
 import { NOT_STARTED } from './lib/utils/constants';
-import { GameButton } from './ui/button/GameButton';
+import { GameButton } from './ui/GameButton';
 
 export const App: React.FC = () => {
   const { state, start } = useGame();

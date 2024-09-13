@@ -3,7 +3,7 @@ import React from 'react';
 type IllustrationProps = {
   src: string;
   alt: string;
-  bgColor: string;
+  bgColor?: string;
   imgSize: string;
   containerImgClass: string;
 };

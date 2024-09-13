@@ -1,5 +1,20 @@
-import { Choice, Result, Round } from '../types/game.types';
-import { DRAW, LEAF, OPPONENT, PLAYER, SCISSORS, STONE } from './constants';
+import {
+  Choice,
+  Result,
+  Round,
+  Rules,
+  VisualElements,
+} from '../types/game.types';
+import {
+  DRAW,
+  LEAF,
+  OPPONENT,
+  PLAYER,
+  SCISSORS,
+  SHIFUMI_RULES,
+  STONE,
+  VISUAL_ELEMENTS,
+} from './constants';
 
 export const determineRoundResult = (
   playerChoice: string,
@@ -37,5 +52,17 @@ export const getPlayerScores = (
   return {
     playerScore,
     opponentScore,
+  };
+};
+
+export const getRuleInfo = (
+  choice: Choice,
+): Rules[Choice] & VisualElements[Choice] => {
+  const rule = SHIFUMI_RULES[choice];
+  const visual = VISUAL_ELEMENTS[choice];
+
+  return {
+    ...rule,
+    ...visual,
   };
 };
