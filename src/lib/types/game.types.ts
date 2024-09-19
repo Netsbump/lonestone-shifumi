@@ -46,6 +46,11 @@ export type VisualElements = Record<
   }
 >;
 
+export type RoundStatus = {
+  roundNumber: number;
+  isTimerEndRoundFinished: boolean;
+};
+
 export type Player = {
   name: string;
   avatar: {
@@ -56,7 +61,7 @@ export type Player = {
 
 export type Game = {
   gameStatus: GameStatus;
-  currentRound: number;
+  roundStatus: RoundStatus[];
   history: Round[];
   players: {
     [PLAYER]: Player;

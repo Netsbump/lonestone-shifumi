@@ -10,7 +10,7 @@ import { RoundResultDisplay } from './RoundResultDisplay';
 import { Timer } from './Timer';
 
 export const GameScreen: React.FC = () => {
-  const { state, play } = useGame();
+  const { state, play, nextRound } = useGame();
   const { gameStatus, history, players } = state;
   const lastRound = state.history[state.history.length - 1];
   const [showRoundChoices, setShowRoundChoices] = useState(false);
@@ -48,6 +48,7 @@ export const GameScreen: React.FC = () => {
 
   // Fonction appelée lorsque la ProgressBar atteint la fin (après 5 secondes)
   const handleProgressComplete = (): void => {
+    nextRound();
     setShowRoundChoices(false); // Cache le RoundChoices et réaffiche le Timer
     setHasPlayerMadeChoice(false); // Reset l'état pour le prochain tour
   };
