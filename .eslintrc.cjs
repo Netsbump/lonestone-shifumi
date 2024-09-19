@@ -25,6 +25,11 @@ module.exports = {
     '@typescript-eslint', // Active les règles spécifiques à TypeScript
     'prettier' // Active Prettier comme plugin ESLint
   ],
+  settings: {
+    react: {
+      version: 'detect', // Cela permet à eslint-plugin-react de détecter automatiquement la version de React utilisée dans notre projet
+    },
+  },
   rules: {
     'react-refresh/only-export-components': [
       'warn', // Avertir si autre chose que des composants sont exportés avec React Fast Refresh
