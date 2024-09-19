@@ -19,10 +19,16 @@ import {
 const RESET = 'RESET';
 const PLAY = 'PLAY';
 const START = 'START';
+const NEXTROUND = 'NEXTROUND';
 
 const initialGameState: Game = {
   gameStatus: NOT_STARTED,
-  currentRound: 0,
+  roundStatus: [
+    {
+      roundNumber: 0,
+      isTimerEndRoundFinished: true,
+    },
+  ],
   history: [],
   players: {
     player: {
@@ -45,7 +51,8 @@ const initialGameState: Game = {
 type GameAction =
   | { type: typeof PLAY; value: Choice }
   | { type: typeof START }
-  | { type: typeof RESET };
+  | { type: typeof RESET }
+  | { type: typeof NEXTROUND };
 
 // Action creators
 const start = (): GameAction => ({
@@ -59,6 +66,10 @@ const play = (playerChoice: Choice): GameAction => ({
 
 const reset = (): GameAction => ({
   type: RESET,
+});
+
+const nextRound = (): GameAction => ({
+  type: NEXTROUND,
 });
 
 const gameReducer = (state: Game, action: GameAction): Game => {
@@ -98,15 +109,37 @@ const gameReducer = (state: Game, action: GameAction): Game => {
         gameStatus = FINISHED;
       }
 
+      //Add newRoundStatus to roundStatus
+      const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
+      const newRoundStatus = {
+        roundNumber: lastRoundStatus.roundNumber + 1,
+        isTimerEndRoundFinished: false,
+      };
+
+      const updateRoundStatus = [...state.roundStatus, newRoundStatus];
+
       return {
         ...state,
-        currentRound: state.currentRound + 1,
+        roundStatus: updateRoundStatus,
         gameStatus,
         history: updateHistory,
       };
     }
     case RESET: {
       return initialGameState;
+    }
+    case NEXTROUND: {
+      const lastRoundStatusIndex = state.roundStatus.length - 1;
+      const updatedRoundStatus = [...state.roundStatus];
+      updatedRoundStatus[lastRoundStatusIndex] = {
+        ...updatedRoundStatus[lastRoundStatusIndex],
+        isTimerEndRoundFinished: true,
+      };
+
+      return {
+        ...state,
+        roundStatus: updatedRoundStatus,
+      };
     }
     default:
       return state;
@@ -118,6 +151,7 @@ export type GameContextType = {
   start: () => void;
   play: (playerChoice: Choice) => void;
   reset: () => void;
+  nextRound: () => void;
 };
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -141,6 +175,10 @@ const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     dispatch(reset());
   }, []);
 
+  const nextRoundCallBack = useCallback(() => {
+    dispatch(nextRound());
+  }, []);
+
   return (
     <GameContext.Provider
       value={{
@@ -148,6 +186,7 @@ const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         play: playCallback,
         start: startCallback,
         reset: resetCallback,
+        nextRound: nextRoundCallBack,
       }}
     >
       {children}
