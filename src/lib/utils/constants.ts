@@ -10,6 +10,7 @@ export const DRAW = 'draw';
 export const LEAF = 'LEAF';
 export const STONE = 'STONE';
 export const SCISSORS = 'SCISSORS';
+export const FORFEIT = 'FORFEIT';
 
 export const STONE_TEXT = 'Pierre !';
 export const LEAF_TEXT = 'Feuille !';
@@ -35,6 +36,9 @@ export const SHIFUMI_RULES: Rules = {
   [SCISSORS]: {
     beat: LEAF,
   },
+  [FORFEIT]: {
+    beat: FORFEIT, // Un forfeit ne bat personne
+  },
 };
 
 export const VISUAL_ELEMENTS: VisualElements = {
@@ -52,5 +56,10 @@ export const VISUAL_ELEMENTS: VisualElements = {
     iconSrc: scissorsIcon,
     iconAlt: 'Ciseaux',
     text: 'ciseaux',
+  },
+  [FORFEIT]: {
+    iconSrc: '', // Ajouter un icone "?"
+    iconAlt: 'Forfait',
+    text: 'forfait',
   },
 };

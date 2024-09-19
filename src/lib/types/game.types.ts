@@ -1,6 +1,7 @@
 import {
   DRAW,
   FINISHED,
+  FORFEIT,
   IN_PROGRESS,
   LEAF,
   NOT_STARTED,
@@ -18,7 +19,11 @@ export type Round = {
   roundResult: Result;
 };
 
-export type Choice = typeof LEAF | typeof STONE | typeof SCISSORS;
+export type Choice =
+  | typeof LEAF
+  | typeof STONE
+  | typeof SCISSORS
+  | typeof FORFEIT;
 
 export type GameStatus =
   | typeof NOT_STARTED
