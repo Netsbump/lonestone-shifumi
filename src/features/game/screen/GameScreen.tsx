@@ -28,15 +28,13 @@ export const GameScreen: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history]);
 
-  const playerChoice = lastRound?.playerChoice;
-
   // Détecte quand le joueur fait un choix
   useEffect(() => {
-    if (playerChoice) {
+    if (lastRound) {
       setHasPlayerMadeChoice(true); // Le joueur a fait un choix, donc on arrête le Timer
       setShowRoundChoices(true); // On affiche le résultat du round
     }
-  }, [playerChoice]);
+  }, [lastRound]);
 
   // Fonction appelée lorsque le Timer atteint zéro (Forfait si pas de choix)
   const handleTimerEnd = (): void => {

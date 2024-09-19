@@ -1,6 +1,7 @@
 import React from 'react';
 
 import leaf from '../../../assets/images/icon-leaf.svg';
+import question from '../../../assets/images/icon-question.svg';
 import scissors from '../../../assets/images/icon-scissors.svg';
 import stone from '../../../assets/images/icon-stone.svg';
 import { choiceTranslation, DRAW, PLAYER } from '../../../lib/utils/constants';
@@ -22,6 +23,7 @@ export const RoundResultDisplay: React.FC<RoundResultDisplayProps> = ({
   const playerChoice = lastRound?.playerChoice;
   const opponentChoice = lastRound?.opponentChoice;
   const winnerRound = lastRound?.roundResult;
+
   const textRoundResult: string =
     winnerRound === DRAW
       ? 'Égalité !'
@@ -33,6 +35,7 @@ export const RoundResultDisplay: React.FC<RoundResultDisplayProps> = ({
     leaf: leaf,
     scissors: scissors,
     stone: stone,
+    forfeit: question,
   };
 
   const iconPlayerChoice = playerChoice
@@ -65,9 +68,7 @@ export const RoundResultDisplay: React.FC<RoundResultDisplayProps> = ({
             </div>
           </ChoiceCard>
         )}
-        {playerChoice && opponentChoice && (
-          <h2 className="text-light-blue">{textRoundResult}</h2>
-        )}
+        {winnerRound && <h2 className="text-light-blue">{textRoundResult}</h2>}
         {opponentChoice && (
           <ChoiceCard outerClassName="bg-dark-red" innerClassName="border-red">
             <div className="flex h-full flex-col items-center justify-center">
