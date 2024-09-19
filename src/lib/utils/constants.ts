@@ -1,4 +1,5 @@
 import leafIcon from '../../assets/images/icon-leaf.svg';
+import questionIcon from '../../assets/images/icon-question.svg';
 import scissorsIcon from '../../assets/images/icon-scissors.svg';
 import stoneIcon from '../../assets/images/icon-stone.svg';
 import { Rules, VisualElements } from '../types/game.types';
@@ -24,6 +25,7 @@ export const choiceTranslation: { [key: string]: string } = {
   LEAF: 'Feuille',
   STONE: 'Pierre',
   SCISSORS: 'Ciseaux',
+  FORFEIT: 'Forfait',
 };
 
 export const SHIFUMI_RULES: Rules = {
@@ -58,7 +60,7 @@ export const VISUAL_ELEMENTS: VisualElements = {
     text: 'ciseaux',
   },
   [FORFEIT]: {
-    iconSrc: '', // Ajouter un icone "?"
+    iconSrc: questionIcon,
     iconAlt: 'Forfait',
     text: 'forfait',
   },
