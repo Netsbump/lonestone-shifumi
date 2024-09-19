@@ -5,6 +5,7 @@ import player2 from '../../assets/images/avatar-robot.svg';
 import { Choice, Game } from '../../lib/types/game.types';
 import {
   FINISHED,
+  FORFEIT,
   IN_PROGRESS,
   NOT_STARTED,
   OPPONENT,
@@ -71,7 +72,10 @@ const gameReducer = (state: Game, action: GameAction): Game => {
     case PLAY: {
       const playerChoice = action.value;
       const opponentChoice = getRandomChoice();
-      const roundResult = determineRoundResult(playerChoice, opponentChoice);
+      const roundResult =
+        playerChoice === FORFEIT
+          ? 'opponent'
+          : determineRoundResult(playerChoice, opponentChoice);
 
       //Add newRound to history
       const newRound = {
