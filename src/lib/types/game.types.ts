@@ -46,9 +46,14 @@ export type VisualElements = Record<
   }
 >;
 
+export type TimerProgressBar =
+  | typeof NOT_STARTED
+  | typeof IN_PROGRESS
+  | typeof FINISHED;
+
 export type RoundStatus = {
   roundNumber: number;
-  isTimerEndRoundFinished: boolean;
+  timerProgressBarStatus: TimerProgressBar;
 };
 
 export type Player = {

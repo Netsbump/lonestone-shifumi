@@ -2,7 +2,7 @@ import React, { createContext, useCallback, useReducer } from 'react';
 
 import player1 from '../../assets/images/avatar-human.svg';
 import player2 from '../../assets/images/avatar-robot.svg';
-import { Choice, Game } from '../../lib/types/game.types';
+import { Choice, Game, RoundStatus } from '../../lib/types/game.types';
 import {
   FINISHED,
   FORFEIT,
@@ -26,7 +26,7 @@ const initialGameState: Game = {
   roundStatus: [
     {
       roundNumber: 0,
-      isTimerEndRoundFinished: true,
+      timerProgressBarStatus: NOT_STARTED,
     },
   ],
   history: [],
@@ -111,9 +111,9 @@ const gameReducer = (state: Game, action: GameAction): Game => {
 
       //Add newRoundStatus to roundStatus
       const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
-      const newRoundStatus = {
+      const newRoundStatus: RoundStatus = {
         roundNumber: lastRoundStatus.roundNumber + 1,
-        isTimerEndRoundFinished: false,
+        timerProgressBarStatus: IN_PROGRESS,
       };
 
       const updateRoundStatus = [...state.roundStatus, newRoundStatus];
@@ -133,7 +133,7 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       const updatedRoundStatus = [...state.roundStatus];
       updatedRoundStatus[lastRoundStatusIndex] = {
         ...updatedRoundStatus[lastRoundStatusIndex],
-        isTimerEndRoundFinished: true,
+        timerProgressBarStatus: FINISHED,
       };
 
       return {

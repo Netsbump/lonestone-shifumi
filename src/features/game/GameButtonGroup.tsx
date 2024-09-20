@@ -5,6 +5,7 @@ import scissors from '../../assets/images/icon-scissors.svg';
 import stone from '../../assets/images/icon-stone.svg';
 import { Choice } from '../../lib/types/game.types';
 import {
+  IN_PROGRESS,
   LEAF,
   LEAF_TEXT,
   SCISSORS,
@@ -27,7 +28,7 @@ export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({
 
   // Récupère l'état du dernier round pour savoir si le timer est terminé
   const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
-  const isDisabled = !lastRoundStatus?.isTimerEndRoundFinished;
+  const isDisabled = lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
 
   return (
     <div className="flex w-full items-center justify-center gap-3">
