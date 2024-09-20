@@ -8,15 +8,8 @@ import { choiceTranslation, DRAW, PLAYER } from '../../../lib/utils/constants';
 import { ChoiceCard } from '../../../ui/ChoiceCard';
 import { Illustration } from '../../../ui/Illustration';
 import { useGame } from '../useGame';
-import TimerProgressBar from './TimerProgressBar';
 
-type RoundResultDisplayProps = {
-  onProgressComplete: () => void;
-};
-
-export const RoundResultDisplay: React.FC<RoundResultDisplayProps> = ({
-  onProgressComplete,
-}) => {
+export const RoundResultDisplay: React.FC = () => {
   const { state } = useGame();
   const lastRound = state.history[state.history.length - 1];
 
@@ -85,10 +78,6 @@ export const RoundResultDisplay: React.FC<RoundResultDisplayProps> = ({
             </div>
           </ChoiceCard>
         )}
-      </div>
-      {/* Barre de progression */}
-      <div className="flex w-full items-center">
-        <TimerProgressBar onTimerProgressBarEnds={onProgressComplete} />
       </div>
     </div>
   );

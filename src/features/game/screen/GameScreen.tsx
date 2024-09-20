@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
-import { FINISHED, FORFEIT } from '../../../lib/utils/constants';
+import { FINISHED, FORFEIT, IN_PROGRESS } from '../../../lib/utils/constants';
 import { getPlayerScores } from '../../../lib/utils/game.logic';
 import { GameContainer } from '../../../ui/GameContainer';
 import { useGame } from '../useGame';
@@ -10,11 +10,12 @@ import { RoundResultDisplay } from './RoundResultDisplay';
 import { Timer } from './Timer';
 
 export const GameScreen: React.FC = () => {
-  const { state, play, nextRound } = useGame();
+  const { state, play } = useGame();
   const { gameStatus, history, players } = state;
-  const lastRound = state.history[state.history.length - 1];
-  const [showRoundChoices, setShowRoundChoices] = useState(false);
-  const [hasPlayerMadeChoice, setHasPlayerMadeChoice] = useState(false);
+
+  const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
+  const isRoundTimerInProgress =
+    lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
 
   const winnerGameName = useMemo(() => {
     const { playerScore } = getPlayerScores(history);
@@ -28,27 +29,8 @@ export const GameScreen: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history]);
 
-  // Détecte quand le joueur fait un choix
-  useEffect(() => {
-    if (lastRound) {
-      setHasPlayerMadeChoice(true); // Le joueur a fait un choix, donc on arrête le Timer
-      setShowRoundChoices(true); // On affiche le résultat du round
-    }
-  }, [lastRound]);
-
-  // Fonction appelée lorsque le Timer atteint zéro (Forfait si pas de choix)
   const handleTimerEnd = (): void => {
-    if (!hasPlayerMadeChoice) {
-      play(FORFEIT); // Déclenche un forfait seulement si aucun choix n'a été fait
-      setShowRoundChoices(true); // Affiche les résultats même en cas de forfait
-    }
-  };
-
-  // Fonction appelée lorsque la ProgressBar atteint la fin (après 5 secondes)
-  const handleProgressComplete = (): void => {
-    nextRound();
-    setShowRoundChoices(false); // Cache le RoundChoices et réaffiche le Timer
-    setHasPlayerMadeChoice(false); // Reset l'état pour le prochain tour
+    play(FORFEIT);
   };
 
   return (
@@ -58,10 +40,8 @@ export const GameScreen: React.FC = () => {
         <div className="flex h-full w-full items-center justify-center gap-9">
           {gameStatus === FINISHED ? (
             <EndGameDisplay winnerGameName={winnerGameName} />
-          ) : showRoundChoices ? (
-            <RoundResultDisplay
-              onProgressComplete={handleProgressComplete} // Relance le Timer à la fin des 5 secondes
-            />
+          ) : isRoundTimerInProgress ? (
+            <RoundResultDisplay />
           ) : (
             <Timer onTimerEnd={handleTimerEnd} />
           )}
