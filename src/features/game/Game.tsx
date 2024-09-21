@@ -8,13 +8,11 @@ import { GameHistory } from './history/GameHistory';
 import { GameRules } from './rules/GameRules';
 import { PlayerScores } from './scores/PlayerScores';
 import { GameScreen } from './screen/GameScreen';
-import TimerProgressBar from './screen/TimerProgressBar';
 import { useGame } from './useGame';
 
 export const Game: React.FC = () => {
-  const { state, play, reset, nextRound } = useGame();
+  const { state, play, reset } = useGame();
   const gameStatus = state.gameStatus;
-  const roundStatus = state.roundStatus;
 
   const handlePlayerChoice = (playerChoice: Choice): void => {
     play(playerChoice);
@@ -23,14 +21,6 @@ export const Game: React.FC = () => {
   const handleResetGame = (): void => {
     reset();
   };
-
-  const handleProgressComplete = (): void => {
-    nextRound();
-  };
-
-  const lastRoundStatus = roundStatus[roundStatus.length - 1];
-  const showProgressBar =
-    lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
 
   return (
     <main className="grid grid-cols-5 grid-rows-[auto,minmax(420px,1fr),auto]">
@@ -51,17 +41,8 @@ export const Game: React.FC = () => {
       </div>
 
       {gameStatus === IN_PROGRESS && (
-        <div className="col-span-3 col-start-2">
-          {showProgressBar && (
-            <div className="flex w-full items-center px-[24px] pb-3 pt-1">
-              <TimerProgressBar
-                onTimerProgressBarEnds={handleProgressComplete}
-              />
-            </div>
-          )}
-          <div className="mt-5">
-            <GameButtonGroup onPlayerChoice={handlePlayerChoice} />
-          </div>
+        <div className="col-span-3 col-start-2 mt-5 flex items-center justify-center gap-3">
+          <GameButtonGroup onPlayerChoice={handlePlayerChoice} />
         </div>
       )}
 

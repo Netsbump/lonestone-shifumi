@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { GameProgressBar } from '../../../ui/GameProgressBar';
 
@@ -9,26 +9,19 @@ type TimerProgressBarProps = {
 const TimerProgressBar: React.FC<TimerProgressBarProps> = ({
   onTimerProgressBarEnds,
 }) => {
-  const maxTime = 5; // 5 secondes au départ
-  const [timeLeft, setTimeLeft] = useState(maxTime);
+  const duration = 5;
 
   useEffect(() => {
-    if (timeLeft <= 0) {
+    const timer = setTimeout(() => {
       onTimerProgressBarEnds();
-      return;
-    }
+    }, duration * 1000);
 
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => Math.max(prev - 1, 0)); // Diminue d'une seconde
-    }, 1000);
-
-    return (): void => clearInterval(interval);
-  }, [timeLeft, onTimerProgressBarEnds]);
+    return (): void => clearTimeout(timer);
+  }, [onTimerProgressBarEnds]);
 
   return (
     <div className="flex w-full items-center">
-      {/* Utilisation de la GameProgressBar avec le pourcentage calculé */}
-      <GameProgressBar timeLeft={timeLeft} maxTime={maxTime} />
+      <GameProgressBar duration={duration} />
     </div>
   );
 };
