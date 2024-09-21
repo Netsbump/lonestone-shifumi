@@ -10,9 +10,9 @@ export const GameProgressBar: React.FC<GameProgressBar> = ({
   className,
 }) => {
   return (
-    <ProgressBar className={`className="flex w-full ${className}`}>
+    <ProgressBar className={`flex w-full justify-center ${className}`}>
       {() => (
-        <div className="flex w-full flex-col items-center">
+        <div className="flex w-[80%] flex-col items-center">
           <div className="mb-1">
             <Label>Prochain round...</Label>
           </div>
