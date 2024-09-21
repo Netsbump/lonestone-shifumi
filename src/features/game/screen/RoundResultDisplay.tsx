@@ -4,14 +4,21 @@ import leaf from '../../../assets/images/icon-leaf.svg';
 import question from '../../../assets/images/icon-question.svg';
 import scissors from '../../../assets/images/icon-scissors.svg';
 import stone from '../../../assets/images/icon-stone.svg';
-import { choiceTranslation, DRAW, PLAYER } from '../../../lib/utils/constants';
+import {
+  choiceTranslation,
+  DRAW,
+  IN_PROGRESS,
+  PLAYER,
+} from '../../../lib/utils/constants';
 import { ChoiceCard } from '../../../ui/ChoiceCard';
 import { Illustration } from '../../../ui/Illustration';
 import { useGame } from '../useGame';
+import TimerProgressBar from './TimerProgressBar';
 
 export const RoundResultDisplay: React.FC = () => {
-  const { state } = useGame();
+  const { state, nextRound } = useGame();
   const lastRound = state.history[state.history.length - 1];
+  const roundStatus = state.roundStatus;
 
   const playerChoice = lastRound?.playerChoice;
   const opponentChoice = lastRound?.opponentChoice;
@@ -39,9 +46,17 @@ export const RoundResultDisplay: React.FC = () => {
     ? iconMapping[opponentChoice.toLocaleLowerCase()]
     : null;
 
+  const lastRoundStatus = roundStatus[roundStatus.length - 1];
+  const showProgressBar =
+    lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
+
+  const handleProgressComplete = (): void => {
+    nextRound();
+  };
+
   return (
-    <div className="flex w-full flex-col">
-      <div className="flex w-full items-center justify-around">
+    <div className="flex h-full w-full flex-col">
+      <div className="flex w-full flex-1 items-center justify-around">
         {playerChoice && (
           <ChoiceCard
             outerClassName="bg-hard-blue"
@@ -79,6 +94,11 @@ export const RoundResultDisplay: React.FC = () => {
           </ChoiceCard>
         )}
       </div>
+      {showProgressBar && (
+        <div className="flex w-full items-center px-[24px]">
+          <TimerProgressBar onTimerProgressBarEnds={handleProgressComplete} />
+        </div>
+      )}
     </div>
   );
 };

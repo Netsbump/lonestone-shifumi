@@ -52,7 +52,16 @@ export default {
       },
       padding: {
         'container' : 'var(--padding-game-container)' 
-      }
+      },
+      keyframes: {
+        'progress-bar-right-to-left': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-100%)' },
+        },
+      },
+      animation: {
+        'progress-bar-right-to-left': 'progress-bar-right-to-left var(--duration) linear forwards',
+      },
     },
   },
   plugins: [ 
