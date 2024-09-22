@@ -36,18 +36,17 @@ export const GameHistory: React.FC = () => {
               const opponentInfo = getRuleInfo(round.opponentChoice);
 
               return (
-                <li key={index} className="pb-2">
+                <li
+                  key={index}
+                  className="pb-2"
+                >
                   <IconTextLine
                     className="bg-night-blue"
                     iconSrc1={playerInfo.iconSrc}
                     iconAlt1={playerInfo.iconAlt}
                     iconSrc2={opponentInfo.iconSrc}
                     iconAlt2={opponentInfo.iconAlt}
-                    text={getResultText(
-                      playerInfo.text,
-                      opponentInfo.text,
-                      round.roundResult,
-                    )}
+                    text={getResultText(playerInfo.text, opponentInfo.text, round.roundResult)}
                     roundResult={round.roundResult}
                   />
                 </li>

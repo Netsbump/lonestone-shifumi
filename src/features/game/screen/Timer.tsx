@@ -31,8 +31,8 @@ export const Timer: React.FC<TimerProps> = ({ onTimerEnd }) => {
     <>
       {gameStatus === IN_PROGRESS ? (
         <div className="flex h-full w-full flex-col items-center justify-center">
-          <h1>{time}</h1>
-          <h4>Choisissez votre coup</h4>
+          <h1 className="text-light-blue">{time}</h1>
+          <h4 className="text-light-blue">Choisissez votre coup</h4>
         </div>
       ) : null}
     </>

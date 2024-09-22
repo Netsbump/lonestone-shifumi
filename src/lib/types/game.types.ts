@@ -19,16 +19,9 @@ export type Round = {
   roundResult: Result;
 };
 
-export type Choice =
-  | typeof LEAF
-  | typeof STONE
-  | typeof SCISSORS
-  | typeof FORFEIT;
+export type Choice = typeof LEAF | typeof STONE | typeof SCISSORS | typeof FORFEIT;
 
-export type GameStatus =
-  | typeof NOT_STARTED
-  | typeof IN_PROGRESS
-  | typeof FINISHED;
+export type GameStatus = typeof NOT_STARTED | typeof IN_PROGRESS | typeof FINISHED;
 
 export type Rules = Record<
   Choice,
@@ -46,10 +39,7 @@ export type VisualElements = Record<
   }
 >;
 
-export type TimerProgressBar =
-  | typeof NOT_STARTED
-  | typeof IN_PROGRESS
-  | typeof FINISHED;
+export type TimerProgressBar = typeof NOT_STARTED | typeof IN_PROGRESS | typeof FINISHED;
 
 export type RoundStatus = {
   roundNumber: number;

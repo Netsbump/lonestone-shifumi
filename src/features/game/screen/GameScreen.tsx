@@ -14,8 +14,7 @@ export const GameScreen: React.FC = () => {
   const { gameStatus, history, players } = state;
 
   const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
-  const isRoundTimerInProgress =
-    lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
+  const isRoundTimerInProgress = lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
 
   const winnerGameName = useMemo(() => {
     const { playerScore } = getPlayerScores(history);

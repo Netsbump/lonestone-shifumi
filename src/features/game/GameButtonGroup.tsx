@@ -21,12 +21,9 @@ type GameButtonGroupProps = {
   onPlayerChoice: (playerChoice: Choice) => void;
 };
 
-export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({
-  onPlayerChoice,
-}) => {
+export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({ onPlayerChoice }) => {
   const { state } = useGame();
-
-  // Récupère l'état du dernier round pour savoir si le timer est terminé
+  const history = state.history.length > 0 ? state.history[state.history.length - 1] : null;
   const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
   const isDisabled = lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
 
@@ -36,6 +33,8 @@ export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({
         onPress={() => onPlayerChoice(STONE)}
         className={'w-56'}
         isDisabled={isDisabled}
+        isSelected={history?.playerChoice === STONE}
+        aria-pressed={history?.playerChoice === STONE}
       >
         <span className="flex h-full items-center justify-center gap-2">
           <Illustration
@@ -52,6 +51,8 @@ export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({
         onPress={() => onPlayerChoice(LEAF)}
         className={'w-56'}
         isDisabled={isDisabled}
+        isSelected={history?.playerChoice === LEAF}
+        aria-pressed={history?.playerChoice === LEAF}
       >
         <span className="flex h-full items-center justify-center gap-2">
           <Illustration
@@ -68,6 +69,8 @@ export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({
         onPress={() => onPlayerChoice(SCISSORS)}
         className={'w-56'}
         isDisabled={isDisabled}
+        isSelected={history?.playerChoice === SCISSORS}
+        aria-pressed={history?.playerChoice === SCISSORS}
       >
         <span className="flex h-full items-center justify-center gap-2">
           <Illustration

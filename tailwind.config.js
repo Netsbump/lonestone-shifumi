@@ -109,6 +109,7 @@ export default {
           fontWeight: theme('fontWeight.normal'),
           textAlign: 'center',
         },
+      
       })
     },
   ],
