@@ -5,12 +5,7 @@ import leaf from '../../../assets/images/icon-leaf.svg';
 import question from '../../../assets/images/icon-question.svg';
 import scissors from '../../../assets/images/icon-scissors.svg';
 import stone from '../../../assets/images/icon-stone.svg';
-import {
-  choiceTranslation,
-  DRAW,
-  IN_PROGRESS,
-  PLAYER,
-} from '../../../lib/utils/constants';
+import { choiceTranslation, DRAW, IN_PROGRESS, PLAYER } from '../../../lib/utils/constants';
 import { ChoiceCard } from '../../../ui/ChoiceCard';
 import { Illustration } from '../../../ui/Illustration';
 import { useGame } from '../useGame';
@@ -51,11 +46,7 @@ export const RoundResultDisplay: React.FC = () => {
   }, [playerChoice, opponentChoice]);
 
   const textRoundResult: string =
-    winnerRound === DRAW
-      ? 'Égalité !'
-      : winnerRound === PLAYER
-        ? 'Gagné !'
-        : 'Perdu !';
+    winnerRound === DRAW ? 'Égalité !' : winnerRound === PLAYER ? 'Gagné !' : 'Perdu !';
 
   const iconMapping: { [key: string]: string } = {
     leaf: leaf,
@@ -64,17 +55,14 @@ export const RoundResultDisplay: React.FC = () => {
     forfeit: question,
   };
 
-  const iconPlayerChoice = playerChoice
-    ? iconMapping[playerChoice.toLocaleLowerCase()]
-    : null;
+  const iconPlayerChoice = playerChoice ? iconMapping[playerChoice.toLocaleLowerCase()] : null;
 
   const iconOpponentChoice = opponentChoice
     ? iconMapping[opponentChoice.toLocaleLowerCase()]
     : null;
 
   const lastRoundStatus = roundStatus[roundStatus.length - 1];
-  const showProgressBar =
-    lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
+  const showProgressBar = lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
 
   const handleProgressComplete = (): void => {
     nextRound();
@@ -88,7 +76,7 @@ export const RoundResultDisplay: React.FC = () => {
             initial={{
               opacity: 0,
               translateX: '-50%',
-              rotate: -15,
+              rotate: 15,
             }}
             animate={{
               opacity: 1,
@@ -111,9 +99,7 @@ export const RoundResultDisplay: React.FC = () => {
                   imgSize="50px"
                   containerImgClass="h-[100px] w-[100px]"
                 />
-                <h4 className="mt-5 text-hard-blue">
-                  {choiceTranslation[playerChoice]}
-                </h4>
+                <h4 className="mt-5 text-hard-blue">{choiceTranslation[playerChoice]}</h4>
               </div>
             </ChoiceCard>
           </motion.div>
@@ -136,7 +122,7 @@ export const RoundResultDisplay: React.FC = () => {
             initial={{
               opacity: 0,
               translateX: '50%',
-              rotate: 15,
+              rotate: -15,
             }}
             animate={{
               opacity: 1,
@@ -159,9 +145,7 @@ export const RoundResultDisplay: React.FC = () => {
                   imgSize="50px"
                   containerImgClass="h-[100px] w-[100px]"
                 />
-                <h4 className="mt-5 text-red">
-                  {choiceTranslation[opponentChoice]}
-                </h4>
+                <h4 className="mt-5 text-red">{choiceTranslation[opponentChoice]}</h4>
               </div>
             </ChoiceCard>
           </motion.div>

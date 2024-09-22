@@ -11,10 +11,7 @@ import {
   OPPONENT,
   PLAYER,
 } from '../../lib/utils/constants';
-import {
-  determineRoundResult,
-  getRandomChoice,
-} from '../../lib/utils/game.logic';
+import { determineRoundResult, getRandomChoice } from '../../lib/utils/game.logic';
 
 const RESET = 'RESET';
 const PLAY = 'PLAY';
@@ -84,9 +81,7 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       const playerChoice = action.value;
       const opponentChoice = getRandomChoice();
       const roundResult =
-        playerChoice === FORFEIT
-          ? 'opponent'
-          : determineRoundResult(playerChoice, opponentChoice);
+        playerChoice === FORFEIT ? 'opponent' : determineRoundResult(playerChoice, opponentChoice);
 
       //Add newRound to history
       const newRound = {
@@ -97,12 +92,8 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       const updateHistory = [...state.history, newRound];
 
       // Check if either player has won the game by reaching 5 wins
-      const playerWins = updateHistory.filter(
-        (round) => round.roundResult === PLAYER,
-      ).length;
-      const opponentWins = updateHistory.filter(
-        (round) => round.roundResult === OPPONENT,
-      ).length;
+      const playerWins = updateHistory.filter((round) => round.roundResult === PLAYER).length;
+      const opponentWins = updateHistory.filter((round) => round.roundResult === OPPONENT).length;
 
       let gameStatus = state.gameStatus;
       if (playerWins === 5 || opponentWins === 5) {

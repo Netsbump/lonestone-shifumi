@@ -10,6 +10,10 @@ module.exports = {
   singleQuote: true, // Utilise des guillemets simples au lieu de doubles.
   endOfLine: 'auto', // Gère automatiquement les fins de ligne en fonction de l'environnement, évitant les problèmes de compatibilité entre différents systèmes d'exploitation.
   arrowParens: 'always', // Encadre toujours les paramètres des fonctions fléchées avec des parenthèses.
+  printWidth: 100,
+  bracketSameLine: false,
+  jsxSingleQuote: false,
+  singleAttributePerLine: true,
   plugins: [
     "@ianvs/prettier-plugin-sort-imports",
     "prettier-plugin-tailwindcss",

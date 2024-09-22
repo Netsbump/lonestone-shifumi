@@ -23,9 +23,7 @@ export const IconTextLine: React.FC<IconTextLineProps> = ({
   className,
 }) => {
   return (
-    <span
-      className={`flex w-full items-center justify-between p-[10px] ${className}`}
-    >
+    <span className={`flex w-full items-center justify-between p-[10px] ${className}`}>
       <Illustration
         src={iconSrc1}
         alt={iconAlt1.toLowerCase()}

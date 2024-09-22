@@ -6,9 +6,7 @@ type TimerProgressBarProps = {
   onTimerProgressBarEnds: () => void;
 };
 
-const TimerProgressBar: React.FC<TimerProgressBarProps> = ({
-  onTimerProgressBarEnds,
-}) => {
+const TimerProgressBar: React.FC<TimerProgressBarProps> = ({ onTimerProgressBarEnds }) => {
   const duration = 5;
 
   useEffect(() => {

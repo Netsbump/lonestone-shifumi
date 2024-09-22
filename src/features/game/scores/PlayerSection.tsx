@@ -9,9 +9,7 @@ type PlayerSectionProps = {
   isOpponent?: boolean;
 };
 
-export const PlayerSection: React.FC<PlayerSectionProps> = ({
-  isOpponent = false,
-}) => {
+export const PlayerSection: React.FC<PlayerSectionProps> = ({ isOpponent = false }) => {
   const { state } = useGame();
   const { history, players } = state;
   const player = isOpponent ? players.opponent : players.player;
@@ -23,9 +21,7 @@ export const PlayerSection: React.FC<PlayerSectionProps> = ({
   const score = isOpponent ? opponentScore : playerScore;
 
   return (
-    <div
-      className={`flex ${isOpponent ? 'flex-row-reverse' : 'flex-row'} gap-4`}
-    >
+    <div className={`flex ${isOpponent ? 'flex-row-reverse' : 'flex-row'} gap-4`}>
       <div>
         <img
           src={player.avatar.imgPath}
@@ -34,8 +30,14 @@ export const PlayerSection: React.FC<PlayerSectionProps> = ({
         />
       </div>
       <div className="flex flex-col gap-1">
-        <PlayerName playerName={player.name} isOpponent={isOpponent} />
-        <LiveScore scores={score} isOpponent={isOpponent} />
+        <PlayerName
+          playerName={player.name}
+          isOpponent={isOpponent}
+        />
+        <LiveScore
+          scores={score}
+          isOpponent={isOpponent}
+        />
       </div>
     </div>
   );

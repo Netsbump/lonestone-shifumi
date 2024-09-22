@@ -5,15 +5,8 @@ type PlayerNameProps = {
   isOpponent: boolean;
 };
 
-export const PlayerName: React.FC<PlayerNameProps> = ({
-  playerName,
-  isOpponent,
-}) => {
+export const PlayerName: React.FC<PlayerNameProps> = ({ playerName, isOpponent }) => {
   return (
-    <h3
-      className={`flex ${isOpponent ? 'flex-row-reverse' : ''} text-light-blue`}
-    >
-      {playerName}
-    </h3>
+    <h3 className={`flex ${isOpponent ? 'flex-row-reverse' : ''} text-light-blue`}>{playerName}</h3>
   );
 };

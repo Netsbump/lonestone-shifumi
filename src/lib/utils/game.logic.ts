@@ -1,10 +1,4 @@
-import {
-  Choice,
-  Result,
-  Round,
-  Rules,
-  VisualElements,
-} from '../types/game.types';
+import { Choice, Result, Round, Rules, VisualElements } from '../types/game.types';
 import {
   DRAW,
   LEAF,
@@ -16,10 +10,7 @@ import {
   VISUAL_ELEMENTS,
 } from './constants';
 
-export const determineRoundResult = (
-  playerChoice: string,
-  opponentChoice: string,
-): Result => {
+export const determineRoundResult = (playerChoice: string, opponentChoice: string): Result => {
   if (playerChoice === opponentChoice) return DRAW;
 
   if (
@@ -42,12 +33,8 @@ export const getRandomChoice = (): Choice => {
 export const getPlayerScores = (
   history: Round[],
 ): { playerScore: number; opponentScore: number } => {
-  const playerScore = history.filter(
-    (round) => round.roundResult === PLAYER,
-  ).length;
-  const opponentScore = history.filter(
-    (round) => round.roundResult === OPPONENT,
-  ).length;
+  const playerScore = history.filter((round) => round.roundResult === PLAYER).length;
+  const opponentScore = history.filter((round) => round.roundResult === OPPONENT).length;
 
   return {
     playerScore,
@@ -55,9 +42,7 @@ export const getPlayerScores = (
   };
 };
 
-export const getRuleInfo = (
-  choice: Choice,
-): Rules[Choice] & VisualElements[Choice] => {
+export const getRuleInfo = (choice: Choice): Rules[Choice] & VisualElements[Choice] => {
   const rule = SHIFUMI_RULES[choice];
   const visual = VISUAL_ELEMENTS[choice];
 

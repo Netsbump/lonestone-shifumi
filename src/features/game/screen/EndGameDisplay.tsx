@@ -4,9 +4,7 @@ type EndGameDisplayProps = {
   winnerGameName: string;
 };
 
-export const EndGameDisplay: React.FC<EndGameDisplayProps> = ({
-  winnerGameName,
-}) => {
+export const EndGameDisplay: React.FC<EndGameDisplayProps> = ({ winnerGameName }) => {
   return (
     <div className="flex h-full w-full items-center justify-center gap-9">
       <h2 className="w-full justify-center text-light-blue">

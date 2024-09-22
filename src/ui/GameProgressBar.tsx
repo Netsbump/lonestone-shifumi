@@ -5,10 +5,7 @@ type GameProgressBar = ProgressBarProps & {
   className?: string;
   duration: number;
 };
-export const GameProgressBar: React.FC<GameProgressBar> = ({
-  duration,
-  className,
-}) => {
+export const GameProgressBar: React.FC<GameProgressBar> = ({ duration, className }) => {
   return (
     <ProgressBar className={`flex w-full justify-center ${className}`}>
       {() => (
@@ -18,7 +15,7 @@ export const GameProgressBar: React.FC<GameProgressBar> = ({
           </div>
           <div className="relative h-2 w-full overflow-hidden rounded-full bg-gray-400 bg-opacity-40">
             <div
-              className="animate-progress-bar-right-to-left absolute right-0 top-0 h-full w-full bg-green"
+              className="absolute right-0 top-0 h-full w-full animate-progress-bar-right-to-left bg-green"
               style={
                 {
                   ['--duration' as string]: `${duration}s`,

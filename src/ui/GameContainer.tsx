@@ -5,9 +5,5 @@ type GameContainerProps = {
 };
 
 export const GameContainer: React.FC<GameContainerProps> = ({ children }) => {
-  return (
-    <div className="flex min-h-full rounded-primary bg-container">
-      {children}
-    </div>
-  );
+  return <div className="flex min-h-full rounded-primary bg-container">{children}</div>;
 };

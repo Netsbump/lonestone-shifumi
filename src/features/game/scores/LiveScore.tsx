@@ -22,9 +22,5 @@ export const LiveScore: React.FC<LiveScoreProps> = ({ scores, isOpponent }) => {
         />
       );
     });
-  return (
-    <div className={`flex ${isOpponent ? 'flex-row-reverse' : ''} gap-1`}>
-      {dots}
-    </div>
-  );
+  return <div className={`flex ${isOpponent ? 'flex-row-reverse' : ''} gap-1`}>{dots}</div>;
 };
