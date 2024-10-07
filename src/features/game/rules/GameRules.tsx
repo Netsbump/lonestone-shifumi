@@ -32,7 +32,9 @@ export const GameRules: React.FC = () => {
           </ul>
           <div className="flex flex-col gap-5">
             <div className="mx-7 border-t-4 border-dark-blue"></div>
-            <p className="Texte-courant text-center text-light-blue">Le premier à 5 gagne</p>
+            <p className="Texte-courant text-center text-light-blue">
+              Le premier à 5 gagne
+            </p>
           </div>
         </div>
       </div>
