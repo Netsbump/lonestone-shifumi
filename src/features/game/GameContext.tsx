@@ -11,7 +11,10 @@ import {
   OPPONENT,
   PLAYER,
 } from '../../lib/utils/constants';
-import { determineRoundResult, getRandomChoice } from '../../lib/utils/game.logic';
+import {
+  determineRoundResult,
+  getRandomChoice,
+} from '../../lib/utils/game.logic';
 
 const RESET = 'RESET';
 const PLAY = 'PLAY';
@@ -81,34 +84,46 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       const playerChoice = action.value;
       const opponentChoice = getRandomChoice();
       const roundResult =
-        playerChoice === FORFEIT ? 'opponent' : determineRoundResult(playerChoice, opponentChoice);
+        playerChoice === FORFEIT
+          ? 'opponent'
+          : determineRoundResult(playerChoice, opponentChoice);
 
-      //Add newRound to history
+      // Create a new round object containing player and opponent choices, and the round result
       const newRound = {
         playerChoice,
         opponentChoice,
         roundResult,
       };
+      // Add this new round to the history
       const updateHistory = [...state.history, newRound];
 
       // Check if either player has won the game by reaching 5 wins
-      const playerWins = updateHistory.filter((round) => round.roundResult === PLAYER).length;
-      const opponentWins = updateHistory.filter((round) => round.roundResult === OPPONENT).length;
+      const playerWins = updateHistory.filter(
+        (round) => round.roundResult === PLAYER,
+      ).length;
+      const opponentWins = updateHistory.filter(
+        (round) => round.roundResult === OPPONENT,
+      ).length;
 
+      // By default, keep the current game status
       let gameStatus = state.gameStatus;
+
+      // If either the player or opponent reaches 5 wins, the game is marked as finished
       if (playerWins === 5 || opponentWins === 5) {
         gameStatus = FINISHED;
       }
 
-      //Add newRoundStatus to roundStatus
+      // Get the last round status (to determine the next round number)
       const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
+
+      // Create a new round status for the next round, incrementing the round number
       const newRoundStatus: RoundStatus = {
         roundNumber: lastRoundStatus.roundNumber + 1,
         timerProgressBarStatus: IN_PROGRESS,
       };
-
       const updateRoundStatus = [...state.roundStatus, newRoundStatus];
 
+      // Return the updated state with new round status, updated game history, and game status
       return {
         ...state,
         roundStatus: updateRoundStatus,
@@ -120,13 +135,19 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       return initialGameState;
     }
     case NEXTROUND: {
+      // Get the index of the last round status in the roundStatus array
       const lastRoundStatusIndex = state.roundStatus.length - 1;
+
+      //Create a copy of the roundStatus array to avoid mutating the original state directly
       const updatedRoundStatus = [...state.roundStatus];
+
+      // Update the timerProgressBarStatus of the last round to FINISHED
       updatedRoundStatus[lastRoundStatusIndex] = {
         ...updatedRoundStatus[lastRoundStatusIndex],
         timerProgressBarStatus: FINISHED,
       };
 
+      // Return the updated state with the modified roundStatus array
       return {
         ...state,
         roundStatus: updatedRoundStatus,

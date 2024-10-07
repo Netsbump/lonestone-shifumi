@@ -21,9 +21,12 @@ type GameButtonGroupProps = {
   onPlayerChoice: (playerChoice: Choice) => void;
 };
 
-export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({ onPlayerChoice }) => {
+export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({
+  onPlayerChoice,
+}) => {
   const { state } = useGame();
-  const history = state.history.length > 0 ? state.history[state.history.length - 1] : null;
+  const history =
+    state.history.length > 0 ? state.history[state.history.length - 1] : null;
   const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
   const isDisabled = lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
 
