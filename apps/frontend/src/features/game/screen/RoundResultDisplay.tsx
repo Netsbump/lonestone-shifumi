@@ -43,7 +43,7 @@ export const RoundResultDisplay: React.FC = () => {
       clearTimeout(moveCardsTimer);
       clearTimeout(resultTimer);
     };
-  }, [playerChoice, opponentChoice]);
+  }, []);
 
   const textRoundResult: string =
     winnerRound === DRAW ? 'Égalité !' : winnerRound === PLAYER ? 'Gagné !' : 'Perdu !';

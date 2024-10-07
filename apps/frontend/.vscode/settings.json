@@ -1,0 +1,6 @@
+{
+  // Traite tous les fichiers CSS comme du Tailwind CSS pour une meilleure autocomplétion et coloration syntaxique
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}
