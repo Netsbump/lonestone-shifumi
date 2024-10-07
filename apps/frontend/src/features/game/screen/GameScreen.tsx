@@ -16,6 +16,7 @@ export const GameScreen: React.FC = () => {
   const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
   const isRoundTimerInProgress = lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const winnerGameName = useMemo(() => {
     const { playerScore } = getPlayerScores(history);
 
@@ -25,7 +26,6 @@ export const GameScreen: React.FC = () => {
 
     return players.opponent.name;
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history]);
 
   const handleTimerEnd = (): void => {

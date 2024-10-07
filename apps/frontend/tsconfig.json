@@ -20,6 +20,6 @@
     "noUnusedParameters": true, // Signale une erreur si des paramètres de fonction ne sont pas utilisés
     "noFallthroughCasesInSwitch": true // Empêche le passage de cas dans les instructions switch sans utiliser 'break'
   },
-  "include": ["eslintrc.cjs", "src"], // Dossiers et fichiers à inclure dans le processus de compilation
+  "include": ["src"], // Dossiers et fichiers à inclure dans le processus de compilation
   "references": [{ "path": "./tsconfig.node.json" }] // Permet la configuration du projet en plusieurs tsconfigs référant les uns aux autres
 }

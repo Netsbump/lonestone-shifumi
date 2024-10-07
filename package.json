@@ -1,0 +1,21 @@
+{
+  "name": "lonestone-shifumi",
+  "private": "true",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "pnpm biome lint",
+    "format": "pnpm biome format",
+    "test": "turbo run test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.3",
+    "turbo": "^2.1.3"
+  },
+  "packageManager": "pnpm@9.11.0"
+}
