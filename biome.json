@@ -122,7 +122,7 @@
 	},
 	"overrides": [
 		{
-			"include": ["*.ts", "*.tsx", "*.mts", "*.cts"],
+			"include": ["apps/frontend/**/*.ts", "apps/frontend/**/*.tsx"],
 			"linter": {
 				"rules": {
 					"correctness": {
@@ -152,6 +152,14 @@
 						"useGetterReturn": "off"
 					}
 				}
+			}
+		},
+		{
+			"include": ["apps/backend/**/*.ts", "apps/backend/**/*.tsx"],
+			"linter": {
+			  "rules": {
+				
+			  }
 			}
 		}
 	]
