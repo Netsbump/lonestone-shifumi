@@ -1,10 +1,10 @@
 import { defineConfig, Options, SqliteDriver } from '@mikro-orm/sqlite';
-import { Player } from './entities/player.entity';
 
 const ormConfig: Options = defineConfig({
-    entities: [Player],
+    entities: ['./dist/entities'],
     entitiesTs: ['./src/entities'],
-    dbName: 'shifumi-db.sqlite3',
+    dbName: './db/shifumi-db.sqlite3',
+    debug: true,
     driver: SqliteDriver,
 })
 
