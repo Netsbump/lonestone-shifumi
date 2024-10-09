@@ -18,7 +18,11 @@
     "strict": true, // Active toutes les options strictes de vérification de type
     "noUnusedLocals": true, // Signale une erreur si des variables locales ne sont pas utilisées
     "noUnusedParameters": true, // Signale une erreur si des paramètres de fonction ne sont pas utilisés
-    "noFallthroughCasesInSwitch": true // Empêche le passage de cas dans les instructions switch sans utiliser 'break'
+    "noFallthroughCasesInSwitch": true, // Empêche le passage de cas dans les instructions switch sans utiliser 'break'
+
+    "paths": {
+      "@packages/dtos": ["../../packages/dtos/src"]
+    },
   },
   "include": ["src"], // Dossiers et fichiers à inclure dans le processus de compilation
   "references": [{ "path": "./tsconfig.node.json" }] // Permet la configuration du projet en plusieurs tsconfigs référant les uns aux autres

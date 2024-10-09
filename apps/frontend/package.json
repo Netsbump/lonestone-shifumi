@@ -18,7 +18,8 @@
     "react-aria-components": "^1.3.3",
     "react-dom": "^18.2.0",
     "react-refresh": "^0.14.0",
-    "shifumi": "link:"
+    "shifumi": "link:",
+    "@packages/dtos": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

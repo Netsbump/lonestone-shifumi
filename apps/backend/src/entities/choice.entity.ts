@@ -1,24 +1,17 @@
-import { Collection, Entity, ManyToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, ManyToOne, Property } from "@mikro-orm/core";
 import { Round } from "./round.entity";
+import { Player } from "./player.entity";
 
 @Entity()
 export class Choice {
 
-    @PrimaryKey()
-    id!: number;
+   @ManyToOne(() => Player, { primary: true })
+   player!: Player;
+   
+   @ManyToOne(() => Round, { primary: true })
+   round!: Round;
 
-    @Property()
-    action!: string
+   @Property()
+   action!: string
 
-    @Property({ type: 'date', onCreate: () => new Date() })
-    createdAt!: Date;
-
-    @Property({ type: 'date', onUpdate: () => new Date() })
-    updatedAt!: Date;
-
-    @Property({ type: 'date', nullable: true })
-    deletedAt?: Date;
-
-    @ManyToMany(() => Round)
-    rounds = new Collection<Round>(this);
 }

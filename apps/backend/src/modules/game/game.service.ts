@@ -35,22 +35,12 @@ export class GameService {
       throw new Error(`Game with id ${id} not found`);
     }
 
-    gameToUpdate.status = updateGameDto.status;
+    const players = await this.em.find(Player, { id: { $in: updateGameDto.players } });
+    gameToUpdate.players.set(players)
+    
     await this.em.persistAndFlush(gameToUpdate); 
 
     return gameToUpdate;
-  }
-
-  async softRemove(id: number) {
-    const game = await this.em.findOne(Game, { id });
-  
-    if (!game) {
-      throw new Error(`Game with id ${id} not found`);
-    }
-  
-    game.deletedAt = new Date();
-  
-    await this.em.persistAndFlush(game);
   }
 
   async remove(id: number) {
