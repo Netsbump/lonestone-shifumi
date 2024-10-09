@@ -1,5 +1,6 @@
-import { Collection, Entity, ManyToMany, PrimaryKey, Property, Unique } from "@mikro-orm/core";
+import { Collection, Entity, ManyToMany, OneToMany, PrimaryKey, Property, Unique } from "@mikro-orm/core";
 import { Game } from "./game.entity";
+import { Choice } from "./choice.entity";
 
 @Entity()
 export class Player {
@@ -20,9 +21,9 @@ export class Player {
     @Property({ type: 'date', onUpdate: () => new Date() })
     updatedAt!: Date;
 
-    @Property({ type: 'date', nullable: true })
-    deletedAt?: Date;
-
     @ManyToMany(()=> Game)
     games = new Collection<Game>(this);
+
+    @OneToMany(() => Choice, choice => choice.player)
+    choices = new Collection<Choice>(this);
 }

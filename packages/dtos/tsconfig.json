@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "target": "ES2020",                          // Version JavaScript cible
+      "module": "ESNext",                          // Utiliser des modules ES
+      "declaration": true,                         // Générer des fichiers de définition de types (.d.ts)
+      "declarationMap": true,                      // Générer une map pour les déclarations
+      "outDir": "./dist",                          // Répertoire de sortie pour les fichiers compilés
+      "strict": true,                              // Activer toutes les vérifications strictes
+      "esModuleInterop": true,                     // Permet la compatibilité avec les modules CommonJS
+      "skipLibCheck": true,                        // Ignorer la vérification des types des fichiers de bibliothèque
+      "forceConsistentCasingInFileNames": true,    // Forcer la casse consistante dans les noms de fichiers
+      "moduleResolution": "node",                  // Utiliser la résolution de module Node.js
+      "isolatedModules": true,                     // Assurer que chaque fichier est traité comme un module isolé
+      "resolveJsonModule": true                    // Permet l'import de fichiers .json
+    },
+    "include": ["src"],                            // Inclure les fichiers dans le dossier src
+    "exclude": ["node_modules", "dist"]            // Exclure les dossiers node_modules et dist
+  }
+  

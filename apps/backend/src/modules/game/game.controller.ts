@@ -27,11 +27,6 @@ export class GameController {
     return await this.gameService.update(+id, updateGameDto);
   }
 
-  @Delete('soft-remove/:id')
-  async softRemove(@Param('id') id: string) {
-    return await this.gameService.softRemove(+id);
-  }
-
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.gameService.remove(+id);
