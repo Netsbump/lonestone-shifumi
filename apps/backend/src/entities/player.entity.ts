@@ -15,11 +15,11 @@ export class Player {
     @Property()
     avatar_path!: string
 
-    @Property({ type: 'date', onCreate: () => new Date() })
-    createdAt!: Date;
+    @Property({ onCreate: () => new Date() })
+    createdAt: Date = new Date()
 
-    @Property({ type: 'date', onUpdate: () => new Date() })
-    updatedAt!: Date;
+    @Property({ onUpdate: () => new Date() })
+    updatedAt: Date = new Date()
 
     @ManyToMany(()=> Game)
     games = new Collection<Game>(this);
