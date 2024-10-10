@@ -1,50 +1,5 @@
 import { z } from 'zod';
 
-declare enum Status {
-    NOT_STARTED = "NOT_STARTED",
-    IN_PROGRESS = "IN_PROGRESS",
-    FINISHED = "FINISHED"
-}
-
-type GameDTO = {
-    id: number;
-    status: Status;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date;
-    players: PlayerDTO[];
-};
-type CreateGameDTO = {
-    players: PlayerDTO[];
-};
-type PlayerDTO = {
-    id: number;
-    name: string;
-    avatar_path: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date;
-    games: GameDTO[];
-};
-type ChoiceDTO = {
-    id: number;
-    action: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date;
-    rounds: RoundDTO[];
-};
-type RoundDTO = {
-    id: number;
-    number: number;
-    timer_status: Status;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date;
-    game: GameDTO;
-    choices: ChoiceDTO[];
-};
-
 declare const PlayerSchema: z.ZodObject<{
     name: z.ZodString;
     avatar_path: z.ZodOptional<z.ZodString>;
@@ -78,4 +33,35 @@ declare const GameSchema: z.ZodObject<{
     }[];
 }>;
 
-export { type ChoiceDTO, type CreateGameDTO, type GameDTO, GameSchema, type PlayerDTO, PlayerSchema, type RoundDTO, Status };
+type GameDTO = {
+    id: number;
+    players: PlayerDTO[];
+};
+type CreateGameDTO = z.infer<typeof GameSchema>;
+type UpdateGameDTO = z.infer<typeof GameSchema>;
+type PlayerDTO = {
+    id: number;
+    name: string;
+    avatar_path: string;
+};
+type CreatePlayerDTO = z.infer<typeof PlayerSchema>;
+type UpdatePlayerDTO = z.infer<typeof PlayerSchema>;
+type ChoiceDTO = {
+    player: PlayerDTO;
+    rounds: RoundDTO;
+    action: string;
+};
+type RoundDTO = {
+    id: number;
+    number: number;
+    game: GameDTO;
+    choices: ChoiceDTO[];
+};
+
+declare enum Status {
+    NOT_STARTED = "NOT_STARTED",
+    IN_PROGRESS = "IN_PROGRESS",
+    FINISHED = "FINISHED"
+}
+
+export { type ChoiceDTO, type CreateGameDTO, type CreatePlayerDTO, type GameDTO, GameSchema, type PlayerDTO, PlayerSchema, type RoundDTO, Status, type UpdateGameDTO, type UpdatePlayerDTO };

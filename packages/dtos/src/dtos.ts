@@ -1,44 +1,34 @@
+import { z } from "zod";
 import { Status } from "./enums";
+import { GameSchema, PlayerSchema } from "./schemas";
 
 export type GameDTO = {
     id: number;
-    status: Status;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date; 
     players: PlayerDTO[];
 }
 
-export type CreateGameDTO = {
-    players: PlayerDTO[];
-}
+export type CreateGameDTO = z.infer<typeof GameSchema>
+export type UpdateGameDTO = z.infer<typeof GameSchema>
 
 export type PlayerDTO = {
-    id: number,
+    id: number;
     name: string;
     avatar_path: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date;
-    games: GameDTO[];
+    //todo : est ce que j'ajoute les games associés ou non ?
 }
 
+export type CreatePlayerDTO = z.infer<typeof PlayerSchema>
+export type UpdatePlayerDTO = z.infer<typeof PlayerSchema>
+
 export type ChoiceDTO = {
-    id: number;
+    player: PlayerDTO;
+    rounds: RoundDTO;
     action: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date;
-    rounds: RoundDTO[];
 }
 
 export type RoundDTO = {
     id: number;
     number: number;
-    timer_status: Status;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date;
     game: GameDTO;
     choices: ChoiceDTO[];
 }
