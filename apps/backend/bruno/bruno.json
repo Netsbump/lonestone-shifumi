@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "shifumi",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
