@@ -9,13 +9,13 @@ export class Round {
     id!: number;
 
     @Property()
-    number!: number
+    number!: number;
 
-    @Property({ type: 'date', onCreate: () => new Date() })
-    createdAt!: Date;
+    @Property({ onCreate: () => new Date() })
+    createdAt: Date = new Date();
 
-    @Property({ type: 'date', onUpdate: () => new Date() })
-    updatedAt!: Date;
+    @Property({ onUpdate: () => new Date() })
+    updatedAt: Date = new Date();
 
     @ManyToOne(() => Game)
     game!: Game;

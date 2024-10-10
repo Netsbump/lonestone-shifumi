@@ -7,11 +7,11 @@ export class Game {
     @PrimaryKey()
     id!: number;
     
-    @Property({ type: 'date', onCreate: () => new Date() })
-    createdAt!: Date;
-
-    @Property({ type: 'date', onUpdate: () => new Date() })
-    updatedAt!: Date;
+    @Property({ onCreate: () => new Date() })
+    createdAt: Date = new Date();
+    
+    @Property({ onUpdate: () => new Date() })
+    updatedAt: Date = new Date();
 
     @ManyToMany(() => Player, player => player.games)
     players = new Collection<Player>(this);
