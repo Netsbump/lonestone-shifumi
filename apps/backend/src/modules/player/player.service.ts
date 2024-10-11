@@ -25,7 +25,7 @@ export class PlayerService {
     return await this.em.findAll(Player);
   }
 
-  async findOne(id: number) {
+  async findOne(id: number){
     return await this.em.findOne(Player, { id });
   }
 
