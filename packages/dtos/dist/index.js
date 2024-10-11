@@ -20,8 +20,11 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
+  ChoiceSchema: () => ChoiceSchema,
   GameSchema: () => GameSchema,
+  IdSchema: () => IdSchema,
   PlayerSchema: () => PlayerSchema,
+  RoundSchema: () => RoundSchema,
   Status: () => Status
 });
 module.exports = __toCommonJS(src_exports);
@@ -36,17 +39,30 @@ var Status = /* @__PURE__ */ ((Status2) => {
 
 // src/schemas.ts
 var import_zod = require("zod");
+var IdSchema = import_zod.z.number().int().positive();
 var NonEmptyStringSchema = import_zod.z.string().min(1, "must be a non-empty string");
 var PlayerSchema = import_zod.z.object({
   name: NonEmptyStringSchema,
   avatar_path: import_zod.z.string().optional()
 });
 var GameSchema = import_zod.z.object({
-  players: import_zod.z.array(PlayerSchema)
+  players: import_zod.z.array(import_zod.z.number())
+});
+var ChoiceSchema = import_zod.z.object({
+  player: import_zod.z.number(),
+  round: import_zod.z.number(),
+  action: import_zod.z.string()
+});
+var RoundSchema = import_zod.z.object({
+  number: import_zod.z.number(),
+  game: import_zod.z.number()
 });
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  ChoiceSchema,
   GameSchema,
+  IdSchema,
   PlayerSchema,
+  RoundSchema,
   Status
 });
