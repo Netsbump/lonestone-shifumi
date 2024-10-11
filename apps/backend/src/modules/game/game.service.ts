@@ -25,7 +25,7 @@ export class GameService {
   }
 
   async findOne(id: number) {
-    return await this.em.findOne(Game, { id });
+    return await this.em.findOne(Game, { id }, { populate: ['players'] } );
   }
 
   async update(id: number, updateGameDto: UpdateGameDto) {
