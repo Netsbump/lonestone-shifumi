@@ -1,55 +1,76 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGameDto } from './dto/create-game.dto';
-import { UpdateGameDto } from './dto/update-game.dto';
+import { CreateGameDTO, UpdateGameDTO } from '@packages/dtos';
 import { EntityManager } from '@mikro-orm/core';
 import { Game } from 'src/entities/game.entity';
 import { Player } from 'src/entities/player.entity';
+import { GameDTO } from '@packages/dtos';
 
 @Injectable()
 export class GameService {
   constructor(private readonly em: EntityManager) { }
 
-  async create(createGameDto: CreateGameDto) {
+  async create(createGameDto: CreateGameDTO): Promise<GameDTO> {
     const players = await this.em.find(Player, { id: { $in: createGameDto.players } });
 
     const newGame = new Game();
     newGame.players.add(players);
   
     await this.em.persistAndFlush(newGame); 
-  
-    return newGame;
-  }
 
-  async findAll(): Promise<Game[]> {
-    return await this.em.findAll(Game);
-  }
+    const gameCreated = await this.em.findOneOrFail(Game, { id: newGame.id }, { populate: ["players"]})
 
-  async findOne(id: number) {
-    return await this.em.findOne(Game, { id }, { populate: ['players'] } );
-  }
-
-  async update(id: number, updateGameDto: UpdateGameDto) {
-    const gameToUpdate = await this.em.findOne(Game, { id });
-
-    if(!gameToUpdate){
-      throw new Error(`Game with id ${id} not found`);
+    return {
+      id: gameCreated.id,
+      players: gameCreated.players.getItems(false).map(player => { return {
+        id: player.id, name: player.name 
+      }})
     }
+  }
+
+  async findAll(): Promise<GameDTO[]> {
+
+    const games = await this.em.findAll(Game, { populate: ['players']});
+
+    return games.map( game => ({
+      id: game.id,
+      players: game.players.getItems(false).map(player => { return {
+        id: player.id,
+        name: player.name
+      }})
+    }))
+  }
+
+  async findOne(id: number): Promise<GameDTO> {
+    const game = await this.em.findOneOrFail(Game, { id }, { populate: ['players'] } );
+
+    return {
+      id: game.id,
+      players: game.players.getItems(false).map(player => { return {
+        id: player.id, name: player.name 
+      }})
+    }
+  }
+
+  async update(id: number, updateGameDto: UpdateGameDTO): Promise<GameDTO> {
+    const gameToUpdate = await this.em.findOneOrFail(Game, { id });
 
     const players = await this.em.find(Player, { id: { $in: updateGameDto.players } });
     gameToUpdate.players.set(players)
     
     await this.em.persistAndFlush(gameToUpdate); 
 
-    return gameToUpdate;
+    const gameUpdated = await this.em.findOneOrFail(Game, { id }, { populate: ['players']})
+
+    return {
+      id: gameUpdated.id,
+      players: gameUpdated.players.getItems(false).map(player => { return {
+        id: player.id, name: player.name 
+      }})
+    }
   }
 
-  async remove(id: number) {
-    const game = await this.em.findOne(Game, { id });
-
-    if (!game) {
-      throw new Error(`Game with id ${id} not found`);
-    }
-
+  async remove(id: number): Promise<void> {
+    const game = await this.em.findOneOrFail(Game, { id });
     await this.em.remove(game).flush();
   }
 }

@@ -1,0 +1,17 @@
+meta {
+  name: update()
+  type: http
+  seq: 4
+}
+
+patch {
+  url: http://localhost:3000/rounds/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "number": 2
+  }
+}
