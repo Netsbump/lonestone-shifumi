@@ -1,4 +1,4 @@
-import { Collection, Entity, ManyToMany, OneToMany, PrimaryKey, Property, Unique } from "@mikro-orm/core";
+import { Cascade, Collection, Entity, ManyToMany, OneToMany, PrimaryKey, Property, Unique } from "@mikro-orm/core";
 import { Game } from "./game.entity";
 import { Choice } from "./choice.entity";
 
@@ -24,6 +24,6 @@ export class Player {
     @ManyToMany(()=> Game)
     games = new Collection<Game>(this);
 
-    @OneToMany(() => Choice, choice => choice.player)
+    @OneToMany(() => Choice, choice => choice.player, { cascade: [Cascade.REMOVE] })
     choices = new Collection<Choice>(this);
 }

@@ -1,4 +1,4 @@
-import { Collection, Entity, ManyToMany, PrimaryKey, Property } from "@mikro-orm/core";
+import { Cascade, Collection, Entity, ManyToMany, PrimaryKey, Property } from "@mikro-orm/core";
 import { Player } from "./player.entity";
 
 @Entity()
@@ -13,6 +13,6 @@ export class Game {
     @Property({ onUpdate: () => new Date() })
     updatedAt: Date = new Date();
 
-    @ManyToMany(() => Player, player => player.games)
+    @ManyToMany(() => Player, player => player.games, { cascade: [Cascade.REMOVE] })
     players = new Collection<Player>(this);
 }

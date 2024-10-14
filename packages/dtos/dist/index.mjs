@@ -8,7 +8,7 @@ var Status = /* @__PURE__ */ ((Status2) => {
 
 // src/schemas.ts
 import { z } from "zod";
-var IdSchema = z.number().int().positive();
+var IdSchema = z.coerce.number().int().positive();
 var NonEmptyStringSchema = z.string().min(1, "must be a non-empty string");
 var PlayerSchema = z.object({
   name: NonEmptyStringSchema,
@@ -18,19 +18,42 @@ var GameSchema = z.object({
   players: z.array(z.number())
 });
 var ChoiceSchema = z.object({
-  player: z.number(),
+  playerId: z.number(),
   round: z.number(),
   action: z.string()
 });
+var PlayerPatchSchema = PlayerSchema.pick({
+  name: true,
+  avatar_path: true
+}).partial();
 var RoundSchema = z.object({
   number: z.number(),
   game: z.number()
 });
+var CreatePlayerChoiceSchema = ChoiceSchema.pick({
+  playerId: true,
+  action: true
+});
+var CreateRoundSchema = RoundSchema.extend({
+  playersChoices: z.array(CreatePlayerChoiceSchema)
+});
+var ChoicePatchSchema = ChoiceSchema.pick({
+  playerId: true,
+  round: true,
+  action: true
+}).partial();
+var RoundPatchSchema = RoundSchema.pick({
+  number: true,
+  game: true
+}).partial();
 export {
+  ChoicePatchSchema,
   ChoiceSchema,
+  CreateRoundSchema,
   GameSchema,
   IdSchema,
+  PlayerPatchSchema,
   PlayerSchema,
-  RoundSchema,
+  RoundPatchSchema,
   Status
 };

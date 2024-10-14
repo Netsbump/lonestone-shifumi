@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from "@nestjs/common";
 import { PlayerService } from "./player.service";
-import { CreatePlayerDTO, UpdatePlayerDTO } from "@packages/dtos";
+import { CreatePlayerDTO, IdSchema, PlayerSchema, UpdatePlayerDTO } from "@packages/dtos";
 import { PlayerDTO } from "@packages/dtos";
-import { entityToDTO } from "./player.entityToDTO";
+import { ZodError } from "zod";
+import { NotFoundError } from "@mikro-orm/core";
+import { PlayerPatchSchema } from "@packages/dtos";
 
 @Controller('players')
 export class PlayerController {
@@ -10,30 +12,72 @@ export class PlayerController {
 
   @Post()
   async create(@Body() createPlayerDto: CreatePlayerDTO) : Promise<PlayerDTO> {
-    const playerCreated =  await this.playerService.create(createPlayerDto);
-    return entityToDTO(playerCreated)
+    try {
+      PlayerSchema.parse(createPlayerDto);
+      return await this.playerService.create(createPlayerDto);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new BadRequestException(
+          'Invalid Player format: ' + error.errors.map((err) => err.message).join(', '),
+        );
+      }
+      throw new InternalServerErrorException('Unexpected error occurred during player creation');
+    }
   }
 
   @Get()
   async findAll() : Promise<PlayerDTO[]> {
-    const players = await this.playerService.findAll();
-    return players.map(player => entityToDTO(player)) 
+    try {
+      return await this.playerService.findAll();
+    } catch {
+      throw new InternalServerErrorException('Unexpected error occurred during player retrieval');
+    }
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) : Promise<PlayerDTO> {
-    const player =  await this.playerService.findOne(+id);
-    return entityToDTO(player);
+  async findOne(@Param('id') id: string) : Promise<PlayerDTO> {    
+    try {
+      const idToNumber = IdSchema.parse(id);
+      return await this.playerService.findOne(idToNumber);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new BadRequestException('Invalid ID format');
+      } else if (error instanceof NotFoundError) {
+        throw new BadRequestException('Player not found');
+      }
+      throw new InternalServerErrorException('Unexpected error occurred during player retrieval');
+    }
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDTO): Promise<PlayerDTO> {
-    const playerUpdated =  await this.playerService.update(+id, updatePlayerDto);
-    return entityToDTO(playerUpdated);
+  async update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDTO): Promise<PlayerDTO> {   
+    try {
+      const idToNumber = IdSchema.parse(id);
+      const parsedUpdatePlayerDTO = PlayerPatchSchema.parse(updatePlayerDto);
+
+      return await this.playerService.update(idToNumber, parsedUpdatePlayerDTO);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new BadRequestException('Invalid input');
+      } else if (error instanceof NotFoundError) {
+        throw new BadRequestException('Player not found');
+      }
+      throw new InternalServerErrorException('Unexpected error occurred during player update');
+    }
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
-    return await this.playerService.remove(+id);
+    try {
+      const idToNumber = IdSchema.parse(id);
+      return await this.playerService.remove(idToNumber);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        throw new BadRequestException('Invalid ID format');
+      } else if (error instanceof NotFoundError) {
+        throw new BadRequestException('Player not found');
+      }
+      throw new InternalServerErrorException('Unexpected error occurred during player removal');
+    }
   }
 }

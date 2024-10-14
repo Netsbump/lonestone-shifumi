@@ -4,6 +4,8 @@ import { EntityManager } from '@mikro-orm/core';
 import { Round } from 'src/entities/round.entity';
 import { RoundDTO } from '@packages/dtos';
 import { Game } from 'src/entities/game.entity';
+import { Player } from 'src/entities/player.entity';
+import { Choice } from 'src/entities/choice.entity';
 
 @Injectable()
 export class RoundService {
@@ -11,23 +13,38 @@ export class RoundService {
 
   async create(createRoundDto: CreateRoundDTO): Promise<RoundDTO> {
 
-    const game = await this.em.findOneOrFail(Game, { id: createRoundDto.game })
+    const { number: roundNumber, game: gameID, playersChoices } = createRoundDto;
 
-    const newRound = new Round();
+    return await this.em.transactional( async (em) => {
 
-    newRound.number = createRoundDto.number
-    newRound.game = game
+      const game = await em.findOneOrFail(Game, { id: gameID})
 
-    await this.em.persistAndFlush(newRound); 
-    
-    const roundCreated =  await this.em.findOne(Round, { id: newRound.id}, { populate: ["choices"]})
+      const round = new Round();
+      round.number = roundNumber;
+      round.game = game
+      await em.persistAndFlush(round);
 
-    return {
-      id: roundCreated.id,
-      number: roundCreated.number,
-      game: roundCreated.game.id,
-      choices: roundCreated.choices.getItems(false).map(choice => {return { player: choice.player.id, action: choice.action }})
-    }
+      for (const playerChoice of playersChoices){
+        const player = await em.findOneOrFail(Player, playerChoice.playerId);
+
+        const choice = new Choice();
+        choice.player = player;
+        choice.round = round;
+        choice.action = playerChoice.action
+
+        await em.persistAndFlush(choice);
+      }
+
+      const roundCreated =  await this.em.findOneOrFail(Round, { id: round.id}, { populate: ["choices"]})
+
+      return {
+        id: roundCreated.id,
+        number: roundCreated.number,
+        game: roundCreated.game.id,
+        choices: roundCreated.choices.getItems(false).map(choice => {return { player: choice.player.id, action: choice.action }})
+      }
+      
+    })
   }
 
   async findAll(): Promise<RoundDTO[]> {
@@ -43,7 +60,7 @@ export class RoundService {
   }
 
   async findOne(id: number): Promise<RoundDTO> {
-    const round =  await this.em.findOne(Round, { id }, { populate: ['choices'] });
+    const round =  await this.em.findOneOrFail(Round, { id }, { populate: ['choices'] });
 
     return {
       id: round.id,
@@ -53,19 +70,15 @@ export class RoundService {
     }
   }
 
-  async update(id: number, updateRoundDto: UpdateRoundDTO): Promise<RoundDTO> {
+  async update(id: number, updateRoundDto: Partial<UpdateRoundDTO>): Promise<RoundDTO> {
 
-    const round = await this.em.findOne(Round, { id });
-
-    if(!round){
-      throw new Error(`Round with id ${id} not found`);
-    }
+    const round = await this.em.findOneOrFail(Round, { id });
 
     round.number = updateRoundDto.number
     
     await this.em.persistAndFlush(round); 
 
-    const roundUpdated = await this.em.findOne(Round, { id: round.id}, { populate: ["choices"]})
+    const roundUpdated = await this.em.findOneOrFail(Round, { id: round.id}, { populate: ["choices"]})
 
     return {
       id: roundUpdated.id,
@@ -76,13 +89,8 @@ export class RoundService {
     
   }
 
-  async remove(id: number) {
-    const round = await this.em.findOne(Round, { id });
-
-    if (!round) {
-      throw new Error(`Round with id ${id} not found`);
-    }
-
+  async remove(id: number): Promise<void> {
+    const round = await this.em.findOneOrFail(Round, { id });
     await this.em.remove(round).flush();
   }
 }

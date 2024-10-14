@@ -20,11 +20,14 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/index.ts
 var src_exports = {};
 __export(src_exports, {
+  ChoicePatchSchema: () => ChoicePatchSchema,
   ChoiceSchema: () => ChoiceSchema,
+  CreateRoundSchema: () => CreateRoundSchema,
   GameSchema: () => GameSchema,
   IdSchema: () => IdSchema,
+  PlayerPatchSchema: () => PlayerPatchSchema,
   PlayerSchema: () => PlayerSchema,
-  RoundSchema: () => RoundSchema,
+  RoundPatchSchema: () => RoundPatchSchema,
   Status: () => Status
 });
 module.exports = __toCommonJS(src_exports);
@@ -39,7 +42,7 @@ var Status = /* @__PURE__ */ ((Status2) => {
 
 // src/schemas.ts
 var import_zod = require("zod");
-var IdSchema = import_zod.z.number().int().positive();
+var IdSchema = import_zod.z.coerce.number().int().positive();
 var NonEmptyStringSchema = import_zod.z.string().min(1, "must be a non-empty string");
 var PlayerSchema = import_zod.z.object({
   name: NonEmptyStringSchema,
@@ -49,20 +52,43 @@ var GameSchema = import_zod.z.object({
   players: import_zod.z.array(import_zod.z.number())
 });
 var ChoiceSchema = import_zod.z.object({
-  player: import_zod.z.number(),
+  playerId: import_zod.z.number(),
   round: import_zod.z.number(),
   action: import_zod.z.string()
 });
+var PlayerPatchSchema = PlayerSchema.pick({
+  name: true,
+  avatar_path: true
+}).partial();
 var RoundSchema = import_zod.z.object({
   number: import_zod.z.number(),
   game: import_zod.z.number()
 });
+var CreatePlayerChoiceSchema = ChoiceSchema.pick({
+  playerId: true,
+  action: true
+});
+var CreateRoundSchema = RoundSchema.extend({
+  playersChoices: import_zod.z.array(CreatePlayerChoiceSchema)
+});
+var ChoicePatchSchema = ChoiceSchema.pick({
+  playerId: true,
+  round: true,
+  action: true
+}).partial();
+var RoundPatchSchema = RoundSchema.pick({
+  number: true,
+  game: true
+}).partial();
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
+  ChoicePatchSchema,
   ChoiceSchema,
+  CreateRoundSchema,
   GameSchema,
   IdSchema,
+  PlayerPatchSchema,
   PlayerSchema,
-  RoundSchema,
+  RoundPatchSchema,
   Status
 });
