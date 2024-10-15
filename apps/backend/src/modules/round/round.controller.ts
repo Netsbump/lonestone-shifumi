@@ -12,7 +12,8 @@ import {
 } from '@nestjs/common';
 import { type CreateRoundDTO, CreateRoundSchema, IdSchema, type RoundDTO, RoundPatchSchema, type UpdateRoundDTO } from '@packages/dtos';
 import { ZodError } from 'zod';
-import type { RoundService } from './round.service';
+// biome-ignore lint/style/useImportType: <explanation>
+import { RoundService } from './round.service';
 
 @Controller('rounds')
 export class RoundController {

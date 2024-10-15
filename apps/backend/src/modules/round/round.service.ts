@@ -1,11 +1,11 @@
+// biome-ignore lint/style/useImportType: <explanation>
+import { EntityManager } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
-import type { CreateRoundDTO, UpdateRoundDTO } from '@packages/dtos';
-import type { EntityManager } from '@mikro-orm/core';
-import { Round } from 'src/entities/round.entity';
-import type { RoundDTO } from '@packages/dtos';
+import type { CreateRoundDTO, RoundDTO, UpdateRoundDTO } from '@packages/dtos';
+import { Choice } from 'src/entities/choice.entity';
 import { Game } from 'src/entities/game.entity';
 import { Player } from 'src/entities/player.entity';
-import { Choice } from 'src/entities/choice.entity';
+import { Round } from 'src/entities/round.entity';
 
 @Injectable()
 export class RoundService {
