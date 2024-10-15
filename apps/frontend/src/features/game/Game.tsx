@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 
-import { Choice } from '../../lib/types/game.types';
+import type { Choice } from '../../lib/types/game.types';
 import { FINISHED, IN_PROGRESS } from '../../lib/utils/constants';
 import { GameButton } from '../../ui/GameButton';
 import { GameButtonGroup } from './GameButtonGroup';

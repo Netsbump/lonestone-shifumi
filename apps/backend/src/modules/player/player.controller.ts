@@ -1,10 +1,9 @@
-import { BadRequestException, Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from "@nestjs/common";
-import { PlayerService } from "./player.service";
-import { CreatePlayerDTO, IdSchema, PlayerSchema, UpdatePlayerDTO } from "@packages/dtos";
-import { PlayerDTO } from "@packages/dtos";
-import { ZodError } from "zod";
 import { NotFoundError } from "@mikro-orm/core";
-import { PlayerPatchSchema } from "@packages/dtos";
+import { BadRequestException, Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from "@nestjs/common";
+import type { PlayerDTO } from "@packages/dtos";
+import { type CreatePlayerDTO, IdSchema, PlayerPatchSchema, PlayerSchema, type UpdatePlayerDTO } from "@packages/dtos";
+import { ZodError } from "zod";
+import type { PlayerService } from "./player.service";
 
 @Controller('players')
 export class PlayerController {
@@ -18,7 +17,7 @@ export class PlayerController {
     } catch (error) {
       if (error instanceof ZodError) {
         throw new BadRequestException(
-          'Invalid Player format: ' + error.errors.map((err) => err.message).join(', '),
+          `Invalid Player format: ${error.errors.map((err) => err.message).join(', ')}`,
         );
       }
       throw new InternalServerErrorException('Unexpected error occurred during player creation');
@@ -42,7 +41,9 @@ export class PlayerController {
     } catch (error) {
       if (error instanceof ZodError) {
         throw new BadRequestException('Invalid ID format');
-      } else if (error instanceof NotFoundError) {
+      }
+      
+      if (error instanceof NotFoundError) {
         throw new BadRequestException('Player not found');
       }
       throw new InternalServerErrorException('Unexpected error occurred during player retrieval');
@@ -59,7 +60,9 @@ export class PlayerController {
     } catch (error) {
       if (error instanceof ZodError) {
         throw new BadRequestException('Invalid input');
-      } else if (error instanceof NotFoundError) {
+      } 
+      
+      if (error instanceof NotFoundError) {
         throw new BadRequestException('Player not found');
       }
       throw new InternalServerErrorException('Unexpected error occurred during player update');
@@ -74,7 +77,9 @@ export class PlayerController {
     } catch (error) {
       if (error instanceof ZodError) {
         throw new BadRequestException('Invalid ID format');
-      } else if (error instanceof NotFoundError) {
+      }
+      
+      if (error instanceof NotFoundError) {
         throw new BadRequestException('Player not found');
       }
       throw new InternalServerErrorException('Unexpected error occurred during player removal');

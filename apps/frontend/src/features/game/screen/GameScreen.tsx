@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import type React from 'react';
+import { useMemo } from 'react';
 
 import { FINISHED, FORFEIT, IN_PROGRESS } from '../../../lib/utils/constants';
 import { getPlayerScores } from '../../../lib/utils/game.logic';

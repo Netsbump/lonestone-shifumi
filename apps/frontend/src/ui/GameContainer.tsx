@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 type GameContainerProps = {
   children?: React.ReactNode;

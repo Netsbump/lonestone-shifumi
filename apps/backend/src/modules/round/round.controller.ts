@@ -1,18 +1,18 @@
+import { NotFoundError } from '@mikro-orm/core';
 import {
   BadRequestException,
-  InternalServerErrorException,
   Body,
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   Patch,
   Post,
 } from '@nestjs/common';
-import { RoundService } from './round.service';
-import { CreateRoundDTO, RoundPatchSchema, UpdateRoundDTO, IdSchema, RoundDTO, CreateRoundSchema } from '@packages/dtos';
+import { type CreateRoundDTO, CreateRoundSchema, IdSchema, type RoundDTO, RoundPatchSchema, type UpdateRoundDTO } from '@packages/dtos';
 import { ZodError } from 'zod';
-import { NotFoundError } from '@mikro-orm/core';
+import type { RoundService } from './round.service';
 
 @Controller('rounds')
 export class RoundController {
@@ -26,7 +26,7 @@ export class RoundController {
     } catch (error) {
       if (error instanceof ZodError) {
         throw new BadRequestException(
-          'Invalid Round format: ' + error.errors.map((err) => err.message).join(', '),
+          `Invalid Round format: ${error.errors.map((err) => err.message).join(', ')}`,
         );
       }
       throw new InternalServerErrorException('Unexpected error occurred during round creation');
@@ -50,9 +50,12 @@ export class RoundController {
     } catch (error) {
       if (error instanceof ZodError) {
         throw new BadRequestException('Invalid ID format');
-      } else if (error instanceof NotFoundError) {
+      }
+      
+      if (error instanceof NotFoundError) {
         throw new BadRequestException('Round not found');
       }
+
       throw new InternalServerErrorException('Unexpected error occurred during round retrieval');
     }
   }
@@ -66,7 +69,9 @@ export class RoundController {
     } catch (error) {
       if (error instanceof ZodError) {
         throw new BadRequestException('Invalid input');
-      } else if (error instanceof NotFoundError) {
+      } 
+      
+      if (error instanceof NotFoundError) {
         throw new BadRequestException('Round not found');
       }
       throw new InternalServerErrorException('Unexpected error occurred during round update');
@@ -81,7 +86,9 @@ export class RoundController {
     } catch (error) {
       if (error instanceof ZodError) {
         throw new BadRequestException('Invalid ID format');
-      } else if (error instanceof NotFoundError) {
+      } 
+      
+      if (error instanceof NotFoundError) {
         throw new BadRequestException('Round not found');
       }
       throw new InternalServerErrorException('Unexpected error occurred during round removal');

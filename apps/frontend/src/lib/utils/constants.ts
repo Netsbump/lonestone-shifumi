@@ -2,7 +2,7 @@ import leafIcon from '../../assets/images/icon-leaf.svg';
 import questionIcon from '../../assets/images/icon-question.svg';
 import scissorsIcon from '../../assets/images/icon-scissors.svg';
 import stoneIcon from '../../assets/images/icon-stone.svg';
-import { Rules, VisualElements } from '../types/game.types';
+import type { Rules, VisualElements } from '../types/game.types';
 
 export const PLAYER = 'player';
 export const OPPONENT = 'opponent';

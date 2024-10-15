@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 import { TitleContainer } from '../../../ui/TitleContainer';
 import { useGame } from '../useGame';

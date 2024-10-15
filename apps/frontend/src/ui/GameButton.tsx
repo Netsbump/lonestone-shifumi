@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, ButtonProps } from 'react-aria-components';
+import type React from 'react';
+import { Button, type ButtonProps } from 'react-aria-components';
 
 type GameButtonProps = ButtonProps & {
   children: React.ReactNode;

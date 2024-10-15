@@ -1,5 +1,5 @@
-import React from 'react';
-import { Label, ProgressBar, ProgressBarProps } from 'react-aria-components';
+import type React from 'react';
+import { Label, ProgressBar, type ProgressBarProps } from 'react-aria-components';
 
 type GameProgressBar = ProgressBarProps & {
   className?: string;
