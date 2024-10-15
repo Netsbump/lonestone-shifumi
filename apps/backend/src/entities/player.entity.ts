@@ -1,6 +1,6 @@
 import { Cascade, Collection, Entity, ManyToMany, OneToMany, PrimaryKey, Property, Unique } from "@mikro-orm/core";
-import { Game } from "./game.entity";
 import { Choice } from "./choice.entity";
+import { Game } from "./game.entity";
 
 @Entity()
 export class Player {
@@ -14,6 +14,9 @@ export class Player {
 
     @Property()
     avatar_path!: string;
+
+    @Property({ type: 'boolean', default: false })
+    isNPC = false;  
 
     @Property({ onCreate: () => new Date() })
     createdAt: Date = new Date();

@@ -3,20 +3,26 @@ import { z } from 'zod';
 declare const IdSchema: z.ZodNumber;
 declare const PlayerSchema: z.ZodObject<{
     name: z.ZodString;
+    isNPC: z.ZodBoolean;
     avatar_path: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     name: string;
+    isNPC: boolean;
     avatar_path?: string | undefined;
 }, {
     name: string;
+    isNPC: boolean;
     avatar_path?: string | undefined;
 }>;
 declare const GameSchema: z.ZodObject<{
-    players: z.ZodArray<z.ZodNumber, "many">;
+    playerName: z.ZodString;
+    opponentName: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    players: number[];
+    playerName: string;
+    opponentName: string;
 }, {
-    players: number[];
+    playerName: string;
+    opponentName: string;
 }>;
 declare const ChoiceSchema: z.ZodObject<{
     playerId: z.ZodNumber;
@@ -33,12 +39,15 @@ declare const ChoiceSchema: z.ZodObject<{
 }>;
 declare const PlayerPatchSchema: z.ZodObject<{
     name: z.ZodOptional<z.ZodString>;
+    isNPC: z.ZodOptional<z.ZodBoolean>;
     avatar_path: z.ZodOptional<z.ZodOptional<z.ZodString>>;
 }, "strip", z.ZodTypeAny, {
     name?: string | undefined;
+    isNPC?: boolean | undefined;
     avatar_path?: string | undefined;
 }, {
     name?: string | undefined;
+    isNPC?: boolean | undefined;
     avatar_path?: string | undefined;
 }>;
 declare const CreateRoundSchema: z.ZodObject<z.objectUtil.extendShape<{
@@ -97,7 +106,7 @@ declare const RoundPatchSchema: z.ZodObject<{
 
 type GameDTO = {
     id: number;
-    players: Array<Omit<PlayerDTO, 'avatar_path'>>;
+    players: PlayerDTO[];
 };
 type ChoiceDTO = {
     player: PlayerDTO;

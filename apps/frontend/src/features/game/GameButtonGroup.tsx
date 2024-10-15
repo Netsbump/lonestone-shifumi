@@ -1,8 +1,5 @@
 import type React from 'react';
 
-import leaf from '../../assets/images/icon-leaf.svg';
-import scissors from '../../assets/images/icon-scissors.svg';
-import stone from '../../assets/images/icon-stone.svg';
 import type { Choice } from '../../lib/types/game.types';
 import {
   IN_PROGRESS,
@@ -16,6 +13,10 @@ import {
 import { GameButton } from '../../ui/GameButton';
 import { Illustration } from '../../ui/Illustration';
 import { useGame } from './useGame';
+
+const leaf = '/images/icon-leaf.svg';
+const scissors = '/images/icon-scissors.svg';
+const stone = '/images/icon-stone.svg';
 
 type GameButtonGroupProps = {
   onPlayerChoice: (playerChoice: Choice) => void;

@@ -12,10 +12,12 @@ var IdSchema = z.coerce.number().int().positive();
 var NonEmptyStringSchema = z.string().min(1, "must be a non-empty string");
 var PlayerSchema = z.object({
   name: NonEmptyStringSchema,
+  isNPC: z.boolean(),
   avatar_path: z.string().optional()
 });
 var GameSchema = z.object({
-  players: z.array(z.number())
+  playerName: NonEmptyStringSchema,
+  opponentName: NonEmptyStringSchema
 });
 var ChoiceSchema = z.object({
   playerId: z.number(),
@@ -24,6 +26,7 @@ var ChoiceSchema = z.object({
 });
 var PlayerPatchSchema = PlayerSchema.pick({
   name: true,
+  isNPC: true,
   avatar_path: true
 }).partial();
 var RoundSchema = z.object({

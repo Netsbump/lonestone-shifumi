@@ -1,16 +1,17 @@
+import { motion } from 'framer-motion';
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 
-import leaf from '../../../assets/images/icon-leaf.svg';
-import question from '../../../assets/images/icon-question.svg';
-import scissors from '../../../assets/images/icon-scissors.svg';
-import stone from '../../../assets/images/icon-stone.svg';
-import { choiceTranslation, DRAW, IN_PROGRESS, PLAYER } from '../../../lib/utils/constants';
+import { DRAW, IN_PROGRESS, PLAYER, choiceTranslation } from '../../../lib/utils/constants';
 import { ChoiceCard } from '../../../ui/ChoiceCard';
 import { Illustration } from '../../../ui/Illustration';
 import { useGame } from '../useGame';
 import TimerProgressBar from './TimerProgressBar';
+
+const leaf = '/images/icon-leaf.svg';
+const question = '/images/icon-question.svg';
+const scissors = '/images/icon-scissors.svg';
+const stone = '/images/icon-stone.svg';
 
 export const RoundResultDisplay: React.FC = () => {
   const { state, nextRound } = useGame();

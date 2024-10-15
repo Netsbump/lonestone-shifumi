@@ -1,8 +1,8 @@
-import leafIcon from '../../assets/images/icon-leaf.svg';
-import questionIcon from '../../assets/images/icon-question.svg';
-import scissorsIcon from '../../assets/images/icon-scissors.svg';
-import stoneIcon from '../../assets/images/icon-stone.svg';
 import type { Rules, VisualElements } from '../types/game.types';
+export const leafIcon = '/images/icon-leaf.svg';
+export const questionIcon = '/images/icon-question.svg';
+export const scissorsIcon = '/images/icon-scissors.svg';
+export const stoneIcon = '/images/icon-stone.svg';
 
 export const PLAYER = 'player';
 export const OPPONENT = 'opponent';

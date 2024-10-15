@@ -1,6 +1,3 @@
-import './assets/fonts/fonts.css';
-import './assets/styles/variables.css';
-
 import { Game } from './features/game/Game';
 import { useGame } from './features/game/useGame';
 import { NOT_STARTED } from './lib/utils/constants';

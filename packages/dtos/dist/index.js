@@ -46,10 +46,12 @@ var IdSchema = import_zod.z.coerce.number().int().positive();
 var NonEmptyStringSchema = import_zod.z.string().min(1, "must be a non-empty string");
 var PlayerSchema = import_zod.z.object({
   name: NonEmptyStringSchema,
+  isNPC: import_zod.z.boolean(),
   avatar_path: import_zod.z.string().optional()
 });
 var GameSchema = import_zod.z.object({
-  players: import_zod.z.array(import_zod.z.number())
+  playerName: NonEmptyStringSchema,
+  opponentName: NonEmptyStringSchema
 });
 var ChoiceSchema = import_zod.z.object({
   playerId: import_zod.z.number(),
@@ -58,6 +60,7 @@ var ChoiceSchema = import_zod.z.object({
 });
 var PlayerPatchSchema = PlayerSchema.pick({
   name: true,
+  isNPC: true,
   avatar_path: true
 }).partial();
 var RoundSchema = import_zod.z.object({
