@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 import dotBlack from '../../../assets/images/dot-black.svg';
 import dotGreen from '../../../assets/images/dot-green.svg';
@@ -14,6 +14,7 @@ export const LiveScore: React.FC<LiveScoreProps> = ({ scores, isOpponent }) => {
     .map((_, index) => {
       return (
         <img
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           key={index}
           src={index < scores ? dotGreen : dotBlack}
           alt={index < scores ? 'green dot' : 'black dot'}

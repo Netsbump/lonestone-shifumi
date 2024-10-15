@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRoundDTO, UpdateRoundDTO } from '@packages/dtos';
-import { EntityManager } from '@mikro-orm/core';
+import type { CreateRoundDTO, UpdateRoundDTO } from '@packages/dtos';
+import type { EntityManager } from '@mikro-orm/core';
 import { Round } from 'src/entities/round.entity';
-import { RoundDTO } from '@packages/dtos';
+import type { RoundDTO } from '@packages/dtos';
 import { Game } from 'src/entities/game.entity';
 import { Player } from 'src/entities/player.entity';
 import { Choice } from 'src/entities/choice.entity';

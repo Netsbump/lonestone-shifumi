@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 
 import { IN_PROGRESS } from '../../../lib/utils/constants';
 import { useGame } from '../useGame';

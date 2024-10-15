@@ -1,6 +1,6 @@
+import type { EntityManager } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
-import { CreatePlayerDTO, PlayerDTO, UpdatePlayerDTO } from '@packages/dtos';
-import { EntityManager } from '@mikro-orm/core';
+import type { CreatePlayerDTO, PlayerDTO, UpdatePlayerDTO } from '@packages/dtos';
 import { Player } from 'src/entities/player.entity';
 
 @Injectable()

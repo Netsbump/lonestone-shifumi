@@ -1,9 +1,9 @@
-import React from 'react';
+import type React from 'react';
 
 import leaf from '../../assets/images/icon-leaf.svg';
 import scissors from '../../assets/images/icon-scissors.svg';
 import stone from '../../assets/images/icon-stone.svg';
-import { Choice } from '../../lib/types/game.types';
+import type { Choice } from '../../lib/types/game.types';
 import {
   IN_PROGRESS,
   LEAF,

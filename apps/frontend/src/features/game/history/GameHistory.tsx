@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 
-import { Result } from '../../../lib/types/game.types';
+import type { Result } from '../../../lib/types/game.types';
 import { getRuleInfo } from '../../../lib/utils/game.logic';
 import { GameContainer } from '../../../ui/GameContainer';
 import { IconTextLine } from '../../../ui/IconTextLine';
@@ -18,11 +18,13 @@ export const GameHistory: React.FC = () => {
   ): string => {
     if (roundResult === 'draw') {
       return 'égalité !';
-    } else if (roundResult === 'player') {
-      return `${playerChoice} bat ${opponentChoice}`;
-    } else {
-      return `${opponentChoice} bat ${playerChoice}`;
     }
+    
+    if (roundResult === 'player') {
+      return `${playerChoice} bat ${opponentChoice}`;
+    }
+
+    return `${opponentChoice} bat ${playerChoice}`;
   };
 
   return (
@@ -37,6 +39,7 @@ export const GameHistory: React.FC = () => {
 
               return (
                 <li
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                   key={index}
                   className="pb-2"
                 >

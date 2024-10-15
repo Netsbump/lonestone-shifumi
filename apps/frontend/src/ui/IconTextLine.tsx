@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 import { OPPONENT, PLAYER } from '../lib/utils/constants';
 import { Illustration } from './Illustration';

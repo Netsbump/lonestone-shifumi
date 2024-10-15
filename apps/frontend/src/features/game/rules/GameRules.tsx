@@ -1,6 +1,6 @@
-import React from 'react';
+import type React from 'react';
 
-import { Choice } from '../../../lib/types/game.types';
+import type { Choice } from '../../../lib/types/game.types';
 import { LEAF, SCISSORS, STONE } from '../../../lib/utils/constants';
 import { getRuleInfo } from '../../../lib/utils/game.logic';
 import { GameContainer } from '../../../ui/GameContainer';
@@ -19,7 +19,8 @@ export const GameRules: React.FC = () => {
         <div className="flex flex-col gap-[10px]">
           <ul>
             {ruleInfo.map((rule, index) => (
-              <li key={index}>
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            <li key={index}>
                 <IconTextLine
                   iconSrc1={rule.iconSrc}
                   iconAlt1={rule.iconAlt}
@@ -31,6 +32,7 @@ export const GameRules: React.FC = () => {
             ))}
           </ul>
           <div className="flex flex-col gap-5">
+            {/* biome-ignore lint/style/useSelfClosingElements: <explanation> */}
             <div className="mx-7 border-t-4 border-dark-blue"></div>
             <p className="Texte-courant text-center text-light-blue">
               Le premier à 5 gagne

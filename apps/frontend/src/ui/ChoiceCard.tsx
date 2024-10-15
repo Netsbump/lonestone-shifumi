@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 type ChoiceCardProps = {
   children?: React.ReactNode;

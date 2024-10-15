@@ -1,8 +1,9 @@
-import React, { createContext, useCallback, useReducer } from 'react';
+import type React from 'react';
+import { createContext, useCallback, useReducer } from 'react';
 
 import player1 from '../../assets/images/avatar-human.svg';
 import player2 from '../../assets/images/avatar-robot.svg';
-import { Choice, Game, RoundStatus } from '../../lib/types/game.types';
+import type { Choice, Game, RoundStatus } from '../../lib/types/game.types';
 import {
   FINISHED,
   FORFEIT,

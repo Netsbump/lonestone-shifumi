@@ -1,14 +1,14 @@
 import {
-  DRAW,
-  FINISHED,
-  FORFEIT,
-  IN_PROGRESS,
-  LEAF,
-  NOT_STARTED,
+  type DRAW,
+  type FINISHED,
+  type FORFEIT,
+  type IN_PROGRESS,
+  type LEAF,
+  type NOT_STARTED,
   OPPONENT,
   PLAYER,
-  SCISSORS,
-  STONE,
+  type SCISSORS,
+  type STONE,
 } from '../utils/constants';
 
 export type Result = typeof PLAYER | typeof OPPONENT | typeof DRAW;

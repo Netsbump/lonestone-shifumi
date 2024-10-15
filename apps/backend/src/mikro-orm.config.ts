@@ -1,4 +1,4 @@
-import { defineConfig, Options, SqliteDriver } from '@mikro-orm/sqlite';
+import { type Options, SqliteDriver, defineConfig } from '@mikro-orm/sqlite';
 
 const ormConfig: Options = defineConfig({
     entities: ['./dist/entities'],

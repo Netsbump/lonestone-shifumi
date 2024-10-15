@@ -1,9 +1,8 @@
-import { BadRequestException, Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from "@nestjs/common";
-import { GameService } from "./game.service";
-import { CreateGameDTO, UpdateGameDTO } from '@packages/dtos';
-import { ZodError } from "zod";
-import { GameDTO, GameSchema, IdSchema } from "@packages/dtos";
 import { NotFoundError } from "@mikro-orm/core";
+import { BadRequestException, Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from "@nestjs/common";
+import { type CreateGameDTO, type GameDTO, GameSchema, IdSchema, type UpdateGameDTO } from '@packages/dtos';
+import { ZodError } from "zod";
+import type { GameService } from "./game.service";
 
 @Controller('games')
 export class GameController {
@@ -17,7 +16,7 @@ export class GameController {
     } catch (error) {
       if (error instanceof ZodError) {
         throw new BadRequestException(
-          'Invalid Game format: ' + error.errors.map((err) => err.message).join(', '),
+          `Invalid Game format: ${error.errors.map((err) => err.message).join(', ')}`,
         );
       }
       throw new InternalServerErrorException('Unexpected error occurred during game creation');
@@ -41,9 +40,12 @@ export class GameController {
     } catch (error) {
       if (error instanceof ZodError) {
         throw new BadRequestException('Invalid ID format');
-      } else if (error instanceof NotFoundError) {
+      } 
+      
+      if (error instanceof NotFoundError) {
         throw new BadRequestException('Game not found');
       }
+      
       throw new InternalServerErrorException('Unexpected error occurred during game retrieval');
     }
   }
@@ -55,9 +57,12 @@ export class GameController {
       const parsedUpdateGameDTO = GameSchema.parse(updateGameDto);
       return await this.gameService.update(idToNumber, parsedUpdateGameDTO);
     } catch (error) {
+      
       if (error instanceof ZodError) {
         throw new BadRequestException('Invalid input');
-      } else if (error instanceof NotFoundError) {
+      }
+      
+      if (error instanceof NotFoundError) {
         throw new BadRequestException('Game not found');
       }
       throw new InternalServerErrorException('Unexpected error occurred during game update');
@@ -72,7 +77,9 @@ export class GameController {
     } catch (error) {
       if (error instanceof ZodError) {
         throw new BadRequestException('Invalid ID format');
-      } else if (error instanceof NotFoundError) {
+      }
+      
+      if (error instanceof NotFoundError) {
         throw new BadRequestException('Game not found');
       }
       throw new InternalServerErrorException('Unexpected error occurred during game removal');

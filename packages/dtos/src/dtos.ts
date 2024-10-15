@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { ChoiceSchema, CreateRoundSchema, GameSchema, PlayerSchema } from "./schemas";
+import type { z } from "zod";
+import type { ChoiceSchema, CreateRoundSchema, GameSchema, PlayerSchema } from "./schemas";
 
 // DTOs for mapping entities to DTOs for controller response
 export type GameDTO = {

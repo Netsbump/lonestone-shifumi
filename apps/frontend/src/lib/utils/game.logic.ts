@@ -1,4 +1,4 @@
-import {
+import type {
   Choice,
   Result,
   Round,
@@ -28,9 +28,8 @@ export const determineRoundResult = (
     (playerChoice === SCISSORS && opponentChoice === LEAF)
   ) {
     return PLAYER;
-  } else {
-    return OPPONENT;
   }
+    return OPPONENT;
 };
 
 export const getRandomChoice = (): Choice => {
