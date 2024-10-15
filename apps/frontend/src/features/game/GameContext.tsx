@@ -1,8 +1,8 @@
 import type React from 'react';
 import { createContext, useCallback, useReducer } from 'react';
 
-import player1 from '../../assets/images/avatar-human.svg';
-import player2 from '../../assets/images/avatar-robot.svg';
+import type { GameDTO } from '@packages/dtos';
+import { createGame } from '../../lib/api/game';
 import type { Choice, Game, RoundStatus } from '../../lib/types/game.types';
 import {
   FINISHED,
@@ -33,17 +33,17 @@ const initialGameState: Game = {
   history: [],
   players: {
     player: {
-      name: 'Moi', //Initialiser à "Moi" en v1
+      name: '', 
       avatar: {
-        imgPath: player1,
-        alt: 'avatar player 1',
+        imgPath: '', 
+        alt: '',
       },
     },
     opponent: {
-      name: 'J-Ordi', //Initialiser à "J-Ordi" en v1
+      name: '',
       avatar: {
-        imgPath: player2,
-        alt: 'avatar player 2',
+        imgPath: '', 
+        alt: '',
       },
     },
   },
@@ -51,13 +51,14 @@ const initialGameState: Game = {
 
 type GameAction =
   | { type: typeof PLAY; value: Choice }
-  | { type: typeof START }
+  | { type: typeof START; value: GameDTO }
   | { type: typeof RESET }
   | { type: typeof NEXTROUND };
 
 // Action creators
-const start = (): GameAction => ({
+const start = (gameData: GameDTO): GameAction => ({
   type: START,
+  value: gameData,
 });
 
 const play = (playerChoice: Choice): GameAction => ({
@@ -76,10 +77,28 @@ const nextRound = (): GameAction => ({
 const gameReducer = (state: Game, action: GameAction): Game => {
   switch (action.type) {
     case START: {
+      const { players } = action.value;
+
       return {
-        ...state,
-        gameStatus: IN_PROGRESS,
-      };
+    ...state,
+    gameStatus: IN_PROGRESS,
+    players: {
+      player: {
+        name: players[0].name, 
+        avatar: {
+          imgPath: players[0].avatar_path,
+          alt: `avatar ${players[0].name}`,
+        },
+      },
+      opponent: {
+        name: players[1].name,
+        avatar: {
+          imgPath: players[1].avatar_path,
+          alt: `avatar ${players[1].name}`,
+        },
+      },
+    },
+  };
     }
     case PLAY: {
       const playerChoice = action.value;
@@ -176,8 +195,14 @@ type GameProviderProps = {
 const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialGameState);
 
-  const startCallback = useCallback(() => {
-    dispatch(start());
+  const startCallback = useCallback(async() => {
+    
+    const gameData = await createGame({
+      playerName: 'Moi',
+      opponentName: 'J-Ordi',
+    });
+
+    dispatch(start(gameData));
   }, []);
 
   const playCallback = useCallback((playerChoice: Choice) => {
@@ -207,4 +232,5 @@ const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   );
 };
 
-export { GameProvider, GameContext };
+export { GameContext, GameProvider };
+

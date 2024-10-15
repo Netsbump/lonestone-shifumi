@@ -1,12 +1,12 @@
 import type React from 'react';
 
-import dotBlack from '../../../assets/images/dot-black.svg';
-import dotGreen from '../../../assets/images/dot-green.svg';
-
 type LiveScoreProps = {
   scores: number;
   isOpponent: boolean;
 };
+
+const dotBlack = '/images/dot-black.svg';
+const dotGreen =  '/images/dot-green.svg';
 
 export const LiveScore: React.FC<LiveScoreProps> = ({ scores, isOpponent }) => {
   const dots = Array(5)

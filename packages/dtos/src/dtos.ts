@@ -4,7 +4,7 @@ import type { ChoiceSchema, CreateRoundSchema, GameSchema, PlayerSchema } from "
 // DTOs for mapping entities to DTOs for controller response
 export type GameDTO = {
     id: number;
-    players: Array<Omit<PlayerDTO, 'avatar_path'>>;
+    players: PlayerDTO[];
 }
 
 export type ChoiceDTO = {
@@ -17,7 +17,6 @@ export type PlayerDTO = {
     id: number;
     name: string;
     avatar_path: string;
-    // TODO: Consider including associated game IDs
 }
 
 //Todo: a faire évoluer en ajoutant les choix des joueurs

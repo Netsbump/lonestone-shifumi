@@ -10,21 +10,43 @@ export class GameService {
   constructor(private readonly em: EntityManager) { }
 
   async create(createGameDto: CreateGameDTO): Promise<GameDTO> {
-    const players = await this.em.find(Player, { id: { $in: createGameDto.players } });
-
-    const newGame = new Game();
-    newGame.players.add(players);
+    return await this.em.transactional(async (em) => {
+      const { playerName, opponentName } = createGameDto;
   
-    await this.em.persistAndFlush(newGame); 
-
-    const gameCreated = await this.em.findOneOrFail(Game, { id: newGame.id }, { populate: ["players"]})
-
-    return {
-      id: gameCreated.id,
-      players: gameCreated.players.getItems(false).map(player => { return {
-        id: player.id, name: player.name 
-      }})
-    }
+      let player = await em.findOne(Player, { name: playerName });
+      if (!player) {
+        player = new Player();
+        player.name = playerName;
+        player.avatar_path = '/images/avatar-human.svg';
+        await em.persistAndFlush(player);
+      }
+  
+      let opponent = await em.findOne(Player, { name: opponentName });
+      if (!opponent) {
+        opponent = new Player();
+        opponent.name = opponentName;
+        opponent.isNPC = opponentName === 'J-Ordi';
+        opponent.avatar_path = opponent.isNPC 
+        ? '/images/avatar-robot.svg' 
+        : '/images/avatar-human.svg'; 
+        await em.persistAndFlush(opponent);
+      }
+  
+      const newGame = new Game();
+      newGame.players.add(player, opponent);
+      await em.persistAndFlush(newGame);
+  
+      const gameCreated = await em.findOneOrFail(Game, { id: newGame.id }, { populate: ["players"] });
+  
+      return {
+        id: gameCreated.id,
+        players: gameCreated.players.getItems(false).map(player => ({
+          id: player.id, 
+          name: player.name,
+          avatar_path: player.avatar_path,
+        }))
+      };
+    });
   }
 
   async findAll(): Promise<GameDTO[]> {
@@ -35,7 +57,8 @@ export class GameService {
       id: game.id,
       players: game.players.getItems(false).map(player => { return {
         id: player.id,
-        name: player.name
+        name: player.name,
+        avatar_path: player.avatar_path
       }})
     }))
   }
@@ -46,27 +69,49 @@ export class GameService {
     return {
       id: game.id,
       players: game.players.getItems(false).map(player => { return {
-        id: player.id, name: player.name 
+        id: player.id, name: player.name, avatar_path: player.avatar_path
       }})
     }
   }
 
   async update(id: number, updateGameDto: UpdateGameDTO): Promise<GameDTO> {
-    const gameToUpdate = await this.em.findOneOrFail(Game, { id });
+    return await this.em.transactional(async (em) => {
+      const gameToUpdate = await em.findOneOrFail(Game, { id }, { populate: ['players'] });
+  
+      const { playerName, opponentName } = updateGameDto;
+  
+      let player = await em.findOne(Player, { name: playerName });
+      if (!player) {
+        player = new Player();
+        player.name = playerName;
+        player.isNPC = false;
+        await em.persistAndFlush(player);
+      }
 
-    const players = await this.em.find(Player, { id: { $in: updateGameDto.players } });
-    gameToUpdate.players.set(players)
-    
-    await this.em.persistAndFlush(gameToUpdate); 
+      let opponent = await em.findOne(Player, { name: opponentName });
+      if (!opponent) {
+        opponent = new Player();
+        opponent.name = opponentName;
+        opponent.isNPC = opponentName === 'J-Ordi';
+        await em.persistAndFlush(opponent);
+      }
+  
+      gameToUpdate.players.remove(gameToUpdate.players.getItems());
+      gameToUpdate.players.add(player, opponent);
 
-    const gameUpdated = await this.em.findOneOrFail(Game, { id }, { populate: ['players']})
-
-    return {
-      id: gameUpdated.id,
-      players: gameUpdated.players.getItems(false).map(player => { return {
-        id: player.id, name: player.name 
-      }})
-    }
+      await em.persistAndFlush(gameToUpdate);
+  
+      const gameUpdated = await em.findOneOrFail(Game, { id }, { populate: ['players'] });
+  
+      return {
+        id: gameUpdated.id,
+        players: gameUpdated.players.getItems(false).map(player => ({
+          id: player.id,
+          name: player.name,
+          avatar_path: player.avatar_path,
+        })),
+      };
+    });
   }
 
   async remove(id: number): Promise<void> {

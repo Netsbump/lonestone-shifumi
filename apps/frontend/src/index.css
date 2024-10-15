@@ -1,3 +1,52 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: Chivo;
+    src: local(Chivo-Regular), url(/path/to/Chivo-Regular.woff2) format("woff2"),
+      url(/path/to/Chivo-Regular.woff) format("woff"), url(/path/to/Chivo-Regular.ttf)
+      format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+  }
+
+  @font-face {
+    font-family: Overpass;
+    src: local(Overpass-Black), url(/path/to/Overpass-Black.woff2) format("woff2"),
+      url(/path/to/Overpass-Black.woff) format("woff"), url(/path/to/Overpass-Black.ttf)
+      format("truetype");
+    font-weight: 900;
+    font-style: normal;
+    font-stretch: normal;
+  }
+
+  :root {
+    /* Colors */
+    --night-blue: hsl(229deg, 58%, 9%);
+    --night-blue-medium: hsl(229deg, 47%, 14%);
+    --dark-blue: hsl(230deg, 38%, 21%);
+    --hard-blue: hsl(217deg, 95%, 33%);
+    --electric-blue: hsl(217deg, 99%, 45%);
+    --light-blue: hsl(231deg, 100%, 89%);
+    --dark-red: hsl(0deg, 60%, 42%);
+    --red: hsl(0deg, 79%, 63%);
+    --green: hsl(166deg, 99%, 41%);
+    --white: hsl(0deg, 0%, 100%);
+
+    /* Border Radius */
+    --rounded-primary: 1.25rem;
+
+    /* Box Shadow */
+    --shadow-button-default: "0px 10px 0px 0px var(--hard-blue)";
+
+    /* Padding */
+    --padding-game-container: 10px;
+  }
+
+  body {
+    background: var(--dark-blue);
+  }
+}
