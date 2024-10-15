@@ -1,4 +1,5 @@
-import type { EntityManager } from '@mikro-orm/core';
+// biome-ignore lint/style/useImportType: <explanation>
+import { EntityManager } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
 import type { CreatePlayerDTO, PlayerDTO, UpdatePlayerDTO } from '@packages/dtos';
 import { Player } from 'src/entities/player.entity';

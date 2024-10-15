@@ -2,7 +2,8 @@ import { NotFoundError } from "@mikro-orm/core";
 import { BadRequestException, Body, Controller, Delete, Get, InternalServerErrorException, Param, Patch, Post } from "@nestjs/common";
 import { type CreateGameDTO, type GameDTO, GameSchema, IdSchema, type UpdateGameDTO } from '@packages/dtos';
 import { ZodError } from "zod";
-import type { GameService } from "./game.service";
+// biome-ignore lint/style/useImportType: <explanation>
+import { GameService } from "./game.service";
 
 @Controller('games')
 export class GameController {

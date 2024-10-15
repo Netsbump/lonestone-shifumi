@@ -3,7 +3,8 @@ import { BadRequestException, Body, Controller, Delete, Get, InternalServerError
 import type { PlayerDTO } from "@packages/dtos";
 import { type CreatePlayerDTO, IdSchema, PlayerPatchSchema, PlayerSchema, type UpdatePlayerDTO } from "@packages/dtos";
 import { ZodError } from "zod";
-import type { PlayerService } from "./player.service";
+// biome-ignore lint/style/useImportType: <explanation>
+import { PlayerService } from "./player.service";
 
 @Controller('players')
 export class PlayerController {
