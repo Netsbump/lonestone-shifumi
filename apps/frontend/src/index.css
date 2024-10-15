@@ -4,9 +4,8 @@
 
 @layer base {
   @font-face {
-    font-family: Chivo;
-    src: local(Chivo-Regular), url(/path/to/Chivo-Regular.woff2) format("woff2"),
-      url(/path/to/Chivo-Regular.woff) format("woff"), url(/path/to/Chivo-Regular.ttf)
+    font-family: 'Chivo';
+    src: url(/fonts/Chivo/Chivo-Regular.ttf)
       format("truetype");
     font-weight: normal;
     font-style: normal;
@@ -14,9 +13,8 @@
   }
 
   @font-face {
-    font-family: Overpass;
-    src: local(Overpass-Black), url(/path/to/Overpass-Black.woff2) format("woff2"),
-      url(/path/to/Overpass-Black.woff) format("woff"), url(/path/to/Overpass-Black.ttf)
+    font-family: 'Overpass';
+    src: url(/fonts/Overpass/Overpass-Black.ttf)
       format("truetype");
     font-weight: 900;
     font-style: normal;
