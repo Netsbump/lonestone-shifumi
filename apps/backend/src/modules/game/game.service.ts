@@ -1,18 +1,22 @@
 // biome-ignore lint/style/useImportType: <explanation>
 import { EntityManager } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
-import type { CreateGameDTO, GameDTO, UpdateGameDTO } from '@packages/dtos';
+import type { CreateGameDTO, GameDTO, Result, UpdateGameDTO } from '@packages/dtos';
+import { Status } from '@packages/dtos';
 import { Game } from 'src/entities/game.entity';
 import { Player } from 'src/entities/player.entity';
+import { Round } from 'src/entities/round.entity';
+import { determineGameWinner } from 'src/utils/determineGameWinner';
+import { determineRoundResult } from 'src/utils/determineRoundResult';
 
 @Injectable()
 export class GameService {
-  constructor(private readonly em: EntityManager) { }
+  constructor(private readonly em: EntityManager) {}
 
-  async create(createGameDto: CreateGameDTO): Promise<GameDTO> {
+  async create(createGameDto: CreateGameDTO): Promise<Pick<GameDTO, 'id' | 'players'>> {
     return await this.em.transactional(async (em) => {
       const { playerName, opponentName } = createGameDto;
-  
+
       let player = await em.findOne(Player, { name: playerName });
       if (!player) {
         player = new Player();
@@ -20,66 +24,102 @@ export class GameService {
         player.avatar_path = '/images/avatar-human.svg';
         await em.persistAndFlush(player);
       }
-  
+
       let opponent = await em.findOne(Player, { name: opponentName });
       if (!opponent) {
         opponent = new Player();
         opponent.name = opponentName;
         opponent.isNPC = opponentName === 'J-Ordi';
-        opponent.avatar_path = opponent.isNPC 
-        ? '/images/avatar-robot.svg' 
-        : '/images/avatar-human.svg'; 
+        opponent.avatar_path = opponent.isNPC
+          ? '/images/avatar-robot.svg'
+          : '/images/avatar-human.svg';
         await em.persistAndFlush(opponent);
       }
-  
+
       const newGame = new Game();
       newGame.players.add(player, opponent);
       await em.persistAndFlush(newGame);
-  
-      const gameCreated = await em.findOneOrFail(Game, { id: newGame.id }, { populate: ["players"] });
-  
+
+      const gameCreated = await em.findOneOrFail(
+        Game,
+        { id: newGame.id },
+        { populate: ['players'] },
+      );
+
       return {
         id: gameCreated.id,
-        players: gameCreated.players.getItems(false).map(player => ({
-          id: player.id, 
+        players: gameCreated.players.getItems(false).map((player) => ({
+          id: player.id,
           name: player.name,
           avatar_path: player.avatar_path,
-        }))
+        })),
       };
     });
   }
 
-  async findAll(): Promise<GameDTO[]> {
+  async findAll(): Promise<Omit<GameDTO, 'players'>[]> {
+    const games = await this.em.findAll(Game);
 
-    const games = await this.em.findAll(Game, { populate: ['players']});
+    // Tableau pour collecter les résultats
+    const gameStatuses: Omit<GameDTO, 'players'>[] = [];
 
-    return games.map( game => ({
-      id: game.id,
-      players: game.players.getItems(false).map(player => { return {
-        id: player.id,
-        name: player.name,
-        avatar_path: player.avatar_path
-      }})
-    }))
+    // Récupérer les rounds associés à chaque game de manière parallèle
+    await Promise.all(
+      games.map(async (game) => {
+        const rounds = await this.em.find(Round, { game: game.id }, { populate: ['choices'] });
+
+        let status: Status;
+        const roundPlayed = rounds.length;
+
+        if (roundPlayed < 1) {
+          status = Status.NOT_STARTED;
+        } else if (roundPlayed < 5) {
+          status = Status.IN_PROGRESS;
+        } else {
+          // Calcul s'il y a un gagnant
+          const roundResults: Result[] = [];
+          for (const round of rounds) {
+            if (round.choices.length === 2) {
+              roundResults.push(
+                determineRoundResult(round.choices[0].action, round.choices[1].action),
+              );
+            }
+          }
+          status = determineGameWinner(roundResults);
+        }
+
+        gameStatuses.push({
+          id: game.id,
+          status,
+          roundPlayed,
+        });
+      }),
+    );
+
+    return gameStatuses;
   }
 
-  async findOne(id: number): Promise<GameDTO> {
-    const game = await this.em.findOneOrFail(Game, { id }, { populate: ['players'] } );
+  async findOne(id: number): Promise<Pick<GameDTO, 'id' | 'players'>> {
+    const game = await this.em.findOneOrFail(Game, { id }, { populate: ['players'] });
 
     return {
       id: game.id,
-      players: game.players.getItems(false).map(player => { return {
-        id: player.id, name: player.name, avatar_path: player.avatar_path
-      }})
-    }
+      players: game.players.getItems(false).map((player) => {
+        return {
+          id: player.id,
+          name: player.name,
+          avatar_path: player.avatar_path,
+        };
+      }),
+    };
   }
 
-  async update(id: number, updateGameDto: UpdateGameDTO): Promise<GameDTO> {
+  async update(id: number, updateGameDto: UpdateGameDTO): Promise<Pick<GameDTO, 'id' | 'players'>> {
     return await this.em.transactional(async (em) => {
       const gameToUpdate = await em.findOneOrFail(Game, { id }, { populate: ['players'] });
-  
+
       const { playerName, opponentName } = updateGameDto;
-  
+
       let player = await em.findOne(Player, { name: playerName });
       if (!player) {
         player = new Player();
@@ -95,17 +135,17 @@ export class GameService {
         opponent.isNPC = opponentName === 'J-Ordi';
         await em.persistAndFlush(opponent);
       }
-  
+
       gameToUpdate.players.remove(gameToUpdate.players.getItems());
       gameToUpdate.players.add(player, opponent);
 
       await em.persistAndFlush(gameToUpdate);
-  
+
       const gameUpdated = await em.findOneOrFail(Game, { id }, { populate: ['players'] });
-  
+
       return {
         id: gameUpdated.id,
-        players: gameUpdated.players.getItems(false).map(player => ({
+        players: gameUpdated.players.getItems(false).map((player) => ({
           id: player.id,
           name: player.name,
           avatar_path: player.avatar_path,

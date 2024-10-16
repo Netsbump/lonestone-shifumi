@@ -1,5 +1,13 @@
 import { z } from 'zod';
 
+declare const PLAYER = "player";
+declare const OPPONENT = "opponent";
+declare const DRAW = "draw";
+declare const LEAF = "LEAF";
+declare const STONE = "STONE";
+declare const SCISSORS = "SCISSORS";
+declare const FORFEIT = "FORFEIT";
+
 declare const IdSchema: z.ZodNumber;
 declare const PlayerSchema: z.ZodObject<{
     name: z.ZodString;
@@ -107,6 +115,8 @@ declare const RoundPatchSchema: z.ZodObject<{
 type GameDTO = {
     id: number;
     players: PlayerDTO[];
+    status: string;
+    roundPlayed: number;
 };
 type ChoiceDTO = {
     player: PlayerDTO;
@@ -141,4 +151,12 @@ declare enum Status {
     FINISHED = "FINISHED"
 }
 
-export { type ChoiceDTO, ChoicePatchSchema, ChoiceSchema, type CreateChoiceDTO, type CreateGameDTO, type CreatePlayerDTO, type CreateRoundDTO, CreateRoundSchema, type GameDTO, GameSchema, IdSchema, type PlayerDTO, PlayerPatchSchema, PlayerSchema, type RoundDTO, RoundPatchSchema, Status, type UpdateChoiceDTO, type UpdateGameDTO, type UpdatePlayerDTO, type UpdateRoundDTO };
+type Result = typeof PLAYER | typeof OPPONENT | typeof DRAW;
+type Round = {
+    playerChoice: Choice;
+    opponentChoice: Choice;
+    roundResult: Result;
+};
+type Choice = typeof LEAF | typeof STONE | typeof SCISSORS | typeof FORFEIT;
+
+export { type Choice, type ChoiceDTO, ChoicePatchSchema, ChoiceSchema, type CreateChoiceDTO, type CreateGameDTO, type CreatePlayerDTO, type CreateRoundDTO, CreateRoundSchema, DRAW, FORFEIT, type GameDTO, GameSchema, IdSchema, LEAF, OPPONENT, PLAYER, type PlayerDTO, PlayerPatchSchema, PlayerSchema, type Result, type Round, type RoundDTO, RoundPatchSchema, SCISSORS, STONE, Status, type UpdateChoiceDTO, type UpdateGameDTO, type UpdatePlayerDTO, type UpdateRoundDTO };
