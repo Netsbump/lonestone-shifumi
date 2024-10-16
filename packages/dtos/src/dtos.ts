@@ -5,6 +5,8 @@ import type { ChoiceSchema, CreateRoundSchema, GameSchema, PlayerSchema } from "
 export type GameDTO = {
     id: number;
     players: PlayerDTO[];
+    status: string,
+    roundPlayed: number;
 }
 
 export type ChoiceDTO = {

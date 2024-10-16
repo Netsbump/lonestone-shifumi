@@ -1,3 +1,12 @@
+// src/constants.ts
+var PLAYER = "player";
+var OPPONENT = "opponent";
+var DRAW = "draw";
+var LEAF = "LEAF";
+var STONE = "STONE";
+var SCISSORS = "SCISSORS";
+var FORFEIT = "FORFEIT";
+
 // src/enums.ts
 var Status = /* @__PURE__ */ ((Status2) => {
   Status2["NOT_STARTED"] = "NOT_STARTED";
@@ -53,10 +62,17 @@ export {
   ChoicePatchSchema,
   ChoiceSchema,
   CreateRoundSchema,
+  DRAW,
+  FORFEIT,
   GameSchema,
   IdSchema,
+  LEAF,
+  OPPONENT,
+  PLAYER,
   PlayerPatchSchema,
   PlayerSchema,
   RoundPatchSchema,
+  SCISSORS,
+  STONE,
   Status
 };

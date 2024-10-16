@@ -23,14 +23,30 @@ __export(src_exports, {
   ChoicePatchSchema: () => ChoicePatchSchema,
   ChoiceSchema: () => ChoiceSchema,
   CreateRoundSchema: () => CreateRoundSchema,
+  DRAW: () => DRAW,
+  FORFEIT: () => FORFEIT,
   GameSchema: () => GameSchema,
   IdSchema: () => IdSchema,
+  LEAF: () => LEAF,
+  OPPONENT: () => OPPONENT,
+  PLAYER: () => PLAYER,
   PlayerPatchSchema: () => PlayerPatchSchema,
   PlayerSchema: () => PlayerSchema,
   RoundPatchSchema: () => RoundPatchSchema,
+  SCISSORS: () => SCISSORS,
+  STONE: () => STONE,
   Status: () => Status
 });
 module.exports = __toCommonJS(src_exports);
+
+// src/constants.ts
+var PLAYER = "player";
+var OPPONENT = "opponent";
+var DRAW = "draw";
+var LEAF = "LEAF";
+var STONE = "STONE";
+var SCISSORS = "SCISSORS";
+var FORFEIT = "FORFEIT";
 
 // src/enums.ts
 var Status = /* @__PURE__ */ ((Status2) => {
@@ -88,10 +104,17 @@ var RoundPatchSchema = RoundSchema.pick({
   ChoicePatchSchema,
   ChoiceSchema,
   CreateRoundSchema,
+  DRAW,
+  FORFEIT,
   GameSchema,
   IdSchema,
+  LEAF,
+  OPPONENT,
+  PLAYER,
   PlayerPatchSchema,
   PlayerSchema,
   RoundPatchSchema,
+  SCISSORS,
+  STONE,
   Status
 });

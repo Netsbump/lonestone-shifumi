@@ -10,7 +10,7 @@ export class GameController {
     constructor(private readonly gameService: GameService) {}
 
   @Post()
-  async create(@Body() createGameDto: CreateGameDTO): Promise<GameDTO> {
+  async create(@Body() createGameDto: CreateGameDTO): Promise<Pick<GameDTO, 'id' | "players">> {
     try {
       GameSchema.parse(createGameDto);
       return await this.gameService.create(createGameDto);
@@ -25,7 +25,7 @@ export class GameController {
   }
 
   @Get()
-  async findAll(): Promise<GameDTO[]> {
+  async findAll(): Promise<Omit<GameDTO, 'players'>[]> {
     try {
       return await this.gameService.findAll();
     } catch {
@@ -34,7 +34,7 @@ export class GameController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<GameDTO> {
+  async findOne(@Param('id') id: string): Promise<Pick<GameDTO, 'id' | "players">> {
     try {
       const idToNumber = IdSchema.parse(id);
       return await this.gameService.findOne(idToNumber);
@@ -52,7 +52,7 @@ export class GameController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDTO): Promise<GameDTO> {
+  async update(@Param('id') id: string, @Body() updateGameDto: UpdateGameDTO): Promise<Pick<GameDTO, 'id' | "players">> {
     try {
       const idToNumber = IdSchema.parse(id);
       const parsedUpdateGameDTO = GameSchema.parse(updateGameDto);
