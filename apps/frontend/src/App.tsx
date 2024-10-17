@@ -32,17 +32,4 @@ export const App: React.FC = () => {
       </div>
     </div>
   );
-
-  // return (
-  //   <div className="text-white">
-  //     <div className="mx-auto flex h-screen w-full max-w-8xl flex-col">
-  //       <header className="m-9">
-  //         <h2 className="text-light-blue">Shifumi !</h2>
-  //       </header>
-
-  //       <Home />
-        
-  //     </div>
-  //   </div>
-  // );
 };
