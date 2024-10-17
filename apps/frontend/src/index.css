@@ -42,6 +42,7 @@
 
     /* Padding */
     --padding-game-container: 10px;
+    --radius: 0.5rem;
   }
 
   body {

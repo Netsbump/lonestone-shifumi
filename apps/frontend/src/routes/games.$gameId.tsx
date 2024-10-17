@@ -6,16 +6,16 @@ import { GameRules } from '../features/game/rules/GameRules';
 import { PlayerScores } from '../features/game/scores/PlayerScores';
 import { GameScreen } from '../features/game/screen/GameScreen';
 import { useGame } from '../features/game/useGame';
-import { FINISHED, IN_PROGRESS } from '../lib/utils/constants';
+import { FINISHED, IN_PROGRESS, NOT_STARTED } from '../lib/utils/constants';
 import { GameButton } from '../ui/GameButton';
 
 export const Route = createFileRoute('/games/$gameId')({
   component: Game,
-})
+});
 
 //Todo doit s'attendre à récup un gameID
 function Game() {
-  const { state, play, reset } = useGame();
+  const { state, play, reset, start } = useGame();
   const gameStatus = state.gameStatus;
 
   const handlePlayerChoice = (playerChoice: Choice): void => {
@@ -24,6 +24,10 @@ function Game() {
 
   const handleResetGame = (): void => {
     reset();
+  };
+
+  const handleStartGame = (): void => {
+    start();
   };
 
   return (
@@ -52,13 +56,18 @@ function Game() {
 
       {gameStatus === FINISHED && (
         <div className="col-span-3 col-start-2 mt-5 flex items-center justify-center gap-3">
-          <GameButton
-            onPress={handleResetGame}
-            className={'flex w-72 items-center justify-center'}
-          >
+          <GameButton onPress={handleResetGame} className={'flex w-72 items-center justify-center'}>
             Rejouez
           </GameButton>
         </div>
+      )}
+
+      {gameStatus === NOT_STARTED && (
+        <footer className="col-span-3 col-start-2 mt-5 flex items-center justify-center gap-3">
+          <GameButton onPress={handleStartGame} className={'flex w-72 items-center justify-center'}>
+            Commencer la partie
+          </GameButton>
+        </footer>
       )}
     </main>
   );

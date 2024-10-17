@@ -1,68 +1,76 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
+    darkMode: ["class"],
+    content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      colors: {
-        'dark-blue': 'var(--dark-blue)',
-        'hard-blue': 'var(--hard-blue)',
-        'button': 'var(--electric-blue)',
-        'electric-blue' : 'var(--electric-blue)',
-        'night-blue' : 'var(--night-blue)',
-        'light-blue': 'var(--light-blue)',
-        'dark-red': 'var(--dark-red)',
-        'red': 'var(--red)',
-        'green': 'var(--green)',
-        'white': 'var(--white)',
-        'background': 'var(--dark-blue)',
-        'title-container': 'var(--night-blue)',
-        'container' : 'var(--night-blue-medium)'
-      },
-      fontFamily: {
-        'chivo': ['Chivo', 'sans-serif'],
-        'overpass': ['Overpass', 'sans-serif'],
-      },
-      fontSize: {
-        'h1': '72px',
-        'h2': '36px',
-        'h3': '24px',
-        'h4': '24px',
-        'h5': '16px',
-        'texte-courant': '12px',
-      },
-      fontWeight: {
-        'normal': 400,
-        'black': 900,
-      },
-      borderRadius: {
-        'primary' : 'var(--rounded-primary)',
-      },
-      maxWidth: {
-        '8xl' : '90rem'
-      },
-      height: {
-        '15' : '3.75rem'
-      },
-      boxShadow: {
-        'button-primary' : 'var(--shadow-button-default)'
-      },
-      padding: {
-        'container' : 'var(--padding-game-container)' 
-      },
-      keyframes: {
-        'progress-bar-right-to-left': {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-100%)' },
-        },
-      },
-      animation: {
-        'progress-bar-right-to-left': 'progress-bar-right-to-left var(--duration) linear forwards',
-      },
-    },
+  	extend: {
+  		colors: {
+  			'dark-blue': 'var(--dark-blue)',
+  			'hard-blue': 'var(--hard-blue)',
+  			button: 'var(--electric-blue)',
+  			'electric-blue': 'var(--electric-blue)',
+  			'night-blue': 'var(--night-blue)',
+  			'light-blue': 'var(--light-blue)',
+  			'dark-red': 'var(--dark-red)',
+  			red: 'var(--red)',
+  			green: 'var(--green)',
+  			white: 'var(--white)',
+  			background: 'var(--dark-blue)',
+  			'title-container': 'var(--night-blue)',
+  			container: 'var(--night-blue-medium)'
+  		},
+  		fontFamily: {
+  			chivo: ['Chivo', 'sans-serif'],
+  			overpass: ['Overpass', 'sans-serif']
+  		},
+  		fontSize: {
+  			h1: '72px',
+  			h2: '36px',
+  			h3: '24px',
+  			h4: '24px',
+  			h5: '16px',
+  			'texte-courant': '12px'
+  		},
+  		fontWeight: {
+  			normal: '400',
+  			black: '900'
+  		},
+  		borderRadius: {
+  			primary: 'var(--rounded-primary)',
+  			lg: 'var(--radius)',
+  			md: 'calc(var(--radius) - 2px)',
+  			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		maxWidth: {
+  			'8xl': '90rem'
+  		},
+  		height: {
+  			'15': '3.75rem'
+  		},
+  		boxShadow: {
+  			'button-primary': 'var(--shadow-button-default)'
+  		},
+  		padding: {
+  			container: 'var(--padding-game-container)'
+  		},
+  		keyframes: {
+  			'progress-bar-right-to-left': {
+  				'0%': {
+  					transform: 'translateX(0)'
+  				},
+  				'100%': {
+  					transform: 'translateX(-100%)'
+  				}
+  			}
+  		},
+  		animation: {
+  			'progress-bar-right-to-left': 'progress-bar-right-to-left var(--duration) linear forwards'
+  		}
+  	}
   },
   plugins: [ 
     function({ addBase, theme }) {
@@ -112,5 +120,6 @@ export default {
       
       })
     },
-  ],
+      require("tailwindcss-animate")
+],
 }
