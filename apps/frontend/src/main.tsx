@@ -1,11 +1,9 @@
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { routeTree } from './routeTree.gen';
-
-import './index.css';
-
 import { GameProvider } from './features/game/GameContext.tsx';
+import './index.css';
+import { routeTree } from './routeTree.gen';
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -16,15 +14,6 @@ declare module '@tanstack/react-router' {
     router: typeof router;
   }
 }
-
-// // biome-ignore lint/style/noNonNullAssertion: <explanation>
-// ReactDOM.createRoot(document.getElementById('root')!).render(
-//   <React.StrictMode>
-//     <GameProvider>
-//       <App />
-//     </GameProvider>
-//   </React.StrictMode>,
-// );
 
 // biome-ignore lint/style/noNonNullAssertion: <explanation>
 const rootElement = document.getElementById('root')!;

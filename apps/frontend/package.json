@@ -13,8 +13,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.0",
     "@packages/dtos": "workspace:*",
     "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-select": "^2.1.2",
+    "@radix-ui/react-slot": "^1.1.0",
     "@tanstack/react-router": "^1.70.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -24,10 +28,12 @@
     "react": "^18.2.0",
     "react-aria-components": "^1.3.3",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.53.0",
     "react-refresh": "^0.14.0",
     "shifumi": "link:",
     "tailwind-merge": "^2.5.4",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@tanstack/router-devtools": "^1.70.0",
