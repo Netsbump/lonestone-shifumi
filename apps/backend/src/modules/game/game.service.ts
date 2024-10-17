@@ -6,6 +6,7 @@ import { Status } from '@packages/dtos';
 import { Game } from 'src/entities/game.entity';
 import { Player } from 'src/entities/player.entity';
 import { Round } from 'src/entities/round.entity';
+import { determineGameStatus } from 'src/utils/determineGameStatus';
 import { determineGameWinner } from 'src/utils/determineGameWinner';
 import { determineRoundResult } from 'src/utils/determineRoundResult';
 
@@ -68,25 +69,27 @@ export class GameService {
       games.map(async (game) => {
         const rounds = await this.em.find(Round, { game: game.id }, { populate: ['choices'] });
 
-        let status: Status;
-        const roundPlayed = rounds.length;
+        // let status: Status;
+         const roundPlayed = rounds.length;
 
-        if (roundPlayed < 1) {
-          status = Status.NOT_STARTED;
-        } else if (roundPlayed < 5) {
-          status = Status.IN_PROGRESS;
-        } else {
-          // Calcul s'il y a un gagnant
-          const roundResults: Result[] = [];
-          for (const round of rounds) {
-            if (round.choices.length === 2) {
-              roundResults.push(
-                determineRoundResult(round.choices[0].action, round.choices[1].action),
-              );
-            }
-          }
-          status = determineGameWinner(roundResults);
-        }
+        // if (roundPlayed < 1) {
+        //   status = Status.NOT_STARTED;
+        // } else if (roundPlayed < 5) {
+        //   status = Status.IN_PROGRESS;
+        // } else {
+        //   // Calcul s'il y a un gagnant
+        //   const roundResults: Result[] = [];
+        //   for (const round of rounds) {
+        //     if (round.choices.length === 2) {
+        //       roundResults.push(
+        //         determineRoundResult(round.choices[0].action, round.choices[1].action),
+        //       );
+        //     }
+        //   }
+        //   status = determineGameWinner(roundResults);
+        // }
+
+        const status = determineGameStatus(roundPlayed, rounds)
 
         gameStatuses.push({
           id: game.id,
@@ -99,11 +102,33 @@ export class GameService {
     return gameStatuses;
   }
 
-  async findOne(id: number): Promise<Pick<GameDTO, 'id' | 'players'>> {
+  async findOne(id: number): Promise<GameDTO> {
     const game = await this.em.findOneOrFail(Game, { id }, { populate: ['players'] });
+
+    const rounds = await this.em.find(Round, { game: game.id }, { populate: ['choices'] });
+
+    let status: Status;
+    const roundPlayed = rounds.length;
+
+    if (roundPlayed < 1) {
+      status = Status.NOT_STARTED;
+    } else if (roundPlayed < 5) {
+      status = Status.IN_PROGRESS;
+    } else {
+      // Calcul s'il y a un gagnant
+      const roundResults: Result[] = [];
+      for (const round of rounds) {
+        if (round.choices.length === 2) {
+          roundResults.push(determineRoundResult(round.choices[0].action, round.choices[1].action));
+        }
+      }
+      status = determineGameWinner(roundResults);
+    }
 
     return {
       id: game.id,
+      status,
+      roundPlayed,
       players: game.players.getItems(false).map((player) => {
         return {
           id: player.id,

@@ -1,3 +1,4 @@
+import type { Round, Status } from '@packages/dtos';
 import {
   type DRAW,
   type FINISHED,
@@ -13,11 +14,11 @@ import {
 
 export type Result = typeof PLAYER | typeof OPPONENT | typeof DRAW;
 
-export type Round = {
-  playerChoice: Choice;
-  opponentChoice: Choice;
-  roundResult: Result;
-};
+// export type Round = {
+//   playerChoice: Choice;
+//   opponentChoice: Choice;
+//   roundResult: Result;
+// };
 
 export type Choice = typeof LEAF | typeof STONE | typeof SCISSORS | typeof FORFEIT;
 
@@ -55,7 +56,8 @@ export type Player = {
 };
 
 export type Game = {
-  gameStatus: GameStatus;
+  gameId: number
+  gameStatus: Status;
   roundStatus: RoundStatus[];
   history: Round[];
   players: {

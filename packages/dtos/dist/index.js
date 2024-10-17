@@ -22,6 +22,7 @@ var src_exports = {};
 __export(src_exports, {
   ChoicePatchSchema: () => ChoicePatchSchema,
   ChoiceSchema: () => ChoiceSchema,
+  CreatePlayerChoiceSchema: () => CreatePlayerChoiceSchema,
   CreateRoundSchema: () => CreateRoundSchema,
   DRAW: () => DRAW,
   FORFEIT: () => FORFEIT,
@@ -87,8 +88,12 @@ var CreatePlayerChoiceSchema = ChoiceSchema.pick({
   playerId: true,
   action: true
 });
-var CreateRoundSchema = RoundSchema.extend({
-  playersChoices: import_zod.z.array(CreatePlayerChoiceSchema)
+var CreateRoundSchema = import_zod.z.object({
+  gameId: import_zod.z.number(),
+  player: import_zod.z.object({
+    name: import_zod.z.string(),
+    action: import_zod.z.string()
+  })
 });
 var ChoicePatchSchema = ChoiceSchema.pick({
   playerId: true,
@@ -103,6 +108,7 @@ var RoundPatchSchema = RoundSchema.pick({
 0 && (module.exports = {
   ChoicePatchSchema,
   ChoiceSchema,
+  CreatePlayerChoiceSchema,
   CreateRoundSchema,
   DRAW,
   FORFEIT,

@@ -8,6 +8,12 @@ declare const STONE = "STONE";
 declare const SCISSORS = "SCISSORS";
 declare const FORFEIT = "FORFEIT";
 
+declare enum Status {
+    NOT_STARTED = "NOT_STARTED",
+    IN_PROGRESS = "IN_PROGRESS",
+    FINISHED = "FINISHED"
+}
+
 declare const IdSchema: z.ZodNumber;
 declare const PlayerSchema: z.ZodObject<{
     name: z.ZodString;
@@ -58,35 +64,41 @@ declare const PlayerPatchSchema: z.ZodObject<{
     isNPC?: boolean | undefined;
     avatar_path?: string | undefined;
 }>;
-declare const CreateRoundSchema: z.ZodObject<z.objectUtil.extendShape<{
-    number: z.ZodNumber;
-    game: z.ZodNumber;
+declare const CreatePlayerChoiceSchema: z.ZodObject<Pick<{
+    playerId: z.ZodNumber;
+    round: z.ZodNumber;
+    action: z.ZodString;
+}, "playerId" | "action">, "strip", z.ZodTypeAny, {
+    playerId: number;
+    action: string;
 }, {
-    playersChoices: z.ZodArray<z.ZodObject<Pick<{
-        playerId: z.ZodNumber;
-        round: z.ZodNumber;
+    playerId: number;
+    action: string;
+}>;
+declare const CreateRoundSchema: z.ZodObject<{
+    gameId: z.ZodNumber;
+    player: z.ZodObject<{
+        name: z.ZodString;
         action: z.ZodString;
-    }, "playerId" | "action">, "strip", z.ZodTypeAny, {
-        playerId: number;
+    }, "strip", z.ZodTypeAny, {
+        name: string;
         action: string;
     }, {
-        playerId: number;
+        name: string;
         action: string;
-    }>, "many">;
-}>, "strip", z.ZodTypeAny, {
-    number: number;
-    game: number;
-    playersChoices: {
-        playerId: number;
+    }>;
+}, "strip", z.ZodTypeAny, {
+    player: {
+        name: string;
         action: string;
-    }[];
+    };
+    gameId: number;
 }, {
-    number: number;
-    game: number;
-    playersChoices: {
-        playerId: number;
+    player: {
+        name: string;
         action: string;
-    }[];
+    };
+    gameId: number;
 }>;
 declare const ChoicePatchSchema: z.ZodObject<{
     playerId: z.ZodOptional<z.ZodNumber>;
@@ -115,7 +127,7 @@ declare const RoundPatchSchema: z.ZodObject<{
 type GameDTO = {
     id: number;
     players: PlayerDTO[];
-    status: string;
+    status: Status;
     roundPlayed: number;
 };
 type ChoiceDTO = {
@@ -135,6 +147,7 @@ type RoundDTO = {
     choices: Array<Omit<ChoiceDTO, 'round' | 'player'> & {
         player: number;
     }>;
+    roundResult: string;
 };
 type CreateGameDTO = z.infer<typeof GameSchema>;
 type UpdateGameDTO = z.infer<typeof GameSchema>;
@@ -145,18 +158,12 @@ type UpdateChoiceDTO = z.infer<typeof ChoiceSchema>;
 type CreateRoundDTO = z.infer<typeof CreateRoundSchema>;
 type UpdateRoundDTO = Omit<z.infer<typeof CreateRoundSchema>, 'game'>;
 
-declare enum Status {
-    NOT_STARTED = "NOT_STARTED",
-    IN_PROGRESS = "IN_PROGRESS",
-    FINISHED = "FINISHED"
-}
-
 type Result = typeof PLAYER | typeof OPPONENT | typeof DRAW;
+type Choice = typeof LEAF | typeof STONE | typeof SCISSORS | typeof FORFEIT;
 type Round = {
     playerChoice: Choice;
     opponentChoice: Choice;
     roundResult: Result;
 };
-type Choice = typeof LEAF | typeof STONE | typeof SCISSORS | typeof FORFEIT;
 
-export { type Choice, type ChoiceDTO, ChoicePatchSchema, ChoiceSchema, type CreateChoiceDTO, type CreateGameDTO, type CreatePlayerDTO, type CreateRoundDTO, CreateRoundSchema, DRAW, FORFEIT, type GameDTO, GameSchema, IdSchema, LEAF, OPPONENT, PLAYER, type PlayerDTO, PlayerPatchSchema, PlayerSchema, type Result, type Round, type RoundDTO, RoundPatchSchema, SCISSORS, STONE, Status, type UpdateChoiceDTO, type UpdateGameDTO, type UpdatePlayerDTO, type UpdateRoundDTO };
+export { type Choice, type ChoiceDTO, ChoicePatchSchema, ChoiceSchema, type CreateChoiceDTO, type CreateGameDTO, CreatePlayerChoiceSchema, type CreatePlayerDTO, type CreateRoundDTO, CreateRoundSchema, DRAW, FORFEIT, type GameDTO, GameSchema, IdSchema, LEAF, OPPONENT, PLAYER, type PlayerDTO, PlayerPatchSchema, PlayerSchema, type Result, type Round, type RoundDTO, RoundPatchSchema, SCISSORS, STONE, Status, type UpdateChoiceDTO, type UpdateGameDTO, type UpdatePlayerDTO, type UpdateRoundDTO };
