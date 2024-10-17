@@ -46,8 +46,12 @@ var CreatePlayerChoiceSchema = ChoiceSchema.pick({
   playerId: true,
   action: true
 });
-var CreateRoundSchema = RoundSchema.extend({
-  playersChoices: z.array(CreatePlayerChoiceSchema)
+var CreateRoundSchema = z.object({
+  gameId: z.number(),
+  player: z.object({
+    name: z.string(),
+    action: z.string()
+  })
 });
 var ChoicePatchSchema = ChoiceSchema.pick({
   playerId: true,
@@ -61,6 +65,7 @@ var RoundPatchSchema = RoundSchema.pick({
 export {
   ChoicePatchSchema,
   ChoiceSchema,
+  CreatePlayerChoiceSchema,
   CreateRoundSchema,
   DRAW,
   FORFEIT,

@@ -7,10 +7,9 @@ import {
   Get,
   InternalServerErrorException,
   Param,
-  Patch,
-  Post,
+  Post
 } from '@nestjs/common';
-import { type CreateRoundDTO, CreateRoundSchema, IdSchema, type RoundDTO, RoundPatchSchema, type UpdateRoundDTO } from '@packages/dtos';
+import { type CreateRoundDTO, CreateRoundSchema, IdSchema, type RoundDTO } from '@packages/dtos';
 import { ZodError } from 'zod';
 // biome-ignore lint/style/useImportType: <explanation>
 import { RoundService } from './round.service';
@@ -35,7 +34,7 @@ export class RoundController {
   }
 
   @Get()
-  async findAll(): Promise<RoundDTO[]> {
+  async findAll(): Promise<Omit<RoundDTO, 'roundResult'>[]> {
     try {
       return await this.roundService.findAll();
     } catch {
@@ -44,7 +43,7 @@ export class RoundController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<RoundDTO> {
+  async findOne(@Param('id') id: string): Promise<Omit<RoundDTO, 'roundResult'>> {
     try {
       const idToNumber = IdSchema.parse(id);
       return await this.roundService.findOne(idToNumber);
@@ -61,23 +60,23 @@ export class RoundController {
     }
   }
 
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateRoundDto: UpdateRoundDTO): Promise<RoundDTO> {
-    try {
-      const idToNumber = IdSchema.parse(id);
-      const parsedUpdateRoundDTO = RoundPatchSchema.parse(updateRoundDto);
-      return await this.roundService.update(idToNumber, parsedUpdateRoundDTO);
-    } catch (error) {
-      if (error instanceof ZodError) {
-        throw new BadRequestException('Invalid input');
-      } 
+  // @Patch(':id')
+  // async update(@Param('id') id: string, @Body() updateRoundDto: UpdateRoundDTO): Promise<RoundDTO> {
+  //   try {
+  //     const idToNumber = IdSchema.parse(id);
+  //     const parsedUpdateRoundDTO = RoundPatchSchema.parse(updateRoundDto);
+  //     return await this.roundService.update(idToNumber, parsedUpdateRoundDTO);
+  //   } catch (error) {
+  //     if (error instanceof ZodError) {
+  //       throw new BadRequestException('Invalid input');
+  //     } 
       
-      if (error instanceof NotFoundError) {
-        throw new BadRequestException('Round not found');
-      }
-      throw new InternalServerErrorException('Unexpected error occurred during round update');
-    }
-  }
+  //     if (error instanceof NotFoundError) {
+  //       throw new BadRequestException('Round not found');
+  //     }
+  //     throw new InternalServerErrorException('Unexpected error occurred during round update');
+  //   }
+  // }
 
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {

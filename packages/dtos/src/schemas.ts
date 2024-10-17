@@ -32,13 +32,17 @@ const RoundSchema = z.object({
     game: z.number(),
 })
 
-const CreatePlayerChoiceSchema = ChoiceSchema.pick({
+export const CreatePlayerChoiceSchema = ChoiceSchema.pick({
     playerId: true,
     action: true
 })
   
-export const CreateRoundSchema = RoundSchema.extend({
-    playersChoices: z.array(CreatePlayerChoiceSchema),
+export const CreateRoundSchema = z.object({
+    gameId: z.number(),
+    player: z.object({
+        name: z.string(),
+        action: z.string()
+    })
 })
 
 

@@ -1,21 +1,16 @@
 import type React from 'react';
 import { createContext, useCallback, useReducer } from 'react';
 
-import type { GameDTO } from '@packages/dtos';
-import { createGame } from '../../lib/api/game';
+import type { Round, RoundDTO } from '@packages/dtos';
+import { type GameDTO, type Result, Status } from '@packages/dtos';
+import { createGame, fetchGame } from '../../lib/api/game';
+import { createRound } from '../../lib/api/round';
 import type { Choice, Game, RoundStatus } from '../../lib/types/game.types';
 import {
   FINISHED,
-  FORFEIT,
   IN_PROGRESS,
-  NOT_STARTED,
-  OPPONENT,
-  PLAYER,
+  NOT_STARTED
 } from '../../lib/utils/constants';
-import {
-  determineRoundResult,
-  getRandomChoice,
-} from '../../lib/utils/game.logic';
 
 const RESET = 'RESET';
 const PLAY = 'PLAY';
@@ -23,7 +18,8 @@ const START = 'START';
 const NEXTROUND = 'NEXTROUND';
 
 const initialGameState: Game = {
-  gameStatus: NOT_STARTED,
+  gameId: 0,
+  gameStatus: Status.NOT_STARTED,
   roundStatus: [
     {
       roundNumber: 0,
@@ -50,7 +46,7 @@ const initialGameState: Game = {
 };
 
 type GameAction =
-  | { type: typeof PLAY; value: Choice }
+  | { type: typeof PLAY; value: { round: RoundDTO, game: GameDTO} }
   | { type: typeof START; value: GameDTO }
   | { type: typeof RESET }
   | { type: typeof NEXTROUND };
@@ -61,9 +57,12 @@ const start = (gameData: GameDTO): GameAction => ({
   value: gameData,
 });
 
-const play = (playerChoice: Choice): GameAction => ({
+const play = (roundCreated: RoundDTO, game: GameDTO): GameAction => ({
   type: PLAY,
-  value: playerChoice,
+  value: {
+    round: roundCreated,
+    game: game
+  }
 });
 
 const reset = (): GameAction => ({
@@ -77,11 +76,12 @@ const nextRound = (): GameAction => ({
 const gameReducer = (state: Game, action: GameAction): Game => {
   switch (action.type) {
     case START: {
-      const { players } = action.value;
+      const { players, id } = action.value;
 
       return {
     ...state,
-    gameStatus: IN_PROGRESS,
+    gameId: id,
+    gameStatus: Status.IN_PROGRESS,
     players: {
       player: {
         name: players[0].name, 
@@ -101,44 +101,24 @@ const gameReducer = (state: Game, action: GameAction): Game => {
   };
     }
     case PLAY: {
-      const playerChoice = action.value;
-      const opponentChoice = getRandomChoice();
-      const roundResult =
-        playerChoice === FORFEIT
-          ? 'opponent'
-          : determineRoundResult(playerChoice, opponentChoice);
+      const { round, game } = action.value;
 
-      // Create a new round object containing player and opponent choices, and the round result
-      const newRound = {
-        playerChoice,
-        opponentChoice,
-        roundResult,
+      const newRound: Round = {
+        playerChoice: round.choices[0].action as Choice, 
+        opponentChoice: round.choices[1].action as Choice,
+        roundResult: round.roundResult as Result,
       };
+
       // Add this new round to the history
-      const updateHistory = [...state.history, newRound];
+      const updateHistory = [...state.history, newRound
+      ];
 
-      // Check if either player has won the game by reaching 5 wins
-      const playerWins = updateHistory.filter(
-        (round) => round.roundResult === PLAYER,
-      ).length;
-      const opponentWins = updateHistory.filter(
-        (round) => round.roundResult === OPPONENT,
-      ).length;
-
-      // By default, keep the current game status
-      let gameStatus = state.gameStatus;
-
-      // If either the player or opponent reaches 5 wins, the game is marked as finished
-      if (playerWins === 5 || opponentWins === 5) {
-        gameStatus = FINISHED;
-      }
-
-      // Get the last round status (to determine the next round number)
-      const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
+      // Updte game status
+      const gameStatus = game.status;
 
       // Create a new round status for the next round, incrementing the round number
       const newRoundStatus: RoundStatus = {
-        roundNumber: lastRoundStatus.roundNumber + 1,
+        roundNumber: round.number,
         timerProgressBarStatus: IN_PROGRESS,
       };
       const updateRoundStatus = [...state.roundStatus, newRoundStatus];
@@ -155,10 +135,11 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       return initialGameState;
     }
     case NEXTROUND: {
+
       // Get the index of the last round status in the roundStatus array
       const lastRoundStatusIndex = state.roundStatus.length - 1;
 
-      //Create a copy of the roundStatus array to avoid mutating the original state directly
+      // Create a copy of the roundStatus array to avoid mutating the original state directly
       const updatedRoundStatus = [...state.roundStatus];
 
       // Update the timerProgressBarStatus of the last round to FINISHED
@@ -205,9 +186,14 @@ const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     dispatch(start(gameData));
   }, []);
 
-  const playCallback = useCallback((playerChoice: Choice) => {
-    dispatch(play(playerChoice));
-  }, []);
+  const playCallback = useCallback(async (playerChoice: Choice) => {
+    const roundCreated = await createRound({ gameId: state.gameId, player: {name: state.players.player.name, action: playerChoice}});
+    console.log(roundCreated)
+    const game = await fetchGame(state.gameId);
+    console.log(game);
+
+    dispatch(play(roundCreated, game));
+  }, [state.gameId, state.players.player.name]);
 
   const resetCallback = useCallback(() => {
     dispatch(reset());
