@@ -6,16 +6,13 @@ import { type GameDTO, type Result, Status } from '@packages/dtos';
 import { createGame, fetchGame } from '../../lib/api/game';
 import { createRound } from '../../lib/api/round';
 import type { Choice, Game, RoundStatus } from '../../lib/types/game.types';
-import {
-  FINISHED,
-  IN_PROGRESS,
-  NOT_STARTED
-} from '../../lib/utils/constants';
+import { FINISHED, IN_PROGRESS, NOT_STARTED } from '../../lib/utils/constants';
 
 const RESET = 'RESET';
 const PLAY = 'PLAY';
 const START = 'START';
 const NEXTROUND = 'NEXTROUND';
+const CREATE = 'CREATE';
 
 const initialGameState: Game = {
   gameId: 0,
@@ -29,16 +26,16 @@ const initialGameState: Game = {
   history: [],
   players: {
     player: {
-      name: '', 
+      name: '',
       avatar: {
-        imgPath: '', 
+        imgPath: '',
         alt: '',
       },
     },
     opponent: {
       name: '',
       avatar: {
-        imgPath: '', 
+        imgPath: '',
         alt: '',
       },
     },
@@ -46,23 +43,28 @@ const initialGameState: Game = {
 };
 
 type GameAction =
-  | { type: typeof PLAY; value: { round: RoundDTO, game: GameDTO} }
-  | { type: typeof START; value: GameDTO }
+  | { type: typeof PLAY; value: { round: RoundDTO; game: GameDTO } }
+  | { type: typeof CREATE; value: GameDTO }
+  | { type: typeof START }
   | { type: typeof RESET }
   | { type: typeof NEXTROUND };
 
 // Action creators
-const start = (gameData: GameDTO): GameAction => ({
-  type: START,
+const create = (gameData: GameDTO): GameAction => ({
+  type: CREATE,
   value: gameData,
+});
+
+const start = (): GameAction => ({
+  type: START,
 });
 
 const play = (roundCreated: RoundDTO, game: GameDTO): GameAction => ({
   type: PLAY,
   value: {
     round: roundCreated,
-    game: game
-  }
+    game: game,
+  },
 });
 
 const reset = (): GameAction => ({
@@ -75,43 +77,48 @@ const nextRound = (): GameAction => ({
 
 const gameReducer = (state: Game, action: GameAction): Game => {
   switch (action.type) {
-    case START: {
+    case CREATE: {
       const { players, id } = action.value;
 
       return {
-    ...state,
-    gameId: id,
-    gameStatus: Status.IN_PROGRESS,
-    players: {
-      player: {
-        name: players[0].name, 
-        avatar: {
-          imgPath: players[0].avatar_path,
-          alt: `avatar ${players[0].name}`,
+        ...state,
+        gameId: id,
+        players: {
+          player: {
+            name: players[0].name,
+            avatar: {
+              imgPath: players[0].avatar_path,
+              alt: `avatar ${players[0].name}`,
+            },
+          },
+          opponent: {
+            name: players[1].name,
+            avatar: {
+              imgPath: players[1].avatar_path,
+              alt: `avatar ${players[1].name}`,
+            },
+          },
         },
-      },
-      opponent: {
-        name: players[1].name,
-        avatar: {
-          imgPath: players[1].avatar_path,
-          alt: `avatar ${players[1].name}`,
-        },
-      },
-    },
-  };
+      };
+    }
+    case START: {
+
+      return {
+        ...state,
+        gameStatus: Status.IN_PROGRESS,
+      };
     }
     case PLAY: {
       const { round, game } = action.value;
 
       const newRound: Round = {
-        playerChoice: round.choices[0].action as Choice, 
+        playerChoice: round.choices[0].action as Choice,
         opponentChoice: round.choices[1].action as Choice,
         roundResult: round.roundResult as Result,
       };
 
       // Add this new round to the history
-      const updateHistory = [...state.history, newRound
-      ];
+      const updateHistory = [...state.history, newRound];
 
       // Updte game status
       const gameStatus = game.status;
@@ -135,7 +142,6 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       return initialGameState;
     }
     case NEXTROUND: {
-
       // Get the index of the last round status in the roundStatus array
       const lastRoundStatusIndex = state.roundStatus.length - 1;
 
@@ -161,6 +167,7 @@ const gameReducer = (state: Game, action: GameAction): Game => {
 
 export type GameContextType = {
   state: Game;
+  create: (playerChoice: string) => Promise<GameDTO>;
   start: () => void;
   play: (playerChoice: Choice) => void;
   reset: () => void;
@@ -176,24 +183,32 @@ type GameProviderProps = {
 const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialGameState);
 
-  const startCallback = useCallback(async() => {
-    
+  const createCallBack = useCallback(async (playerName: string): Promise<GameDTO> => {
     const gameData = await createGame({
-      playerName: 'Moi',
+      playerName: playerName,
       opponentName: 'J-Ordi',
     });
 
-    dispatch(start(gameData));
+    dispatch(create(gameData));
+    return gameData;
   }, []);
 
-  const playCallback = useCallback(async (playerChoice: Choice) => {
-    const roundCreated = await createRound({ gameId: state.gameId, player: {name: state.players.player.name, action: playerChoice}});
-    console.log(roundCreated)
-    const game = await fetchGame(state.gameId);
-    console.log(game);
+  const startCallback = useCallback(() => {
+    dispatch(start());
+  }, []);
 
-    dispatch(play(roundCreated, game));
-  }, [state.gameId, state.players.player.name]);
+  const playCallback = useCallback(
+    async (playerChoice: Choice) => {
+      const roundCreated = await createRound({
+        gameId: state.gameId,
+        player: { name: state.players.player.name, action: playerChoice },
+      });
+      const game = await fetchGame(state.gameId);
+
+      dispatch(play(roundCreated, game));
+    },
+    [state.gameId, state.players.player.name],
+  );
 
   const resetCallback = useCallback(() => {
     dispatch(reset());
@@ -207,6 +222,7 @@ const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     <GameContext.Provider
       value={{
         state,
+        create: createCallBack,
         play: playCallback,
         start: startCallback,
         reset: resetCallback,
@@ -219,4 +235,3 @@ const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 };
 
 export { GameContext, GameProvider };
-
