@@ -12,7 +12,7 @@ export const createGame = async (gameData: CreateGameDTO): Promise<GameDTO> => {
 };
 
 // Fetch a single game by ID
-export const fetchGame = async (id: string | number): Promise<GameDTO> => {
+export const fetchGame = async (id: number): Promise<GameDTO> => {
   return await api.get(`games/${id}`).json();
 };
 

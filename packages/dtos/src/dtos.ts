@@ -1,6 +1,7 @@
 import type { z } from "zod";
 import type { Status } from "./enums";
 import type { ChoiceSchema, CreateRoundSchema, GameSchema, PlayerSchema } from "./schemas";
+import type { Choice, Result } from "./types";
 
 // DTOs for mapping entities to DTOs for controller response
 export type GameDTO = {
@@ -8,6 +9,7 @@ export type GameDTO = {
     players: PlayerDTO[];
     status: Status,
     roundPlayed: number;
+    historyRound?: {playerChoice: Choice, opponentChoice: Choice, roundResult: Result}[]
 }
 
 export type ChoiceDTO = {

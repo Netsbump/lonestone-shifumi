@@ -1,5 +1,6 @@
 import type { Choice } from '@packages/dtos';
 import { createFileRoute } from '@tanstack/react-router';
+import { useEffect } from 'react';
 import { GameButtonGroup } from '../features/game/GameButtonGroup';
 import { GameHistory } from '../features/game/history/GameHistory';
 import { GameRules } from '../features/game/rules/GameRules';
@@ -13,10 +14,18 @@ export const Route = createFileRoute('/games/$gameId')({
   component: Game,
 });
 
-//Todo doit s'attendre à récup un gameID
 function Game() {
-  const { state, play, reset, start } = useGame();
+  const { gameId } = Route.useParams();
+  const isValidId = !Number.isNaN(Number(gameId));
+  const { state, play, reset, start, update } = useGame();
   const gameStatus = state.gameStatus;
+
+  useEffect(() => {
+    if (isValidId) {
+      update(Number(gameId));
+      console.log('appel update')
+    }
+  }, [gameId, isValidId, update]);
 
   const handlePlayerChoice = (playerChoice: Choice): void => {
     play(playerChoice);
@@ -53,6 +62,7 @@ function Game() {
           <GameButtonGroup onPlayerChoice={handlePlayerChoice} />
         </div>
       )}
+
 
       {gameStatus === FINISHED && (
         <div className="col-span-3 col-start-2 mt-5 flex items-center justify-center gap-3">

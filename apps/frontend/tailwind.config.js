@@ -91,7 +91,7 @@ export default {
           fontFamily: theme('fontFamily.overpass'),
           fontSize: theme('fontSize.h3'),
           fontWeight: theme('fontWeight.black'),
-          textAlign: 'right',
+          textAlign: 'center',
         },
         'h4': {
           fontFamily: theme('fontFamily.chivo'),
