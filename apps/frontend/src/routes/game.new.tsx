@@ -1,39 +1,46 @@
 import { Button } from '@/components/ui/button';
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select';
+import { useGame } from '@/features/game/useGame';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createFileRoute } from '@tanstack/react-router';
 
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
 export const Route = createFileRoute('/game/new')({
   component: SetupGameForm,
 });
 
 function SetupGameForm() {
-  //const navigate = Route.useNavigate();
+  const navigate = Route.useNavigate();
+  const { create } = useGame();
+  const handleSubmitNewGame = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const gameData = await create(values.playerName);
 
-  const handleSubmitNewGame = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    //Création de la partie: ajouter un hook createLobby ou createGame
-    //Redirection /games/id
-    //Startgame doit juste lancer la game
+      const gameId = gameData.id;
+
+      navigate({ to: `/games/${gameId}`, replace: true });
+    } catch (error) {
+      console.error('Unexpected error occurred during game creation', error);
+    }
   };
 
   const formSchema = z.object({
@@ -52,7 +59,10 @@ function SetupGameForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmitNewGame)} className="flex flex-col justify-center">
+      <form
+        onSubmit={form.handleSubmit(handleSubmitNewGame)}
+        className="flex flex-col justify-center"
+      >
         <FormField
           control={form.control}
           name="playerName"
@@ -83,27 +93,5 @@ function SetupGameForm() {
         <Button type="submit">Valider</Button>
       </form>
     </Form>
-    // <form action="" method="get" className="form-example">
-    //   <div className="form-example">
-    //     <label htmlFor="name">Entrez votre nom</label>
-    //     <input type="text" name="name" id="name" required />
-    //   </div>
-
-    //   <div className="form-example">
-    //     <p>Choissisez votre adversaire</p>
-    //     <select>
-    //       <option>J-Ordi (NPC)</option>
-    //       <option>Inviter un ami</option>
-    //       <option>Random player</option>
-    //     </select>
-    //   </div>
-    //   <div className="form-example">
-    //     <p>Choissisez votre type de partie</p>
-    //     <select>
-    //       <option>Normal</option>
-    //       <option>Super Partie</option>
-    //     </select>
-    //   </div>
-    // </form>
   );
 }
