@@ -124,11 +124,24 @@ declare const RoundPatchSchema: z.ZodObject<{
     game?: number | undefined;
 }>;
 
+type Result = typeof PLAYER | typeof OPPONENT | typeof DRAW;
+type Choice = typeof LEAF | typeof STONE | typeof SCISSORS | typeof FORFEIT;
+type Round = {
+    playerChoice: Choice;
+    opponentChoice: Choice;
+    roundResult: Result;
+};
+
 type GameDTO = {
     id: number;
     players: PlayerDTO[];
     status: Status;
     roundPlayed: number;
+    historyRound?: {
+        playerChoice: Choice;
+        opponentChoice: Choice;
+        roundResult: Result;
+    }[];
 };
 type ChoiceDTO = {
     player: PlayerDTO;
@@ -157,13 +170,5 @@ type CreateChoiceDTO = z.infer<typeof ChoiceSchema>;
 type UpdateChoiceDTO = z.infer<typeof ChoiceSchema>;
 type CreateRoundDTO = z.infer<typeof CreateRoundSchema>;
 type UpdateRoundDTO = Omit<z.infer<typeof CreateRoundSchema>, 'game'>;
-
-type Result = typeof PLAYER | typeof OPPONENT | typeof DRAW;
-type Choice = typeof LEAF | typeof STONE | typeof SCISSORS | typeof FORFEIT;
-type Round = {
-    playerChoice: Choice;
-    opponentChoice: Choice;
-    roundResult: Result;
-};
 
 export { type Choice, type ChoiceDTO, ChoicePatchSchema, ChoiceSchema, type CreateChoiceDTO, type CreateGameDTO, CreatePlayerChoiceSchema, type CreatePlayerDTO, type CreateRoundDTO, CreateRoundSchema, DRAW, FORFEIT, type GameDTO, GameSchema, IdSchema, LEAF, OPPONENT, PLAYER, type PlayerDTO, PlayerPatchSchema, PlayerSchema, type Result, type Round, type RoundDTO, RoundPatchSchema, SCISSORS, STONE, Status, type UpdateChoiceDTO, type UpdateGameDTO, type UpdatePlayerDTO, type UpdateRoundDTO };

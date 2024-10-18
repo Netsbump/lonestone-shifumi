@@ -13,6 +13,7 @@ const PLAY = 'PLAY';
 const START = 'START';
 const NEXTROUND = 'NEXTROUND';
 const CREATE = 'CREATE';
+const UPDATE = 'UPDATE';
 
 const initialGameState: Game = {
   gameId: 0,
@@ -44,6 +45,7 @@ const initialGameState: Game = {
 
 type GameAction =
   | { type: typeof PLAY; value: { round: RoundDTO; game: GameDTO } }
+  | { type: typeof UPDATE; value: GameDTO }
   | { type: typeof CREATE; value: GameDTO }
   | { type: typeof START }
   | { type: typeof RESET }
@@ -57,6 +59,11 @@ const create = (gameData: GameDTO): GameAction => ({
 
 const start = (): GameAction => ({
   type: START,
+});
+
+const update = (gameData: GameDTO): GameAction => ({
+  type: UPDATE,
+  value: gameData,
 });
 
 const play = (roundCreated: RoundDTO, game: GameDTO): GameAction => ({
@@ -102,10 +109,57 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       };
     }
     case START: {
-
       return {
         ...state,
         gameStatus: Status.IN_PROGRESS,
+      };
+    }
+    case UPDATE: {
+      const { players, id, status, roundPlayed, historyRound } = action.value;
+
+      // Create a new round status for the next round, incrementing the round number
+      const newRoundStatus: RoundStatus = {
+        roundNumber: roundPlayed,
+        timerProgressBarStatus: NOT_STARTED,
+      };
+      const updateRoundStatus = [...state.roundStatus, newRoundStatus];
+
+      let updateHistory: Round[] = [];
+      if (historyRound) {
+        for (const round of historyRound) {
+          const newRound: Round = {
+            playerChoice: round.playerChoice,
+            opponentChoice: round.opponentChoice,
+            roundResult: round.roundResult,
+          };
+
+          // Add this new round to the history
+          updateHistory = [...state.history, newRound];
+        }
+      }
+
+      return {
+        ...state,
+        gameId: id,
+        gameStatus: status,
+        players: {
+          player: {
+            name: players[0].name,
+            avatar: {
+              imgPath: players[0].avatar_path,
+              alt: `avatar ${players[0].name}`,
+            },
+          },
+          opponent: {
+            name: players[1].name,
+            avatar: {
+              imgPath: players[1].avatar_path,
+              alt: `avatar ${players[1].name}`,
+            },
+          },
+        },
+        roundStatus: updateRoundStatus,
+        history: updateHistory,
       };
     }
     case PLAY: {
@@ -168,6 +222,7 @@ const gameReducer = (state: Game, action: GameAction): Game => {
 export type GameContextType = {
   state: Game;
   create: (playerChoice: string) => Promise<GameDTO>;
+  update: (gameId: number) => void;
   start: () => void;
   play: (playerChoice: Choice) => void;
   reset: () => void;
@@ -191,6 +246,12 @@ const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
     dispatch(create(gameData));
     return gameData;
+  }, []);
+
+  const updateCallBack = useCallback(async (gameId: number) => {
+    const game = await fetchGame(gameId);
+
+    dispatch(update(game));
   }, []);
 
   const startCallback = useCallback(() => {
@@ -223,6 +284,7 @@ const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
       value={{
         state,
         create: createCallBack,
+        update: updateCallBack,
         play: playCallback,
         start: startCallback,
         reset: resetCallback,

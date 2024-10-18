@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import type { GameDTO } from '@packages/dtos';
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
@@ -36,15 +37,15 @@ function Index() {
     <div className="h-full flex flex-col justify-between py-3">
       {games.length > 0 && (
         <main className="flex flex-col">
-          <h2>Choisissez une partie existante</h2>
+          <h3>Choisissez une partie existante</h3>
           <ul className="flex justify-center gap-3 pt-6 flex-wrap">
             {games.map((game) => (
               <li key={game.id} className="col-span-3">
-                <GameButton className="flex flex-col" onPress={() => handleStartGame(game.id)}>
+                <Button className="flex flex-col w-40 h-30 bg-night-blue" onClick={() => handleStartGame(game.id)}>
                   <span> Game {game.id}</span>
                   <span>Statut: {game.status}</span>
                   <span>Rounds joués: {game.roundPlayed}</span>
-                </GameButton>
+                </Button>
               </li>
             ))}
           </ul>
@@ -56,7 +57,7 @@ function Index() {
           onPress={handleStartNewGame}
           className={'flex w-72 items-center justify-center'}
         >
-          Commencer une nouvelle partie
+          Nouvelle partie
         </GameButton>
       </footer>
     </div>
