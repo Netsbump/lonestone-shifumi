@@ -137,16 +137,12 @@ type GameDTO = {
     players: PlayerDTO[];
     status: Status;
     roundPlayed: number;
-    historyRound?: {
-        playerChoice: Choice;
-        opponentChoice: Choice;
-        roundResult: Result;
-    }[];
+    historyRound?: Omit<RoundDTO, 'id' | 'game'>[];
 };
 type ChoiceDTO = {
     player: PlayerDTO;
     round: RoundDTO;
-    action: string;
+    action: Choice;
 };
 type PlayerDTO = {
     id: number;
@@ -158,9 +154,9 @@ type RoundDTO = {
     number: number;
     game: number;
     choices: Array<Omit<ChoiceDTO, 'round' | 'player'> & {
-        player: number;
+        playerID: number;
     }>;
-    roundResult: string;
+    roundResult: Result;
 };
 type CreateGameDTO = z.infer<typeof GameSchema>;
 type UpdateGameDTO = z.infer<typeof GameSchema>;

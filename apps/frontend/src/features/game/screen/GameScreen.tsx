@@ -14,8 +14,8 @@ export const GameScreen: React.FC = () => {
   const { state, play } = useGame();
   const { gameStatus, history, players } = state;
 
-  const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
-  const isRoundTimerInProgress = lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
+  const lastRoundStatus = history.length > 0 ? history[history.length - 1].timerRoundStatus : null;
+  const isRoundTimerInProgress = lastRoundStatus === IN_PROGRESS;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const winnerGameName = useMemo(() => {

@@ -16,11 +16,12 @@ const stone = '/images/icon-stone.svg';
 export const RoundResultDisplay: React.FC = () => {
   const { state, nextRound } = useGame();
   const lastRound = state.history[state.history.length - 1];
-  const roundStatus = state.roundStatus;
+  const showProgressBar = lastRound.timerRoundStatus === IN_PROGRESS;
 
-  const playerChoice = lastRound?.playerChoice;
-  const opponentChoice = lastRound?.opponentChoice;
+  const playerChoice = lastRound?.choices[0].action;
+  const opponentChoice = lastRound?.choices[1].action;
   const winnerRound = lastRound?.roundResult;
+
 
   //Animations
   const [showOpponentCard, setShowOpponentCard] = useState(false);
@@ -63,8 +64,7 @@ export const RoundResultDisplay: React.FC = () => {
     ? iconMapping[opponentChoice.toLocaleLowerCase()]
     : null;
 
-  const lastRoundStatus = roundStatus[roundStatus.length - 1];
-  const showProgressBar = lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
+
 
   const handleProgressComplete = (): void => {
     nextRound();

@@ -1,8 +1,9 @@
+import { RoundDTO } from '@packages/dtos';
 import type {
   Choice,
   Result,
-  Round,
   Rules,
+  TimerProgressBar,
   VisualElements,
 } from '../types/game.types';
 import {
@@ -39,7 +40,7 @@ export const getRandomChoice = (): Choice => {
 };
 
 export const getPlayerScores = (
-  history: Round[],
+  history: Array<Omit<RoundDTO, 'id' | 'game'> & { timerRoundStatus: TimerProgressBar }>,
 ): { playerScore: number; opponentScore: number } => {
   const playerScore = history.filter(
     (round) => round.roundResult === PLAYER,

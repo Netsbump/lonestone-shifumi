@@ -16,20 +16,16 @@ function Index() {
   useEffect(() => {
     const fetch = async () => {
       const response = await fetchGames();
-      console.log(response);
       setGames(response);
     };
     fetch();
   }, []);
 
   const handleStartGame = (gameId: number) => {
-    console.log(`Rejoindre la partie avec ID ${gameId}`);
     navigate({ to: `/games/${gameId}` });
   };
 
   const handleStartNewGame = () => {
-    // Commencer une nouvelle partie
-    console.log('Commencer une nouvelle partie');
     navigate({ to: '/game/new' });
   };
 

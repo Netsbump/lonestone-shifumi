@@ -6,8 +6,8 @@ import type {
   CreateGameDTO,
   GameDTO,
   Result,
-  Round as RoundType,
-  UpdateGameDTO,
+  RoundDTO,
+  UpdateGameDTO
 } from '@packages/dtos';
 import { Game } from 'src/entities/game.entity';
 import { Player } from 'src/entities/player.entity';
@@ -93,11 +93,10 @@ export class GameService {
 
     const rounds = await this.em.find(Round, { game: game.id }, { populate: ['choices'] });
 
-    //let status: Status;
     const roundPlayed = rounds.length;
-    console.log('Rounds joué : ' + roundPlayed);
-    const status = determineGameStatus(roundPlayed, rounds);
 
+    const status = determineGameStatus(roundPlayed, rounds);
+    
     const roundResults: Result[] = [];
 
     if (roundPlayed > 0) {
@@ -108,31 +107,21 @@ export class GameService {
       }
     }
 
-    const historyRound: RoundType[] = [];
+    const historyRound: Array<Omit<RoundDTO, 'id' | 'game'>> = [];
     for (let i = 0; i < rounds.length; i++) {
       historyRound.push({
-        playerChoice: rounds[i].choices[0].action as Choice,
-        opponentChoice: rounds[i].choices[1].action as Choice,
+        number: rounds[i].number,
+        choices: [{
+          playerID: rounds[i].choices[0].player.id,
+          action: rounds[i].choices[0].action as Choice,
+        }, {
+          playerID: rounds[i].choices[1].player.id,
+          action: rounds[i].choices[1].action as Choice,
+        }],
         roundResult: roundResults[i],
       });
     }
 
-
-
-    // // Calcul s'il y a un gagnant
-    // if (roundPlayed < 1) {
-    //   status = Status.NOT_STARTED;
-    // } else if (roundPlayed < 5) {
-    //   status = Status.IN_PROGRESS;
-    // } else {
-    //   const roundResults: Result[] = [];
-    //   for (const round of rounds) {
-    //     if (round.choices.length === 2) {
-    //       roundResults.push(determineRoundResult(round.choices[0].action, round.choices[1].action));
-    //     }
-    //   }
-    //   status = determineGameWinner(roundResults);
-    // }
 
     return {
       id: game.id,

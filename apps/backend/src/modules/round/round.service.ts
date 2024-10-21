@@ -1,7 +1,7 @@
 // biome-ignore lint/style/useImportType: <explanation>
 import { EntityManager } from '@mikro-orm/core';
 import { Injectable } from '@nestjs/common';
-import type { CreateRoundDTO, RoundDTO } from '@packages/dtos';
+import type { Choice as ChoiceType, CreateRoundDTO, RoundDTO } from '@packages/dtos';
 import { Choice } from 'src/entities/choice.entity';
 import { Game } from 'src/entities/game.entity';
 import { Player } from 'src/entities/player.entity';
@@ -72,7 +72,7 @@ export class RoundService {
         number: roundCreated.number,
         game: roundCreated.game.id,
         choices: roundCreated.choices.getItems(false).map((choice) => {
-          return { player: choice.player.id, action: choice.action };
+          return { playerID: choice.player.id, action: choice.action as ChoiceType };
         }),
         roundResult: roundResult
       };
@@ -87,7 +87,7 @@ export class RoundService {
       number: round.number,
       game: round.game.id,
       choices: round.choices.getItems(false).map((choice) => {
-        return { player: choice.player.id, action: choice.action };
+        return { playerID: choice.player.id, action: choice.action as ChoiceType };
       }),
     }));
   }
@@ -100,7 +100,7 @@ export class RoundService {
       number: round.number,
       game: round.game.id,
       choices: round.choices.getItems(false).map((choice) => {
-        return { player: choice.player.id, action: choice.action };
+        return { playerID: choice.player.id, action: choice.action as ChoiceType };
       }),
     };
   }

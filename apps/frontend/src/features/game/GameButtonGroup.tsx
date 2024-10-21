@@ -16,7 +16,7 @@ import { useGame } from './useGame';
 
 const leaf = '/images/icon-leaf.svg';
 const scissors = '/images/icon-scissors.svg';
-const stone = '/images/icon-stone.svg';
+const stone = '/images/icon-stone.svg';history
 
 type GameButtonGroupProps = {
   onPlayerChoice: (playerChoice: Choice) => void;
@@ -28,8 +28,8 @@ export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({
   const { state } = useGame();
   const history =
     state.history.length > 0 ? state.history[state.history.length - 1] : null;
-  const lastRoundStatus = state.roundStatus[state.roundStatus.length - 1];
-  const isDisabled = lastRoundStatus?.timerProgressBarStatus === IN_PROGRESS;
+  const lastRoundStatus = history?.timerRoundStatus;
+  const isDisabled = lastRoundStatus === IN_PROGRESS;
 
   return (
     <div className="flex w-full items-center justify-center gap-3">
@@ -37,8 +37,8 @@ export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({
         onPress={() => onPlayerChoice(STONE)}
         className={'w-56'}
         isDisabled={isDisabled}
-        isSelected={history?.playerChoice === STONE}
-        aria-pressed={history?.playerChoice === STONE}
+        isSelected={history?.choices[0].action === STONE}
+        aria-pressed={history?.choices[0].action === STONE}
       >
         <span className="flex h-full items-center justify-center gap-2">
           <Illustration
@@ -55,8 +55,8 @@ export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({
         onPress={() => onPlayerChoice(LEAF)}
         className={'w-56'}
         isDisabled={isDisabled}
-        isSelected={history?.playerChoice === LEAF}
-        aria-pressed={history?.playerChoice === LEAF}
+        isSelected={history?.choices[0].action === LEAF}
+        aria-pressed={history?.choices[0].action === LEAF}
       >
         <span className="flex h-full items-center justify-center gap-2">
           <Illustration
@@ -73,8 +73,8 @@ export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({
         onPress={() => onPlayerChoice(SCISSORS)}
         className={'w-56'}
         isDisabled={isDisabled}
-        isSelected={history?.playerChoice === SCISSORS}
-        aria-pressed={history?.playerChoice === SCISSORS}
+        isSelected={history?.choices[0].action === SCISSORS}
+        aria-pressed={history?.choices[0].action === SCISSORS}
       >
         <span className="flex h-full items-center justify-center gap-2">
           <Illustration
