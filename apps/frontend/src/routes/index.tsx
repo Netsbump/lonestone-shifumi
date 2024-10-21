@@ -1,33 +1,19 @@
 import { Button } from '@/components/ui/button';
 import type { GameDTO } from '@packages/dtos';
-import { createLazyFileRoute } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { fetchGames } from '../lib/api/game';
 import { GameButton } from '../ui/GameButton';
 
-export const Route = createLazyFileRoute('/')({
+export const Route = createFileRoute('/')({
+  loader: async () => {
+    const games = await fetchGames();
+    return { games };
+  },
   component: Index,
 });
 
 function Index() {
-  const navigate = Route.useNavigate();
-  const [games, setGames] = useState<GameDTO[]>([]);
-
-  useEffect(() => {
-    const fetch = async () => {
-      const response = await fetchGames();
-      setGames(response);
-    };
-    fetch();
-  }, []);
-
-  const handleStartGame = (gameId: number) => {
-    navigate({ to: `/games/${gameId}` });
-  };
-
-  const handleStartNewGame = () => {
-    navigate({ to: '/game/new' });
-  };
+  const { games } = Route.useLoaderData() as { games: GameDTO[] };
 
   return (
     <div className="h-full flex flex-col justify-between py-3">
@@ -37,10 +23,12 @@ function Index() {
           <ul className="flex justify-center gap-3 pt-6 flex-wrap">
             {games.map((game) => (
               <li key={game.id} className="col-span-3">
-                <Button className="flex flex-col w-40 h-30 bg-night-blue" onClick={() => handleStartGame(game.id)}>
+                <Button className="flex flex-col w-40 h-30 bg-night-blue" asChild>
+                  <Link to={`/games/${game.id}`}>
                   <span> Game {game.id}</span>
                   <span>Statut: {game.status}</span>
                   <span>Rounds joués: {game.roundPlayed}</span>
+                  </Link>
                 </Button>
               </li>
             ))}
@@ -50,10 +38,11 @@ function Index() {
 
       <footer className="mt-5 flex items-center justify-center">
         <GameButton
-          onPress={handleStartNewGame}
           className={'flex w-72 items-center justify-center'}
         >
+          <Link to="/game/new">
           Nouvelle partie
+          </Link>
         </GameButton>
       </footer>
     </div>
