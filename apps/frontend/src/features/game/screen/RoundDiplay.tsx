@@ -5,8 +5,10 @@ import { useGame } from '../useGame';
 
 export const RoundDisplay: React.FC = () => {
   const { state } = useGame();
-  const lastRound = state.roundStatus[state.roundStatus.length - 1];
-  const currentRound = lastRound.roundNumber;
+  const { history } = state;
+  //const lastRound = state.roundStatus[state.roundStatus.length - 1];
+  const lastRound = history.length > 0 ? history[history.length - 1].number : 0;
+  const currentRound = lastRound;
 
   return (
     <>

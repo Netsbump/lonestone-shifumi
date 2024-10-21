@@ -1,4 +1,4 @@
-import type { Round, Status } from '@packages/dtos';
+import type { RoundDTO, Status } from '@packages/dtos';
 import {
   type DRAW,
   type FINISHED,
@@ -13,12 +13,6 @@ import {
 } from '../utils/constants';
 
 export type Result = typeof PLAYER | typeof OPPONENT | typeof DRAW;
-
-// export type Round = {
-//   playerChoice: Choice;
-//   opponentChoice: Choice;
-//   roundResult: Result;
-// };
 
 export type Choice = typeof LEAF | typeof STONE | typeof SCISSORS | typeof FORFEIT;
 
@@ -58,8 +52,7 @@ export type Player = {
 export type Game = {
   gameId: number
   gameStatus: Status;
-  roundStatus: RoundStatus[];
-  history: Round[];
+  history: Array<Omit<RoundDTO, 'id' | 'game'> & { timerRoundStatus: TimerProgressBar }>;
   players: {
     [PLAYER]: Player;
     [OPPONENT]: Player;

@@ -23,7 +23,6 @@ function Game() {
   useEffect(() => {
     if (isValidId) {
       update(Number(gameId));
-      console.log('appel update')
     }
   }, [gameId, isValidId, update]);
 
@@ -62,7 +61,6 @@ function Game() {
           <GameButtonGroup onPlayerChoice={handlePlayerChoice} />
         </div>
       )}
-
 
       {gameStatus === FINISHED && (
         <div className="col-span-3 col-start-2 mt-5 flex items-center justify-center gap-3">

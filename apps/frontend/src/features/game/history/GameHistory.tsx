@@ -34,8 +34,8 @@ export const GameHistory: React.FC = () => {
         <div className="flex h-[350px] flex-col-reverse overflow-y-auto">
           <ul>
             {history.map((round, index) => {
-              const playerInfo = getRuleInfo(round.playerChoice);
-              const opponentInfo = getRuleInfo(round.opponentChoice);
+              const playerInfo = getRuleInfo(round.choices[0].action);
+              const opponentInfo = getRuleInfo(round.choices[1].action);
 
               return (
                 <li

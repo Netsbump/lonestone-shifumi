@@ -11,7 +11,7 @@ type TimerProps = {
 export const Timer: React.FC<TimerProps> = ({ onTimerEnd }) => {
   const { state } = useGame();
   const gameStatus = state.gameStatus;
-  const [time, setTime] = useState(3);
+  const [time, setTime] = useState(10);
 
   useEffect(() => {
     if (gameStatus !== IN_PROGRESS) return;

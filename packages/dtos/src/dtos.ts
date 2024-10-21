@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import type { Status } from "./enums";
 import type { ChoiceSchema, CreateRoundSchema, GameSchema, PlayerSchema } from "./schemas";
-import type { Choice, Result } from "./types";
+import { Choice, Result } from "./types";
 
 // DTOs for mapping entities to DTOs for controller response
 export type GameDTO = {
@@ -9,13 +9,13 @@ export type GameDTO = {
     players: PlayerDTO[];
     status: Status,
     roundPlayed: number;
-    historyRound?: {playerChoice: Choice, opponentChoice: Choice, roundResult: Result}[]
+    historyRound?: Omit<RoundDTO, 'id' | 'game'>[]
 }
 
 export type ChoiceDTO = {
     player: PlayerDTO;
     round: RoundDTO;
-    action: string;
+    action: Choice;
 }
 
 export type PlayerDTO = {
@@ -29,8 +29,8 @@ export type RoundDTO = {
     id: number;
     number: number;
     game: number;
-    choices: Array<Omit<ChoiceDTO, 'round' | 'player' > & { player: number }>;
-    roundResult: string;
+    choices: Array<Omit<ChoiceDTO, 'round' | 'player' > & { playerID: number }>;
+    roundResult: Result;
 }
 
 

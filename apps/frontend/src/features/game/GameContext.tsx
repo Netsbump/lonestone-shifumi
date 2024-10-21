@@ -1,12 +1,12 @@
 import type React from 'react';
 import { createContext, useCallback, useReducer } from 'react';
 
-import type { Round, RoundDTO } from '@packages/dtos';
-import { type GameDTO, type Result, Status } from '@packages/dtos';
+import type { RoundDTO } from '@packages/dtos';
+import { type GameDTO, Status } from '@packages/dtos';
 import { createGame, fetchGame } from '../../lib/api/game';
 import { createRound } from '../../lib/api/round';
-import type { Choice, Game, RoundStatus } from '../../lib/types/game.types';
-import { FINISHED, IN_PROGRESS, NOT_STARTED } from '../../lib/utils/constants';
+import type { Choice, Game, TimerProgressBar } from '../../lib/types/game.types';
+import { FINISHED, IN_PROGRESS } from '../../lib/utils/constants';
 
 const RESET = 'RESET';
 const PLAY = 'PLAY';
@@ -18,12 +18,6 @@ const UPDATE = 'UPDATE';
 const initialGameState: Game = {
   gameId: 0,
   gameStatus: Status.NOT_STARTED,
-  roundStatus: [
-    {
-      roundNumber: 0,
-      timerProgressBarStatus: NOT_STARTED,
-    },
-  ],
   history: [],
   players: {
     player: {
@@ -115,29 +109,30 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       };
     }
     case UPDATE: {
-      const { players, id, status, roundPlayed, historyRound } = action.value;
+      const { players, id, status, historyRound } = action.value;
 
-      // Create a new round status for the next round, incrementing the round number
-      const newRoundStatus: RoundStatus = {
-        roundNumber: roundPlayed,
-        timerProgressBarStatus: NOT_STARTED,
-      };
-      const updateRoundStatus = [...state.roundStatus, newRoundStatus];
+      let updateHistory: Array<Omit<RoundDTO, 'id' | 'game'> & { timerRoundStatus: TimerProgressBar }> = [];
 
-      let updateHistory: Round[] = [];
       if (historyRound) {
-        for (const round of historyRound) {
-          const newRound: Round = {
-            playerChoice: round.playerChoice,
-            opponentChoice: round.opponentChoice,
+        for (let i = 0; i < historyRound.length; i++) {
+          const round = historyRound[i];
+          const isLastRound = i === historyRound.length - 1; // Vérifie si c'est le dernier round
+    
+          // Ajoute le round avec le timer approprié
+          updateHistory.push({
+            number: round.number,
+            choices: [
+              { playerID: round.choices[0].playerID, action: round.choices[0].action },
+              { playerID: round.choices[1].playerID, action: round.choices[1].action }
+            ],
             roundResult: round.roundResult,
-          };
-
-          // Add this new round to the history
-          updateHistory = [...state.history, newRound];
+            timerRoundStatus: isLastRound ? IN_PROGRESS : FINISHED, // Dernier round à IN_PROGRESS pour afficher le dernier round joué ajouter un etat "reprendre la partie qui fait passer NOT STARTED EN IN PROGRESS ? autres à FINISHED
+          });
         }
+      } else {
+        updateHistory = [...state.history]; // Si pas de historyRound, on garde l'historique existant
       }
-
+      
       return {
         ...state,
         gameId: id,
@@ -158,36 +153,31 @@ const gameReducer = (state: Game, action: GameAction): Game => {
             },
           },
         },
-        roundStatus: updateRoundStatus,
         history: updateHistory,
       };
     }
     case PLAY: {
       const { round, game } = action.value;
 
-      const newRound: Round = {
-        playerChoice: round.choices[0].action as Choice,
-        opponentChoice: round.choices[1].action as Choice,
-        roundResult: round.roundResult as Result,
+      const newRound: Omit<RoundDTO, 'id' | 'game'> & { timerRoundStatus: TimerProgressBar } = {
+        number: round.number,
+        choices: [
+          { playerID: round.choices[0].playerID, action: round.choices[0].action },
+          { playerID: round.choices[1].playerID, action: round.choices[1].action }
+        ],
+        roundResult: round.roundResult,
+        timerRoundStatus: IN_PROGRESS
       };
 
       // Add this new round to the history
       const updateHistory = [...state.history, newRound];
 
-      // Updte game status
+      // Update game status
       const gameStatus = game.status;
-
-      // Create a new round status for the next round, incrementing the round number
-      const newRoundStatus: RoundStatus = {
-        roundNumber: round.number,
-        timerProgressBarStatus: IN_PROGRESS,
-      };
-      const updateRoundStatus = [...state.roundStatus, newRoundStatus];
 
       // Return the updated state with new round status, updated game history, and game status
       return {
         ...state,
-        roundStatus: updateRoundStatus,
         gameStatus,
         history: updateHistory,
       };
@@ -196,22 +186,24 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       return initialGameState;
     }
     case NEXTROUND: {
-      // Get the index of the last round status in the roundStatus array
-      const lastRoundStatusIndex = state.roundStatus.length - 1;
 
-      // Create a copy of the roundStatus array to avoid mutating the original state directly
-      const updatedRoundStatus = [...state.roundStatus];
+      const updatedHistory = [...state.history];
 
-      // Update the timerProgressBarStatus of the last round to FINISHED
-      updatedRoundStatus[lastRoundStatusIndex] = {
-        ...updatedRoundStatus[lastRoundStatusIndex],
-        timerProgressBarStatus: FINISHED,
-      };
+      // Obtenir l'index du dernier round dans l'historique
+      const lastRoundIndex = updatedHistory.length - 1;
+
+      // Si un round existe, on met à jour son statut à FINISHED
+      if (lastRoundIndex >= 0) {
+        updatedHistory[lastRoundIndex] = {
+          ...updatedHistory[lastRoundIndex],
+          timerRoundStatus: FINISHED, // Le dernier round est terminé
+        };
+      }
 
       // Return the updated state with the modified roundStatus array
       return {
         ...state,
-        roundStatus: updatedRoundStatus,
+        history: updatedHistory,
       };
     }
     default:
