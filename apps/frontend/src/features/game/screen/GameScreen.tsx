@@ -10,7 +10,11 @@ import { RoundDisplay } from './RoundDiplay';
 import { RoundResultDisplay } from './RoundResultDisplay';
 import { Timer } from './Timer';
 
-export const GameScreen: React.FC = () => {
+type GameScreenProps = {
+  isProcessing: boolean,
+}
+
+export const GameScreen: React.FC<GameScreenProps> = ({isProcessing}) => {
   const { state, play } = useGame();
   const { gameStatus, history, players } = state;
 
@@ -38,13 +42,18 @@ export const GameScreen: React.FC = () => {
       <div className="flex w-full flex-col items-center p-container">
         <RoundDisplay />
         <div className="flex h-full w-full items-center justify-center gap-9">
-          {gameStatus === FINISHED ? (
-            <EndGameDisplay winnerGameName={winnerGameName} />
-          ) : isRoundTimerInProgress ? (
-            <RoundResultDisplay />
-          ) : (
-            <Timer onTimerEnd={handleTimerEnd} />
-          )}
+          {isProcessing ? (
+            <div>Choix de l'adversaire en cours...</div>
+          ) :
+            (
+              gameStatus === FINISHED ? (
+                <EndGameDisplay winnerGameName={winnerGameName} />
+              ) : isRoundTimerInProgress ? (
+                <RoundResultDisplay />
+              ) : (
+                <Timer onTimerEnd={handleTimerEnd} />
+              )
+            )}
         </div>
       </div>
     </GameContainer>

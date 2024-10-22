@@ -3,7 +3,7 @@ import { createContext, useCallback, useReducer } from 'react';
 
 import type { RoundDTO } from '@packages/dtos';
 import { type GameDTO, Status } from '@packages/dtos';
-import { createGame, fetchGame } from '../../lib/api/game';
+import { fetchGame } from '../../lib/api/game';
 import { createRound } from '../../lib/api/round';
 import type { Choice, Game, TimerProgressBar } from '../../lib/types/game.types';
 import { FINISHED, IN_PROGRESS } from '../../lib/utils/constants';
@@ -213,8 +213,8 @@ const gameReducer = (state: Game, action: GameAction): Game => {
 
 export type GameContextType = {
   state: Game;
-  create: (playerChoice: string) => Promise<GameDTO>;
-  update: (gameId: number) => void;
+  create: (gameData: GameDTO) => void;
+  update: (gameData: GameDTO) => void;
   start: () => void;
   play: (playerChoice: Choice) => void;
   reset: () => void;
@@ -230,20 +230,12 @@ type GameProviderProps = {
 const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(gameReducer, initialGameState);
 
-  const createCallBack = useCallback(async (playerName: string): Promise<GameDTO> => {
-    const gameData = await createGame({
-      playerName: playerName,
-      opponentName: 'J-Ordi',
-    });
-
+  const createCallBack = useCallback((gameData: GameDTO) => {
     dispatch(create(gameData));
-    return gameData;
   }, []);
 
-  const updateCallBack = useCallback(async (gameId: number) => {
-    const game = await fetchGame(gameId);
-
-    dispatch(update(game));
+  const updateCallBack = useCallback((gameData: GameDTO) => {
+    dispatch(update(gameData));
   }, []);
 
   const startCallback = useCallback(() => {
