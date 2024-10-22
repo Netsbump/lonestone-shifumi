@@ -16,20 +16,23 @@ import { useGame } from './useGame';
 
 const leaf = '/images/icon-leaf.svg';
 const scissors = '/images/icon-scissors.svg';
-const stone = '/images/icon-stone.svg';history
+const stone = '/images/icon-stone.svg'; history
 
 type GameButtonGroupProps = {
   onPlayerChoice: (playerChoice: Choice) => void;
+  isProcessing: boolean,
 };
 
 export const GameButtonGroup: React.FC<GameButtonGroupProps> = ({
-  onPlayerChoice,
+  onPlayerChoice, isProcessing
 }) => {
   const { state } = useGame();
   const history =
     state.history.length > 0 ? state.history[state.history.length - 1] : null;
   const lastRoundStatus = history?.timerRoundStatus;
-  const isDisabled = lastRoundStatus === IN_PROGRESS;
+  const isDisabled = lastRoundStatus === IN_PROGRESS || isProcessing;
+
+
 
   return (
     <div className="flex w-full items-center justify-center gap-3">

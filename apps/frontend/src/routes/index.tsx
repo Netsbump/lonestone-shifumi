@@ -1,19 +1,30 @@
 import { Button } from '@/components/ui/button';
 import type { GameDTO } from '@packages/dtos';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
+import { Link, createFileRoute } from '@tanstack/react-router';
 import { fetchGames } from '../lib/api/game';
 import { GameButton } from '../ui/GameButton';
 
 export const Route = createFileRoute('/')({
-  loader: async () => {
-    const games = await fetchGames();
-    return { games };
-  },
   component: Index,
 });
 
 function Index() {
-  const { games } = Route.useLoaderData() as { games: GameDTO[] };
+  const { data: games, isLoading, isError, error } = useQuery<GameDTO[], Error>(
+    ['games'],
+    fetchGames,
+    {
+      staleTime: 1000 * 60 * 1, // Les données sont fraîches pendant 1 minute
+    }
+  );
+
+  if (isLoading) {
+    return <div className='h-full w-full m-auto py-3 text-center'>Chargement des parties en cours...</div>;
+  }
+
+  if (isError) {
+    return <div className='h-full w-full m-auto py-3 text-center'>Erreur : {error.message}</div>;
+  }
 
   return (
     <div className="h-full flex flex-col justify-between py-3">
