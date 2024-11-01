@@ -1,6 +1,8 @@
+import { fetchGame } from '@/lib/api/game';
+import { useCreateGameMutation } from '@/lib/hooks/useCreateGameMutation';
 import { useCreateRoundMutation } from '@/lib/hooks/useCreateRoundMutation';
 import { useFetchGameQuery } from '@/lib/hooks/useFetchGameQuery';
-import { type Choice, FORFEIT } from '@packages/dtos';
+import { type Choice, FORFEIT, type GameDTO } from '@packages/dtos';
 import { createFileRoute } from '@tanstack/react-router';
 import { useCallback, useState } from 'react';
 import { GameButtonGroup } from '../features/game/GameButtonGroup';
@@ -13,38 +15,30 @@ import { FINISHED, IN_PROGRESS, NOT_STARTED } from '../lib/utils/constants';
 import { GameButton } from '../ui/GameButton';
 
 export const Route = createFileRoute('/games/$gameId')({
+  async loader({ params }) {
+    const gameId = Number(params.gameId);
+    if (Number.isNaN(gameId)) {
+      throw new Error('ID de jeu invalide');
+    }
+    const gameData = await fetchGame(gameId);
+    return gameData;
+  },
   component: Game,
 });
 
-function Game() {
+function Game({ data: initialData }: { data: GameDTO }) {
   const { gameId } = Route.useParams();
+  const navigate = Route.useNavigate();
   const isValidId = !Number.isNaN(Number(gameId));
   const { state, reset, start } = useGame();
   const gameStatus = state.gameStatus;
   const [playerChoice, setPlayerChoice] = useState<Choice | null>(null);
 
-  const { isLoading : isGameLoading, isFetching: isFetchingGame, isError, error } = useFetchGameQuery(Number(gameId))
+  const { isLoading : isGameLoading, isFetching: isFetchingGame, isError, error } = useFetchGameQuery(Number(gameId), {
+    initialData,
+  })
   const { mutateAsync: createRoundMutation, isLoading: isCreateRound } = useCreateRoundMutation(Number(gameId));
-  //   const isPlayerChoice = !!playerChoice;
-    
-  //   let playerRoundChoice = playerChoice;
-
-  //   if(!isPlayerChoice) {
-  //     playerRoundChoice = FORFEIT
-  //   }
-
-  //   try {
-  //     // Appel à la mutation pour créer un nouveau round
-  //     await createRoundMutation({ 
-  //       player: {
-  //         name: state.players.player.name,
-  //         action: playerRoundChoice as Choice,
-  //       },
-  //     });
-  //   } catch (error) {
-  //     console.error('Erreur lors de la création du round:', error);
-  //   }
-  // };
+  const { mutateAsync: resetNewGame, isError: isErrorResetGame, isLoading: isLoadingResetGame } = useCreateGameMutation()
 
   const isProcessing = isFetchingGame || isCreateRound;
 
@@ -71,6 +65,20 @@ const handlePlayerChoice = useCallback(async () => {
     setPlayerChoice(choice);
   }, []);
 
+  const handleSubmitReset = async() => {
+      try {
+  
+        const gameData = await resetNewGame(state.players.player.name)
+
+        reset(gameData.id)
+
+        navigate({ to: `/games/${gameData.id}`, replace: true });
+        
+      } catch (error) {
+        console.error('Unexpected error occurred during game creation', error);
+      }
+  }
+
   if (!isValidId) {
     return <div>ID de jeu invalide</div>;
   }
@@ -81,6 +89,14 @@ const handlePlayerChoice = useCallback(async () => {
 
   if (isError) {
     return <div>Erreur lors du chargement de la partie : {error.message}</div>
+  }
+
+  if (isErrorResetGame) {
+    return <div>Erreur lors du lancement d'une nouvelle partie</div>
+  }
+
+  if (isLoadingResetGame) {
+    return <div>Préparation de la nouvelle partie...</div>
   }
 
   return (
@@ -110,7 +126,7 @@ const handlePlayerChoice = useCallback(async () => {
 
       {gameStatus === FINISHED && (
         <div className="col-span-3 col-start-2 mt-5 flex items-center justify-center gap-3">
-          <GameButton onPress={reset} className={'flex w-72 items-center justify-center'}>
+          <GameButton onPress={handleSubmitReset} className={'flex w-72 items-center justify-center'}>
             Rejouez
           </GameButton>
         </div>

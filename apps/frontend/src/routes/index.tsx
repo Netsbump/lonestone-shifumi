@@ -36,9 +36,9 @@ function Index() {
               <li key={game.id} className="col-span-3">
                 <Button className="flex flex-col w-40 h-30 bg-night-blue" asChild>
                   <Link to={`/games/${game.id}`}>
-                  <span> Game {game.id}</span>
-                  <span>Statut: {game.status}</span>
-                  <span>Rounds joués: {game.roundPlayed}</span>
+                    <span> Game {game.id}</span>
+                    <span>Statut: {game.status}</span>
+                    <span>Rounds joués: {game.roundPlayed}</span>
                   </Link>
                 </Button>
               </li>
