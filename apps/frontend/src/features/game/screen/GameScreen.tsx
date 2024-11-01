@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useMemo } from 'react';
 
-import { FINISHED, FORFEIT, IN_PROGRESS } from '../../../lib/utils/constants';
+import { FINISHED, IN_PROGRESS } from '../../../lib/utils/constants';
 import { getPlayerScores } from '../../../lib/utils/game.logic';
 import { GameContainer } from '../../../ui/GameContainer';
 import { useGame } from '../useGame';
@@ -11,11 +11,12 @@ import { RoundResultDisplay } from './RoundResultDisplay';
 import { Timer } from './Timer';
 
 type GameScreenProps = {
-  isProcessing: boolean,
+  isProcessing: boolean
+  onTimerEnd: () => void,
 }
 
-export const GameScreen: React.FC<GameScreenProps> = ({isProcessing}) => {
-  const { state, play } = useGame();
+export const GameScreen: React.FC<GameScreenProps> = ({ isProcessing, onTimerEnd }) => {
+  const { state } = useGame();
   const { gameStatus, history, players } = state;
 
   const lastRoundStatus = history.length > 0 ? history[history.length - 1].timerRoundStatus : null;
@@ -33,16 +34,13 @@ export const GameScreen: React.FC<GameScreenProps> = ({isProcessing}) => {
 
   }, [history]);
 
-  const handleTimerEnd = (): void => {
-    play(FORFEIT);
-  };
-
   return (
     <GameContainer>
       <div className="flex w-full flex-col items-center p-container">
         <RoundDisplay />
         <div className="flex h-full w-full items-center justify-center gap-9">
-          {isProcessing ? (
+
+        {isProcessing ? (
             <div>Choix de l'adversaire en cours...</div>
           ) :
             (
@@ -51,7 +49,7 @@ export const GameScreen: React.FC<GameScreenProps> = ({isProcessing}) => {
               ) : isRoundTimerInProgress ? (
                 <RoundResultDisplay />
               ) : (
-                <Timer onTimerEnd={handleTimerEnd} />
+                <Timer onTimerEnd={onTimerEnd} />
               )
             )}
         </div>
