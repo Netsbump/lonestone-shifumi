@@ -18,9 +18,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useGame } from '@/features/game/useGame';
-import { createGame } from '@/lib/api/game';
+import { useCreateGameMutation } from '@/lib/hooks/useCreateGameMutation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 
 import { useForm } from 'react-hook-form';
@@ -33,26 +32,16 @@ export const Route = createFileRoute('/game/new')({
 function SetupGameForm() {
   const navigate = Route.useNavigate();
   const { create } = useGame();
-  const queryClient = useQueryClient();
+  const { mutateAsync: createNewGame, isError, isLoading } = useCreateGameMutation()
 
-   const { mutate , isLoading, isError } = useMutation(
-    (playerName: string) => createGame({ playerName, opponentName: 'J-Ordi' }),
-    {
-      onSuccess: (gameData) => {
-
-        create(gameData)
-
-        queryClient.invalidateQueries(['games']);
-
-        const gameId = gameData.id;
-        navigate({ to: `/games/${gameId}`, replace: true });
-      },
-    }
-  );
-
-  const handleSubmitNewGame = (values: z.infer<typeof formSchema>) => {
+  const handleSubmitNewGame = async(values: z.infer<typeof formSchema>) => {
     try {
-      mutate(values.playerName)
+
+      const gameData = await createNewGame(values.playerName)
+      
+      create(gameData)
+      navigate({ to: `/games/${gameData.id}`, replace: true });
+      
     } catch (error) {
       console.error('Unexpected error occurred during game creation', error);
     }
@@ -79,6 +68,9 @@ function SetupGameForm() {
   if(isLoading){
     return <div>Création de la nouvelle partie en cours...</div>
   }
+
+  
+
 
   return (
     <Form {...form}>

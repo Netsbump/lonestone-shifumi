@@ -38,7 +38,7 @@ type GameAction =
   | { type: typeof UPDATE; value: GameDTO }
   | { type: typeof CREATE; value: GameDTO }
   | { type: typeof START }
-  | { type: typeof RESET }
+  | { type: typeof RESET; value: number }
   | { type: typeof NEXTROUND };
 
 // Action creators
@@ -56,8 +56,9 @@ const update = (gameData: GameDTO): GameAction => ({
   value: gameData,
 });
 
-const reset = (): GameAction => ({
+const reset = (gameId: number): GameAction => ({
   type: RESET,
+  value: gameId
 });
 
 const nextRound = (): GameAction => ({
@@ -145,7 +146,14 @@ const gameReducer = (state: Game, action: GameAction): Game => {
       };
     }
     case RESET: {
-      return initialGameState;
+      const gameId  = action.value;
+
+      return {
+        ...state, 
+        gameId: gameId,
+        gameStatus: Status.IN_PROGRESS,
+        history: [],
+      }
     }
     case NEXTROUND: {
 
@@ -178,7 +186,7 @@ export type GameContextType = {
   create: (gameData: GameDTO) => void;
   update: (gameData: GameDTO) => void;
   start: () => void;
-  reset: () => void;
+  reset: (gameId: number) => void;
   nextRound: () => void;
 };
 
@@ -204,8 +212,8 @@ const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   }, []);
 
 
-  const resetCallback = useCallback(() => {
-    dispatch(reset());
+  const resetCallback = useCallback((gameId: number) => {
+    dispatch(reset(gameId));
   }, []);
 
   const nextRoundCallBack = useCallback(() => {
