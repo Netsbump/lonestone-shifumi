@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { TableGames } from '@/ui/TableGames';
 import type { GameDTO } from '@packages/dtos';
 import { useQuery } from '@tanstack/react-query';
 import { Link, createFileRoute } from '@tanstack/react-router';
@@ -32,17 +32,7 @@ function Index() {
         <main className="flex flex-col">
           <h3>Choisissez une partie existante</h3>
           <ul className="flex justify-center gap-3 pt-6 flex-wrap">
-            {games.map((game) => (
-              <li key={game.id} className="col-span-3">
-                <Button className="flex flex-col w-40 h-30 bg-night-blue" asChild>
-                  <Link to={`/games/${game.id}`}>
-                    <span> Game {game.id}</span>
-                    <span>Statut: {game.status}</span>
-                    <span>Rounds joués: {game.roundPlayed}</span>
-                  </Link>
-                </Button>
-              </li>
-            ))}
+          <TableGames games={games}/>
           </ul>
         </main>
       )}
