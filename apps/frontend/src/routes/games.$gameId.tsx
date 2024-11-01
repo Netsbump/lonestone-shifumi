@@ -1,9 +1,8 @@
-import { fetchGame } from '@/lib/api/game';
-import { createRound } from '@/lib/api/round';
-import type { Choice, GameDTO, RoundDTO } from '@packages/dtos';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCreateRoundMutation } from '@/lib/hooks/useCreateRoundMutation';
+import { useFetchGameQuery } from '@/lib/hooks/useFetchGameQuery';
+import { type Choice, FORFEIT } from '@packages/dtos';
 import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { GameButtonGroup } from '../features/game/GameButtonGroup';
 import { GameHistory } from '../features/game/history/GameHistory';
 import { GameRules } from '../features/game/rules/GameRules';
@@ -20,62 +19,57 @@ export const Route = createFileRoute('/games/$gameId')({
 function Game() {
   const { gameId } = Route.useParams();
   const isValidId = !Number.isNaN(Number(gameId));
-  const { state, reset, start, update } = useGame();
+  const { state, reset, start } = useGame();
   const gameStatus = state.gameStatus;
-  const queryClient = useQueryClient();
-  const [isProcessing, setIsProcessing] = useState(false)
-  
+  const [playerChoice, setPlayerChoice] = useState<Choice | null>(null);
 
-  const { isLoading : isGameLoading, isError, error } = useQuery<GameDTO, Error>(
-    ['game', gameId],
-    () => fetchGame(Number(gameId)),
-    {
-      staleTime: 1000 * 60 * 1,
-      enabled: isValidId, 
-      onSuccess: (gameData) => {
-        update(gameData)
-      },
-      onSettled: () => {
-        setIsProcessing(false);
-      }
-    }
-  )
+  const { isLoading : isGameLoading, isFetching: isFetchingGame, isError, error } = useFetchGameQuery(Number(gameId))
+  const { mutateAsync: createRoundMutation, isLoading: isCreateRound } = useCreateRoundMutation(Number(gameId));
+  //   const isPlayerChoice = !!playerChoice;
+    
+  //   let playerRoundChoice = playerChoice;
 
-  // Mutation pour créer un nouveau round
-  const { mutateAsync: createRoundMutation} = useMutation<
-    RoundDTO,
-    Error,
-    { gameId: number; player: { name: string; action: Choice } }
-  >(
-    ({ gameId, player }) => createRound({ gameId, player }), // Fonction de mutation
-    {
-      mutationKey: ['createRound'], 
-      onMutate: () => {
-        setIsProcessing(true);
-      },
-      onSuccess: () => {
-        // Après avoir créé un round, fetch les données du jeu pour avoir la dernière version
-        queryClient.invalidateQueries(['game', gameId]);
-        // Maj de toutes les games de la page d'acceuil
-        queryClient.invalidateQueries(['games']);
-      },
-    }
-  );
+  //   if(!isPlayerChoice) {
+  //     playerRoundChoice = FORFEIT
+  //   }
 
-  const handlePlayerChoice = async (playerChoice: Choice) => {
+  //   try {
+  //     // Appel à la mutation pour créer un nouveau round
+  //     await createRoundMutation({ 
+  //       player: {
+  //         name: state.players.player.name,
+  //         action: playerRoundChoice as Choice,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.error('Erreur lors de la création du round:', error);
+  //   }
+  // };
+
+  const isProcessing = isFetchingGame || isCreateRound;
+
+const handlePlayerChoice = useCallback(async () => {
+  const playerRoundChoice = playerChoice || FORFEIT;
+
     try {
       // Appel à la mutation pour créer un nouveau round
       await createRoundMutation({
-        gameId: Number(gameId), 
         player: {
           name: state.players.player.name,
-          action: playerChoice,
+          action: playerRoundChoice as Choice,
         },
       });
     } catch (error) {
       console.error('Erreur lors de la création du round:', error);
     }
-  };
+    finally {
+      setPlayerChoice(null);
+    }
+  }, [playerChoice, createRoundMutation, state.players.player.name]);
+
+  const handleSetPlayerChoice = useCallback((choice: Choice) => {
+    setPlayerChoice(choice);
+  }, []);
 
   if (!isValidId) {
     return <div>ID de jeu invalide</div>;
@@ -101,7 +95,7 @@ function Game() {
           <GameRules />
         </aside>
         <div className="col-span-3">
-          <GameScreen isProcessing={isProcessing}/>
+          <GameScreen isProcessing={isProcessing} onTimerEnd={handlePlayerChoice}/>
         </div>
         <aside className="col-span-1">
           <GameHistory />
@@ -110,7 +104,7 @@ function Game() {
 
       {gameStatus === IN_PROGRESS && (
         <div className="col-span-3 col-start-2 mt-5 flex items-center justify-center gap-3">
-          <GameButtonGroup onPlayerChoice={handlePlayerChoice} isProcessing={isProcessing} />
+          <GameButtonGroup onPlayerChoice={handleSetPlayerChoice} isProcessing={isProcessing} />
         </div>
       )}
 

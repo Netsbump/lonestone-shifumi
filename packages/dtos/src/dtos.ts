@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import type { Status } from "./enums";
 import type { ChoiceSchema, CreateRoundSchema, GameSchema, PlayerSchema } from "./schemas";
-import { Choice, Result } from "./types";
+import type { Choice, Result } from "./types";
 
 // DTOs for mapping entities to DTOs for controller response
 export type GameDTO = {
